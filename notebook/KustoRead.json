@@ -1,0 +1,282 @@
+{
+	"name": "KustoRead",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "spark330",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "98c5ce5c-551b-4844-a589-9cbca96d8ec3"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/216ca57c-8613-4c54-8960-1e5821b6dc8d/resourceGroups/SDK_E2E_TEST/providers/Microsoft.Synapse/workspaces/synapsekustosparkppe/bigDataPools/spark330",
+				"name": "spark330",
+				"type": "Spark",
+				"endpoint": "https://synapsekustosparkppe.dev.azuresynapse-test.azure.net/livyApi/versions/2019-11-01-preview/sparkPools/spark330",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.3",
+				"nodeCount": 3,
+				"cores": 4,
+				"memory": 28,
+				"automaticScaleJobs": false
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"**Run in single mode**"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "python"
+					},
+					"collapsed": false
+				},
+				"source": [
+					"%%pyspark\n",
+					"\n",
+					"# Read data from Azure Data Explorer table(s)\n",
+					"# Full Sample Code available at: https://github.com/Azure/azure-kusto-spark/blob/master/samples/src/main/python/SynapseSample.py\n",
+					"\n",
+					"kustoDf  = spark.read \\\n",
+					"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\n",
+					"    .option(\"spark.synapse.linkedService\", \"sdktestcluster\") \\\n",
+					"    .option(\"kustoDatabase\", \"e2e\") \\\n",
+					"    .option(\"kustoQuery\", \"AWSLogs2 | take 10\") \\\n",
+					"    .load()\n",
+					"\n",
+					"display(kustoDf)\n",
+					""
+				],
+				"execution_count": 1
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"**Run in distributed mode**"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "python"
+					},
+					"collapsed": false
+				},
+				"source": [
+					"%%pyspark\r\n",
+					"\r\n",
+					"# Read data from Azure Data Explorer table(s)\r\n",
+					"# Full Sample Code available at: https://github.com/Azure/azure-kusto-spark/blob/master/samples/src/main/python/SynapseSample.py\r\n",
+					"\r\n",
+					"kustoDfDistributed  = spark.read \\\r\n",
+					"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\r\n",
+					"    .option(\"spark.synapse.linkedService\", \"sdktestcluster\") \\\r\n",
+					"    .option(\"kustoDatabase\", \"e2e\") \\\r\n",
+					"    .option(\"kustoQuery\", \"AWSLogs2 | take 10\") \\\r\n",
+					"    .option(\"readMode\", \"ForceDistributedMode\") \\\r\n",
+					"    .load()\r\n",
+					"\r\n",
+					"display(kustoDfDistributed)\r\n",
+					""
+				],
+				"execution_count": 2
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"**Create a set of random data with all the datatpes**"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "scala"
+					}
+				},
+				"source": [
+					"%%spark\r\n",
+					"\r\n",
+					"import scala.util.Random\r\n",
+					"import java.time.Instant\r\n",
+					"import java.util.UUID\r\n",
+					"\r\n",
+					"val aDynamic = s\"\"\"{\"itemid\":\"X-Wing-${Random.nextInt()}\" , \"price\": ${Random.nextInt()},\"quantity\": ${Random.nextInt()}\"\"\" //s\"\"\"{\"itemid\":  , \"in_stock\": true,\"price\": ${Random.nextInt()},\"quantity\": 23 }\"\"\"\r\n",
+					"\r\n",
+					"val data = 1 to 100000 map(x =>  (Random.nextBoolean(), Instant.now() , aDynamic ,UUID.randomUUID().toString() ,Random.nextInt(),Random.nextLong(),Random.nextDouble(),Random.nextString(5),123456789.12345678910d))\r\n",
+					"\r\n",
+					"val allTypesDf = spark.sqlContext.createDataFrame(data).toDF(\"BoolType\", \"DateTimeType\", \"DynamicType\",\"GuidType\", \"IntType\", \"LongType\",\"RealType\",\"StringType\",\"DecimalType\")\r\n",
+					"//(BoolType:bool,DateTimeType:datetime,DynamicType:dynamic,GuidType:guid,IntType:int,LongType:long,RealType:real,StringType:string,DecimalType:decimal)\r\n",
+					"\r\n",
+					"allTypesDf.write\r\n",
+					"    .format(\"com.microsoft.kusto.spark.synapse.datasource\")\r\n",
+					"    .option(\"spark.synapse.linkedService\", \"sdktestcluster\")\r\n",
+					"    .option(\"kustoDatabase\", \"spark\")\r\n",
+					"    .option(\"kustoTable\", \"AllDataTypes\")\r\n",
+					"    .option(\"tableCreateOptions\",\"CreateIfNotExist\")\r\n",
+					"    .mode(\"Append\")\r\n",
+					"    .save()"
+				],
+				"execution_count": 3
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"**This will not load immediately, but is a good test for the _queued_ mode**"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "scala"
+					}
+				},
+				"source": [
+					"%%spark\r\n",
+					"allTypesDf.write\r\n",
+					"    .format(\"com.microsoft.kusto.spark.synapse.datasource\")\r\n",
+					"    .option(\"spark.synapse.linkedService\", \"sdktestcluster\")\r\n",
+					"    .option(\"kustoDatabase\", \"spark\")\r\n",
+					"    .option(\"kustoTable\", \"AllDataTypesQueued\")\r\n",
+					"    .option(\"tableCreateOptions\",\"CreateIfNotExist\")\r\n",
+					"    .option(\"writeMode\",\"Queued\")\r\n",
+					"    .mode(\"Append\")\r\n",
+					"    .save()"
+				],
+				"execution_count": 4
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "python"
+					},
+					"collapsed": false
+				},
+				"source": [
+					"%%pyspark\r\n",
+					"\r\n",
+					"# Read data from Azure Data Explorer table(s)\r\n",
+					"# Full Sample Code available at: https://github.com/Azure/azure-kusto-spark/blob/master/samples/src/main/python/SynapseSample.py\r\n",
+					"\r\n",
+					"kustoDfAllTypes  = spark.read \\\r\n",
+					"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\r\n",
+					"    .option(\"spark.synapse.linkedService\", \"sdktestcluster\") \\\r\n",
+					"    .option(\"kustoDatabase\", \"spark\") \\\r\n",
+					"    .option(\"kustoQuery\", \"AllDataTypes | take 100\") \\\r\n",
+					"    .option(\"readMode\", \"ForceDistributedMode\") \\\r\n",
+					"    .load()\r\n",
+					"\r\n",
+					"display(kustoDfAllTypes)"
+				],
+				"execution_count": 23
+			}
+		]
+	}
+}
