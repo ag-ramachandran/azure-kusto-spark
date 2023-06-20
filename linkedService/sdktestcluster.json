@@ -1,0 +1,20 @@
+{
+	"name": "sdktestcluster",
+	"type": "Microsoft.Synapse/workspaces/linkedservices",
+	"properties": {
+		"description": "sdktestcluster",
+		"annotations": [],
+		"type": "AzureDataExplorer",
+		"typeProperties": {
+			"endpoint": "https://sdktestcluster.westeurope.dev.kusto.windows.net",
+			"tenant": "72f988bf-86f1-41af-91ab-2d7cd011db47",
+			"servicePrincipalId": "314cd011-52fd-4093-9c2f-6f6c3c85b60c",
+			"database": "spark",
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIlNZTkFQU0VARDc2MzM1ODMtNTBFMy00MDlFLUJEQTMtMEIxMDhBM0NCRjc2XzYyNzg2YTA4LTFkYzItNGRiYS04ZWJmLTkzZGE5ZDg1YjFlMyINCn0="
+		},
+		"connectVia": {
+			"referenceName": "AutoResolveIntegrationRuntime",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
