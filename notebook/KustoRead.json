@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "98c5ce5c-551b-4844-a589-9cbca96d8ec3"
+				"spark.autotune.trackingId": "1c03e99d-2cd7-4a68-ba99-bcd5fe3f7f5a"
 			}
 		},
 		"metadata": {
@@ -183,21 +183,14 @@
 					"\r\n",
 					"val aDynamic = s\"\"\"{\"itemid\":\"X-Wing-${Random.nextInt()}\" , \"price\": ${Random.nextInt()},\"quantity\": ${Random.nextInt()}\"\"\" //s\"\"\"{\"itemid\":  , \"in_stock\": true,\"price\": ${Random.nextInt()},\"quantity\": 23 }\"\"\"\r\n",
 					"\r\n",
-					"val data = 1 to 100000 map(x =>  (Random.nextBoolean(), Instant.now() , aDynamic ,UUID.randomUUID().toString() ,Random.nextInt(),Random.nextLong(),Random.nextDouble(),Random.nextString(5),123456789.12345678910d))\r\n",
+					"val data = 1 to 100000 map(x =>  (Random.nextBoolean(), Instant.now().toString() , aDynamic ,UUID.randomUUID().toString() ,Random.nextInt(),Random.nextLong(),Random.nextDouble(),Random.nextString(5),123456789.12345678910d))\r\n",
 					"\r\n",
 					"val allTypesDf = spark.sqlContext.createDataFrame(data).toDF(\"BoolType\", \"DateTimeType\", \"DynamicType\",\"GuidType\", \"IntType\", \"LongType\",\"RealType\",\"StringType\",\"DecimalType\")\r\n",
 					"//(BoolType:bool,DateTimeType:datetime,DynamicType:dynamic,GuidType:guid,IntType:int,LongType:long,RealType:real,StringType:string,DecimalType:decimal)\r\n",
 					"\r\n",
-					"allTypesDf.write\r\n",
-					"    .format(\"com.microsoft.kusto.spark.synapse.datasource\")\r\n",
-					"    .option(\"spark.synapse.linkedService\", \"sdktestcluster\")\r\n",
-					"    .option(\"kustoDatabase\", \"spark\")\r\n",
-					"    .option(\"kustoTable\", \"AllDataTypes\")\r\n",
-					"    .option(\"tableCreateOptions\",\"CreateIfNotExist\")\r\n",
-					"    .mode(\"Append\")\r\n",
-					"    .save()"
+					"allTypesDf.write.format(\"com.microsoft.kusto.spark.synapse.datasource\").option(\"spark.synapse.linkedService\", \"sdktestcluster\").option(\"kustoDatabase\", \"spark\").option(\"kustoTable\", \"AllDataTypes\").option(\"tableCreateOptions\",\"CreateIfNotExist\").mode(\"Append\").save()"
 				],
-				"execution_count": 3
+				"execution_count": 5
 			},
 			{
 				"cell_type": "markdown",
@@ -230,17 +223,9 @@
 				},
 				"source": [
 					"%%spark\r\n",
-					"allTypesDf.write\r\n",
-					"    .format(\"com.microsoft.kusto.spark.synapse.datasource\")\r\n",
-					"    .option(\"spark.synapse.linkedService\", \"sdktestcluster\")\r\n",
-					"    .option(\"kustoDatabase\", \"spark\")\r\n",
-					"    .option(\"kustoTable\", \"AllDataTypesQueued\")\r\n",
-					"    .option(\"tableCreateOptions\",\"CreateIfNotExist\")\r\n",
-					"    .option(\"writeMode\",\"Queued\")\r\n",
-					"    .mode(\"Append\")\r\n",
-					"    .save()"
+					"allTypesDf.write.format(\"com.microsoft.kusto.spark.synapse.datasource\").option(\"spark.synapse.linkedService\", \"sdktestcluster\").option(\"kustoDatabase\", \"spark\").option(\"kustoTable\", \"AllDataTypesQueued\").option(\"tableCreateOptions\",\"CreateIfNotExist\").option(\"writeMode\",\"Queued\").mode(\"Append\").save()"
 				],
-				"execution_count": 4
+				"execution_count": 7
 			},
 			{
 				"cell_type": "code",
@@ -264,7 +249,6 @@
 					"\r\n",
 					"# Read data from Azure Data Explorer table(s)\r\n",
 					"# Full Sample Code available at: https://github.com/Azure/azure-kusto-spark/blob/master/samples/src/main/python/SynapseSample.py\r\n",
-					"\r\n",
 					"kustoDfAllTypes  = spark.read \\\r\n",
 					"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\r\n",
 					"    .option(\"spark.synapse.linkedService\", \"sdktestcluster\") \\\r\n",
@@ -275,7 +259,7 @@
 					"\r\n",
 					"display(kustoDfAllTypes)"
 				],
-				"execution_count": 23
+				"execution_count": 6
 			}
 		]
 	}
