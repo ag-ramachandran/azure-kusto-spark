@@ -4,7 +4,7 @@
 		"nbformat": 4,
 		"nbformat_minor": 2,
 		"bigDataPool": {
-			"referenceName": "spark240",
+			"referenceName": "spark331",
 			"type": "BigDataPoolReference"
 		},
 		"sessionProperties": {
@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "92ea7bcc-cd6a-4ef4-b032-35034c7914f6"
+				"spark.autotune.trackingId": "65b1071b-8a34-4e1c-810d-fa19e521b519"
 			}
 		},
 		"metadata": {
@@ -31,15 +31,15 @@
 				"name": "python"
 			},
 			"a365ComputeOptions": {
-				"id": "/subscriptions/216ca57c-8613-4c54-8960-1e5821b6dc8d/resourceGroups/SDK_E2E_TEST/providers/Microsoft.Synapse/workspaces/synapsekustosparkppe/bigDataPools/spark240",
-				"name": "spark240",
+				"id": "/subscriptions/216ca57c-8613-4c54-8960-1e5821b6dc8d/resourceGroups/SDK_E2E_TEST/providers/Microsoft.Synapse/workspaces/synapsekustosparkppe/bigDataPools/spark331",
+				"name": "spark331",
 				"type": "Spark",
-				"endpoint": "https://synapsekustosparkppe.dev.azuresynapse-test.azure.net/livyApi/versions/2019-11-01-preview/sparkPools/spark240",
+				"endpoint": "https://synapsekustosparkppe.dev.azuresynapse-test.azure.net/livyApi/versions/2019-11-01-preview/sparkPools/spark331",
 				"auth": {
 					"type": "AAD",
 					"authResource": "https://dev.azuresynapse.net"
 				},
-				"sparkVersion": "2.4",
+				"sparkVersion": "3.3",
 				"nodeCount": 3,
 				"cores": 4,
 				"memory": 28,
@@ -84,11 +84,9 @@
 					}
 				},
 				"source": [
-					"!python install pip\r\n",
-					"\r\n",
-					""
+					"!pip install dbldatagen"
 				],
-				"execution_count": 7
+				"execution_count": 2
 			},
 			{
 				"cell_type": "code",
@@ -184,7 +182,7 @@
 				"source": [
 					"spark.conf.set(\"spark.sql.streaming.checkpointLocation\", \"/20230622/2023062208\")"
 				],
-				"execution_count": null
+				"execution_count": 4
 			},
 			{
 				"cell_type": "code",
@@ -209,7 +207,7 @@
 					"    .trigger(processingTime='2 seconds')\r\n",
 					"txnq.start().awaitTermination(60*3)"
 				],
-				"execution_count": null
+				"execution_count": 5
 			},
 			{
 				"cell_type": "code",
@@ -235,7 +233,7 @@
 					"    .trigger(processingTime='2 seconds')\r\n",
 					"queuedq.start().awaitTermination(60*3)"
 				],
-				"execution_count": null
+				"execution_count": 6
 			},
 			{
 				"cell_type": "code",
@@ -267,7 +265,7 @@
 					"\r\n",
 					"display(transactionalModeCount)"
 				],
-				"execution_count": null
+				"execution_count": 7
 			},
 			{
 				"cell_type": "code",
@@ -299,7 +297,7 @@
 					"\r\n",
 					"display(queuedModeCount)"
 				],
-				"execution_count": null
+				"execution_count": 10
 			},
 			{
 				"cell_type": "code",
@@ -331,7 +329,7 @@
 					"\r\n",
 					"display(functionModeCount)"
 				],
-				"execution_count": null
+				"execution_count": 11
 			}
 		]
 	}
