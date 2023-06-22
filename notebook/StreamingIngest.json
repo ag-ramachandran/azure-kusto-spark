@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "78be2581-4ddf-4007-b1a3-cdb41c39ccb3"
+				"spark.autotune.trackingId": "f40f93ba-e53b-4f7b-b606-bb7d94fbfd25"
 			}
 		},
 		"metadata": {
@@ -51,107 +51,6 @@
 			{
 				"cell_type": "code",
 				"metadata": {
-					"microsoft": {
-						"language": "python"
-					},
-					"collapsed": false
-				},
-				"source": [
-					"%%pyspark\n",
-					"\n",
-					"# Read data from Azure Data Explorer table(s)\n",
-					"# Full Sample Code available at: https://github.com/Azure/azure-kusto-spark/blob/master/samples/src/main/python/SynapseSample.py\n",
-					"\n",
-					"kustoDf  = spark.read \\\n",
-					"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\n",
-					"    .option(\"spark.synapse.linkedService\", \"sdktestcluster\") \\\n",
-					"    .option(\"kustoDatabase\", \"e2e\") \\\n",
-					"    .option(\"kustoQuery\", \"['Storms'] | take 10\") \\\n",
-					"    .load()\n",
-					"\n",
-					"kustoDf  = spark.read \\\n",
-					"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\n",
-					"    .option(\"spark.synapse.linkedService\", \"sdktestcluster\") \\\n",
-					"    .option(\"kustoDatabase\", \"e2e\") \\\n",
-					"    .option(\"kustoQuery\", \"['Storms'] | count\") \\\n",
-					"    .load()\n",
-					"\n",
-					"display(kustoDf)\n",
-					""
-				],
-				"execution_count": 1
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					},
-					"microsoft": {
-						"language": "python"
-					}
-				},
-				"source": [
-					"%%pyspark\r\n",
-					"\r\n",
-					"# Write data to a Azure Data Explorer table\r\n",
-					"# Full Sample Code available at: https://github.com/Azure/azure-kusto-spark/blob/master/samples/src/main/python/SynapseSample.py\r\n",
-					"\r\n",
-					"kustoDf.write \\\r\n",
-					"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\r\n",
-					"    .option(\"spark.synapse.linkedService\", \"sdktestcluster\") \\\r\n",
-					"    .option(\"kustoDatabase\", \"e2e\") \\\r\n",
-					"    .option(\"kustoTable\", \"[Storms]\") \\\r\n",
-					"    .option(\"tableCreateOptions\",\"CreateIfNotExist\") \\\r\n",
-					"    .mode(\"Append\") \\\r\n",
-					"    .save()\r\n",
-					""
-				],
-				"execution_count": null
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					},
-					"microsoft": {
-						"language": "python"
-					}
-				},
-				"source": [
-					"%%pyspark\r\n",
-					"\r\n",
-					"# Write data to a Azure Data Explorer table\r\n",
-					"# Full Sample Code available at: https://github.com/Azure/azure-kusto-spark/blob/master/samples/src/main/python/SynapseSample.py\r\n",
-					"\r\n",
-					"kustoDf.write \\\r\n",
-					"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\r\n",
-					"    .option(\"spark.synapse.linkedService\", \"sdktestcluster\") \\\r\n",
-					"    .option(\"kustoDatabase\", \"e2e\") \\\r\n",
-					"    .option(\"kustoTable\", \"[StormsQueued]\") \\\r\n",
-					"    .option(\"tableCreateOptions\",\"CreateIfNotExist\") \\\r\n",
-					"    .option(\"writeMode\",\"Queued\") \\\r\n",
-					"    .mode(\"Append\") \\\r\n",
-					"    .save()"
-				],
-				"execution_count": null
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
 					"jupyter": {
 						"source_hidden": false,
 						"outputs_hidden": false
@@ -165,7 +64,7 @@
 				"source": [
 					"mssparkutils.fs.mount(  \r\n",
 					"    \"abfss://synapseppe@synapsekustosparktest.dfs.core.windows.net/\", #ADLS GEN 2 PATH  \r\n",
-					"    \"/20230619\", #Mount Point Name  \r\n",
+					"    \"/20230622\", #Mount Point Name  \r\n",
 					"    { \"linkedService\" : \"synapsekustosparktest\"}  \r\n",
 					")  "
 				],
@@ -213,7 +112,7 @@
 					"import dbldatagen as dg\r\n",
 					"\r\n",
 					"device_population = 1000\r\n",
-					"data_rows = 20 * 1000\r\n",
+					"data_rows = 1000 * 1000\r\n",
 					"partitions_requested = 8\r\n",
 					"\r\n",
 					"country_codes = ['CN', 'US', 'FR', 'CA', 'IN', 'JM', 'IE', 'PK', 'GB', 'IL', 'AU', 'SG',\r\n",
@@ -263,7 +162,7 @@
 					"    .withColumn(\"event_ts\", \"timestamp\", expr=\"now()\")\r\n",
 					"    )\r\n",
 					"\r\n",
-					"dfTestDataStreaming = testDataSpec.build(withStreaming=True, options={'rowsPerSecond': 500})"
+					"dfTestDataStreaming = testDataSpec.build(withStreaming=True, options={'rowsPerSecond': 1500})"
 				],
 				"execution_count": null
 			},
@@ -281,7 +180,7 @@
 					}
 				},
 				"source": [
-					"spark.conf.set(\"spark.sql.streaming.checkpointLocation\", \"/20230619\")"
+					"spark.conf.set(\"spark.sql.streaming.checkpointLocation\", \"/20230622/2023062205\")"
 				],
 				"execution_count": null
 			},
@@ -299,14 +198,14 @@
 					}
 				},
 				"source": [
-					"q = dfTestDataStreaming.writeStream \\\r\n",
+					"txnq = dfTestDataStreaming.writeStream \\\r\n",
 					"    .format(\"com.microsoft.kusto.spark.synapse.datasink.KustoSynapseSinkProvider\") \\\r\n",
 					"    .option(\"spark.synapse.linkedService\", \"sdktestcluster\") \\\r\n",
 					"    .option(\"kustoDatabase\", \"spark\") \\\r\n",
-					"    .option(\"kustoTable\", \"StreamIngestTest\") \\\r\n",
+					"    .option(\"kustoTable\", \"StreamIngestTest33Transactional\") \\\r\n",
 					"    .option(\"tableCreateOptions\",\"CreateIfNotExist\") \\\r\n",
-					"    .trigger(once = True)\r\n",
-					"q.start().awaitTermination(60*8)"
+					"    .trigger(processingTime='2 seconds')\r\n",
+					"txnq.start().awaitTermination(60*3)"
 				],
 				"execution_count": null
 			},
@@ -324,14 +223,111 @@
 					}
 				},
 				"source": [
-					"q = dfTestDataStreaming.writeStream \\\r\n",
+					"queuedq = dfTestDataStreaming.writeStream \\\r\n",
 					"    .format(\"com.microsoft.kusto.spark.synapse.datasink.KustoSynapseSinkProvider\") \\\r\n",
 					"    .option(\"spark.synapse.linkedService\", \"sdktestcluster\") \\\r\n",
 					"    .option(\"kustoDatabase\", \"spark\") \\\r\n",
-					"    .option(\"kustoTable\", \"StreamIngestTest\") \\\r\n",
+					"    .option(\"kustoTable\", \"StreamIngestTest33Queued\") \\\r\n",
+					"    .option(\"writeMode\", \"Queued\") \\\r\n",
 					"    .option(\"tableCreateOptions\",\"CreateIfNotExist\") \\\r\n",
-					"    .trigger(once = True)\r\n",
-					"q.start().awaitTermination(60*8)"
+					"    .trigger(processingTime='2 seconds')\r\n",
+					"queuedq.start().awaitTermination(60*3)"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "python"
+					},
+					"collapsed": false
+				},
+				"source": [
+					"%%pyspark\r\n",
+					"# Read data from Azure Data Explorer table(s)\r\n",
+					"# Full Sample Code available at: https://github.com/Azure/azure-kusto-spark/blob/master/samples/src/main/python/SynapseSample.py\r\n",
+					"transactionalModeCount  = spark.read \\\r\n",
+					"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\r\n",
+					"    .option(\"spark.synapse.linkedService\", \"sdktestcluster\") \\\r\n",
+					"    .option(\"kustoDatabase\", \"spark\") \\\r\n",
+					"    .option(\"kustoQuery\", \"StreamIngestTest33Transactional | project DiffSecs = datetime_diff('second',ingestion_time(),todatetime(event_ts)) | summarize  count(),min(DiffSecs),max(DiffSecs),avg(DiffSecs)\") \\\r\n",
+					"    .load()\r\n",
+					"\r\n",
+					"display(transactionalModeCount)"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "python"
+					},
+					"collapsed": false
+				},
+				"source": [
+					"%%pyspark\r\n",
+					"# Read data from Azure Data Explorer table(s)\r\n",
+					"# Full Sample Code available at: https://github.com/Azure/azure-kusto-spark/blob/master/samples/src/main/python/SynapseSample.py\r\n",
+					"queuedModeCount  = spark.read \\\r\n",
+					"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\r\n",
+					"    .option(\"spark.synapse.linkedService\", \"sdktestcluster\") \\\r\n",
+					"    .option(\"kustoDatabase\", \"spark\") \\\r\n",
+					"    .option(\"kustoQuery\", \"StreamIngestTest33Queued | project DiffSecs = datetime_diff('second',ingestion_time(),todatetime(event_ts)) | summarize  count(),min(DiffSecs),max(DiffSecs),avg(DiffSecs)\") \\\r\n",
+					"    .load()\r\n",
+					"\r\n",
+					"display(queuedModeCount)"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "python"
+					},
+					"collapsed": false
+				},
+				"source": [
+					"%%pyspark\r\n",
+					"# Read data from Azure Data Explorer table(s)\r\n",
+					"# Full Sample Code available at: https://github.com/Azure/azure-kusto-spark/blob/master/samples/src/main/python/SynapseSample.py\r\n",
+					"functionModeCount  = spark.read \\\r\n",
+					"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\r\n",
+					"    .option(\"spark.synapse.linkedService\", \"sdktestcluster\") \\\r\n",
+					"    .option(\"kustoDatabase\", \"spark\") \\\r\n",
+					"    .option(\"kustoQuery\", \"SparkTableIngestStats('StreamIngestTest33Queued')\") \\\r\n",
+					"    .load()\r\n",
+					"\r\n",
+					"display(functionModeCount)"
 				],
 				"execution_count": null
 			}
