@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "38ae1ed0-e578-4aa0-bf69-26aaaf1d4f55"
+				"spark.autotune.trackingId": "92ea7bcc-cd6a-4ef4-b032-35034c7914f6"
 			}
 		},
 		"metadata": {
@@ -84,9 +84,11 @@
 					}
 				},
 				"source": [
-					"!pip install dbldatagen"
+					"!python install pip\r\n",
+					"\r\n",
+					""
 				],
-				"execution_count": 12
+				"execution_count": 7
 			},
 			{
 				"cell_type": "code",
@@ -164,7 +166,7 @@
 					"\r\n",
 					"dfTestDataStreaming = testDataSpec.build(withStreaming=True, options={'rowsPerSecond': 1500})"
 				],
-				"execution_count": 13
+				"execution_count": 3
 			},
 			{
 				"cell_type": "code",
