@@ -4,7 +4,7 @@
 		"nbformat": 4,
 		"nbformat_minor": 2,
 		"bigDataPool": {
-			"referenceName": "spark331",
+			"referenceName": "spark332",
 			"type": "BigDataPoolReference"
 		},
 		"sessionProperties": {
@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "65b1071b-8a34-4e1c-810d-fa19e521b519"
+				"spark.autotune.trackingId": "62cad192-5aff-418e-8b38-c1a5686b9d49"
 			}
 		},
 		"metadata": {
@@ -31,10 +31,10 @@
 				"name": "python"
 			},
 			"a365ComputeOptions": {
-				"id": "/subscriptions/216ca57c-8613-4c54-8960-1e5821b6dc8d/resourceGroups/SDK_E2E_TEST/providers/Microsoft.Synapse/workspaces/synapsekustosparkppe/bigDataPools/spark331",
-				"name": "spark331",
+				"id": "/subscriptions/216ca57c-8613-4c54-8960-1e5821b6dc8d/resourceGroups/SDK_E2E_TEST/providers/Microsoft.Synapse/workspaces/synapsekustosparkppe/bigDataPools/spark332",
+				"name": "spark332",
 				"type": "Spark",
-				"endpoint": "https://synapsekustosparkppe.dev.azuresynapse-test.azure.net/livyApi/versions/2019-11-01-preview/sparkPools/spark331",
+				"endpoint": "https://synapsekustosparkppe.dev.azuresynapse-test.azure.net/livyApi/versions/2019-11-01-preview/sparkPools/spark332",
 				"auth": {
 					"type": "AAD",
 					"authResource": "https://dev.azuresynapse.net"
@@ -68,7 +68,7 @@
 					"    { \"linkedService\" : \"synapsekustosparktest\"}  \r\n",
 					")  "
 				],
-				"execution_count": 1
+				"execution_count": 2
 			},
 			{
 				"cell_type": "code",
@@ -86,7 +86,7 @@
 				"source": [
 					"!pip install dbldatagen"
 				],
-				"execution_count": 2
+				"execution_count": 3
 			},
 			{
 				"cell_type": "code",
@@ -164,7 +164,7 @@
 					"\r\n",
 					"dfTestDataStreaming = testDataSpec.build(withStreaming=True, options={'rowsPerSecond': 1500})"
 				],
-				"execution_count": 3
+				"execution_count": 4
 			},
 			{
 				"cell_type": "code",
@@ -180,9 +180,9 @@
 					}
 				},
 				"source": [
-					"spark.conf.set(\"spark.sql.streaming.checkpointLocation\", \"/20230622/2023062208\")"
+					"spark.conf.set(\"spark.sql.streaming.checkpointLocation\", \"/20230622/2023062701\")"
 				],
-				"execution_count": 4
+				"execution_count": 5
 			},
 			{
 				"cell_type": "code",
@@ -202,12 +202,12 @@
 					"    .format(\"com.microsoft.kusto.spark.synapse.datasink.KustoSynapseSinkProvider\") \\\r\n",
 					"    .option(\"spark.synapse.linkedService\", \"sdktestcluster\") \\\r\n",
 					"    .option(\"kustoDatabase\", \"spark\") \\\r\n",
-					"    .option(\"kustoTable\", \"StreamIngestTest24Transactional\") \\\r\n",
+					"    .option(\"kustoTable\", \"StreamIngestTest33Transactional\") \\\r\n",
 					"    .option(\"tableCreateOptions\",\"CreateIfNotExist\") \\\r\n",
 					"    .trigger(processingTime='2 seconds')\r\n",
 					"txnq.start().awaitTermination(60*3)"
 				],
-				"execution_count": 5
+				"execution_count": 6
 			},
 			{
 				"cell_type": "code",
@@ -227,13 +227,13 @@
 					"    .format(\"com.microsoft.kusto.spark.synapse.datasink.KustoSynapseSinkProvider\") \\\r\n",
 					"    .option(\"spark.synapse.linkedService\", \"sdktestcluster\") \\\r\n",
 					"    .option(\"kustoDatabase\", \"spark\") \\\r\n",
-					"    .option(\"kustoTable\", \"StreamIngestTest24Queued\") \\\r\n",
+					"    .option(\"kustoTable\", \"StreamIngestTest33Queued\") \\\r\n",
 					"    .option(\"writeMode\", \"Queued\") \\\r\n",
 					"    .option(\"tableCreateOptions\",\"CreateIfNotExist\") \\\r\n",
 					"    .trigger(processingTime='2 seconds')\r\n",
 					"queuedq.start().awaitTermination(60*3)"
 				],
-				"execution_count": 6
+				"execution_count": 7
 			},
 			{
 				"cell_type": "code",
@@ -292,12 +292,12 @@
 					"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\r\n",
 					"    .option(\"spark.synapse.linkedService\", \"sdktestcluster\") \\\r\n",
 					"    .option(\"kustoDatabase\", \"spark\") \\\r\n",
-					"    .option(\"kustoQuery\", \"StreamIngestTest24Queued | project DiffSecs = datetime_diff('second',ingestion_time(),todatetime(event_ts)) | summarize  count(),min(DiffSecs),max(DiffSecs),avg(DiffSecs)\") \\\r\n",
+					"    .option(\"kustoQuery\", \"StreamIngestTest33Transactional | project DiffSecs = datetime_diff('second',ingestion_time(),todatetime(event_ts)) | summarize  count(),min(DiffSecs),max(DiffSecs),avg(DiffSecs)\") \\\r\n",
 					"    .load()\r\n",
 					"\r\n",
 					"display(queuedModeCount)"
 				],
-				"execution_count": 10
+				"execution_count": 13
 			},
 			{
 				"cell_type": "code",
@@ -324,12 +324,12 @@
 					"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\r\n",
 					"    .option(\"spark.synapse.linkedService\", \"sdktestcluster\") \\\r\n",
 					"    .option(\"kustoDatabase\", \"spark\") \\\r\n",
-					"    .option(\"kustoQuery\", \"SparkTableIngestStats('StreamIngestTest24Queued')\") \\\r\n",
+					"    .option(\"kustoQuery\", \"SparkTableIngestStats('StreamIngestTest33Queued')\") \\\r\n",
 					"    .load()\r\n",
 					"\r\n",
 					"display(functionModeCount)"
 				],
-				"execution_count": 11
+				"execution_count": 12
 			}
 		]
 	}
