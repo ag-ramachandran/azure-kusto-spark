@@ -4,7 +4,7 @@
 		"nbformat": 4,
 		"nbformat_minor": 2,
 		"bigDataPool": {
-			"referenceName": "spark33",
+			"referenceName": "spark35",
 			"type": "BigDataPoolReference"
 		},
 		"sessionProperties": {
@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "f9cafd35-894f-4c88-b902-b193a3d899e9"
+				"spark.autotune.trackingId": "deddf5f0-63b1-43f8-8912-2b555fd9c0c8"
 			}
 		},
 		"metadata": {
@@ -31,10 +31,10 @@
 				"name": "python"
 			},
 			"a365ComputeOptions": {
-				"id": "/subscriptions/216ca57c-8613-4c54-8960-1e5821b6dc8d/resourceGroups/SDK_E2E_TEST/providers/Microsoft.Synapse/workspaces/synapsekustosparkppe/bigDataPools/spark33",
-				"name": "spark33",
+				"id": "/subscriptions/216ca57c-8613-4c54-8960-1e5821b6dc8d/resourceGroups/SDK_E2E_TEST/providers/Microsoft.Synapse/workspaces/synapsekustosparkppe/bigDataPools/spark35",
+				"name": "spark35",
 				"type": "Spark",
-				"endpoint": "https://synapsekustosparkppe.dev.azuresynapse-test.azure.net/livyApi/versions/2019-11-01-preview/sparkPools/spark33",
+				"endpoint": "https://synapsekustosparkppe.dev.azuresynapse-test.azure.net/livyApi/versions/2019-11-01-preview/sparkPools/spark35",
 				"auth": {
 					"type": "AAD",
 					"authResource": "https://dev.azuresynapse.net"
@@ -84,13 +84,13 @@
 					"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\n",
 					"    .option(\"spark.synapse.linkedService\", \"FabricKustoLS\") \\\n",
 					"    .option(\"kustoDatabase\", \"Stocks\") \\\n",
-					"    .option(\"kustoQuery\", \"TaxiData\t | take 10\") \\\n",
+					"    .option(\"kustoQuery\", \"KustoAirlineDataParquetQueued\t | take 10\") \\\n",
 					"    .load()\n",
 					"\n",
 					"display(kustoDf)\n",
 					""
 				],
-				"execution_count": 11
+				"execution_count": 8
 			},
 			{
 				"cell_type": "markdown",
@@ -132,14 +132,14 @@
 					"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\r\n",
 					"    .option(\"spark.synapse.linkedService\", \"FabricKustoLS\") \\\r\n",
 					"    .option(\"kustoDatabase\", \"Stocks\") \\\r\n",
-					"    .option(\"kustoQuery\", \"TaxiData | take 10000\") \\\r\n",
+					"    .option(\"kustoQuery\", \"KustoAirlineDataParquetQueued | take 10000\") \\\r\n",
 					"    .option(\"readMode\", \"ForceDistributedMode\") \\\r\n",
 					"    .load()\r\n",
 					"\r\n",
 					"display(kustoDfDistributed)\r\n",
 					""
 				],
-				"execution_count": 12
+				"execution_count": 9
 			},
 			{
 				"cell_type": "markdown",
@@ -187,7 +187,7 @@
 					"allTypesDf.write.format(\"com.microsoft.kusto.spark.synapse.datasource\").option(\"spark.synapse.linkedService\", \"FabricKustoLS\").option(\"kustoDatabase\", \"Stocks\").option(\"kustoTable\", \"AllDataTypesTransactionalSpark33\").option(\"tableCreateOptions\",\"CreateIfNotExist\").mode(\"Append\").save()\r\n",
 					"//allTypesDf.write.format(\"com.microsoft.kusto.spark.synapse.datasource\").option(\"spark.synapse.linkedService\", \"FabricKustoLS\").option(\"kustoDatabase\", \"Stocks\").option(\"kustoTable\", \"AllDataTypesQueuedSpark33\").option(\"tableCreateOptions\",\"CreateIfNotExist\").option(\"writeMode\",\"Queued\").mode(\"Append\").save()"
 				],
-				"execution_count": 13
+				"execution_count": 3
 			},
 			{
 				"cell_type": "markdown",
@@ -222,7 +222,7 @@
 					"%%spark\r\n",
 					"allTypesDf.write.format(\"com.microsoft.kusto.spark.synapse.datasource\").option(\"spark.synapse.linkedService\", \"FabricKustoLS\").option(\"kustoDatabase\", \"Stocks\").option(\"kustoTable\", \"AllDataTypesQueuedSpark33\").option(\"tableCreateOptions\",\"CreateIfNotExist\").option(\"writeMode\",\"Queued\").mode(\"Append\").save()"
 				],
-				"execution_count": 14
+				"execution_count": 4
 			},
 			{
 				"cell_type": "code",
@@ -256,7 +256,7 @@
 					"\r\n",
 					"display(kustoDfAllTypes)"
 				],
-				"execution_count": 15
+				"execution_count": 5
 			},
 			{
 				"cell_type": "code",
@@ -289,7 +289,7 @@
 					"\r\n",
 					"display(transactionalModeCount)"
 				],
-				"execution_count": 16
+				"execution_count": 6
 			},
 			{
 				"cell_type": "code",
@@ -321,7 +321,7 @@
 					"\r\n",
 					"display(queuedModeCount)"
 				],
-				"execution_count": 17
+				"execution_count": 10
 			}
 		]
 	}
