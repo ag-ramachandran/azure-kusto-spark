@@ -904,7 +904,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "1295bca4-dff3-4ce4-8a40-96112f3d44ee"
+						"spark.autotune.trackingId": "ea793612-ffb5-4ed1-a051-762bf6400b1c"
 					}
 				},
 				"metadata": {
@@ -965,7 +965,7 @@
 							"access_token = mssparkutils.credentials.getConnectionStringOrCreds(\"FabricKustoLS\")"
 						],
 						"outputs": [],
-						"execution_count": 2
+						"execution_count": 1
 					},
 					{
 						"cell_type": "code",
@@ -1276,7 +1276,7 @@
 							"display(queuedModeCount)"
 						],
 						"outputs": [],
-						"execution_count": 3
+						"execution_count": 9
 					}
 				]
 			},
@@ -1303,7 +1303,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "d36552dc-4882-43ad-a4a6-bef5a3e6ee7c"
+						"spark.autotune.trackingId": "7d76c14f-3970-4c32-b0d0-0d4fdf7e325b"
 					}
 				},
 				"metadata": {
@@ -1328,8 +1328,7 @@
 						"sparkVersion": "3.4",
 						"nodeCount": 3,
 						"cores": 4,
-						"memory": 28,
-						"automaticScaleJobs": false
+						"memory": 28
 					},
 					"sessionKeepAliveTimeout": 30
 				},
