@@ -5,6 +5,9 @@
 		"workspaceName": {
 			"value": "synapsekustosparkppe"
 		},
+		"FabricKustoLS_servicePrincipalKey": {
+			"value": ""
+		},
 		"sdktestcluster_servicePrincipalKey": {
 			"value": ""
 		},
@@ -13,6 +16,15 @@
 		},
 		"synapsekustosparktest_accountKey": {
 			"value": ""
+		},
+		"FabricKustoLS_properties_typeProperties_tenant": {
+			"value": "72f988bf-86f1-41af-91ab-2d7cd011db47"
+		},
+		"FabricKustoLS_properties_typeProperties_servicePrincipalId": {
+			"value": "314cd011-52fd-4093-9c2f-6f6c3c85b60c"
+		},
+		"FabricKustoLS_properties_typeProperties_database": {
+			"value": "6c0c7bb1-f1c6-4549-bc75-6e2e06fecc78"
 		},
 		"sdktestcluster_properties_typeProperties_tenant": {
 			"value": "72f988bf-86f1-41af-91ab-2d7cd011db47"
