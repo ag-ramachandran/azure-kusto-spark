@@ -4,7 +4,7 @@
 		"nbformat": 4,
 		"nbformat_minor": 2,
 		"bigDataPool": {
-			"referenceName": "spark35",
+			"referenceName": "spark342",
 			"type": "BigDataPoolReference"
 		},
 		"sessionProperties": {
@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "dc4a287c-1377-4394-9a7b-a041d6725a2a"
+				"spark.autotune.trackingId": "7a8a984d-468c-4107-aa5a-fdcb8e535197"
 			}
 		},
 		"metadata": {
@@ -31,15 +31,15 @@
 				"name": "python"
 			},
 			"a365ComputeOptions": {
-				"id": "/subscriptions/216ca57c-8613-4c54-8960-1e5821b6dc8d/resourceGroups/SDK_E2E_TEST/providers/Microsoft.Synapse/workspaces/synapsekustosparkppe/bigDataPools/spark35",
-				"name": "spark35",
+				"id": "/subscriptions/216ca57c-8613-4c54-8960-1e5821b6dc8d/resourceGroups/SDK_E2E_TEST/providers/Microsoft.Synapse/workspaces/synapsekustosparkppe/bigDataPools/spark342",
+				"name": "spark342",
 				"type": "Spark",
-				"endpoint": "https://synapsekustosparkppe.dev.azuresynapse-test.azure.net/livyApi/versions/2019-11-01-preview/sparkPools/spark35",
+				"endpoint": "https://synapsekustosparkppe.dev.azuresynapse-test.azure.net/livyApi/versions/2019-11-01-preview/sparkPools/spark342",
 				"auth": {
 					"type": "AAD",
 					"authResource": "https://dev.azuresynapse.net"
 				},
-				"sparkVersion": "3.3",
+				"sparkVersion": "3.4",
 				"nodeCount": 3,
 				"cores": 4,
 				"memory": 28,
@@ -104,6 +104,40 @@
 				"source": [
 					"**Run in distributed mode**"
 				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "python"
+					}
+				},
+				"source": [
+					"%%pyspark\n",
+					"kustoDfAad  = spark.read \\\n",
+					"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\n",
+					"    .option(\"kustoDatabase\", \"spark\") \\\n",
+					"    .option(\"kustoAadAppId\", \"314cd011-52fd-4093-9c2f-6f6c3c85b60c\") \\\n",
+					"    .option(\"kustoAadAuthorityID\", \"72f988bf-86f1-41af-91ab-2d7cd011db47\") \\\n",
+					"    .option(\"kustoAadAppSecret\", \"eMY8Q~CcKbFwQe~GCoS9aMhFbcr~beUpU5YFSaCq\") \\\n",
+					"    .option(\"kustoCluster\", \"https://sdktestcluster.westeurope.dev.kusto.windows.net\") \\\n",
+					"    .option(\"kustoQuery\", \"KustoAirlineDataParquetTransactional\t | take 10\") \\\n",
+					"    .load()\n",
+					"\n",
+					"display(kustoDfAad)\n",
+					"\n",
+					""
+				],
+				"execution_count": 1
 			},
 			{
 				"cell_type": "code",
