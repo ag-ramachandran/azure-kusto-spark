@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "7a8a984d-468c-4107-aa5a-fdcb8e535197"
+				"spark.autotune.trackingId": "c8867e0c-a689-4d58-a9f8-c3b808ce85be"
 			}
 		},
 		"metadata": {
@@ -126,9 +126,7 @@
 					"kustoDfAad  = spark.read \\\n",
 					"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\n",
 					"    .option(\"kustoDatabase\", \"spark\") \\\n",
-					"    .option(\"kustoAadAppId\", \"314cd011-52fd-4093-9c2f-6f6c3c85b60c\") \\\n",
-					"    .option(\"kustoAadAuthorityID\", \"72f988bf-86f1-41af-91ab-2d7cd011db47\") \\\n",
-					"    .option(\"kustoAadAppSecret\", \"eMY8Q~CcKbFwQe~GCoS9aMhFbcr~beUpU5YFSaCq\") \\\n",
+					"\n",
 					"    .option(\"kustoCluster\", \"https://sdktestcluster.westeurope.dev.kusto.windows.net\") \\\n",
 					"    .option(\"kustoQuery\", \"KustoAirlineDataParquetTransactional\t | take 10\") \\\n",
 					"    .load()\n",
