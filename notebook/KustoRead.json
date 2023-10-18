@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "0191029e-e055-461d-8313-67ccba9a11f5"
+				"spark.autotune.trackingId": "c8aee313-359f-45bf-bb8f-ea1125311740"
 			}
 		},
 		"metadata": {
@@ -90,7 +90,7 @@
 					"display(kustoDf)\n",
 					""
 				],
-				"execution_count": 2
+				"execution_count": 35
 			},
 			{
 				"cell_type": "markdown",
@@ -135,7 +135,7 @@
 					"\n",
 					""
 				],
-				"execution_count": 4
+				"execution_count": 36
 			},
 			{
 				"cell_type": "code",
@@ -171,7 +171,7 @@
 					"display(kustoDfDistributed)\r\n",
 					""
 				],
-				"execution_count": 5
+				"execution_count": 37
 			},
 			{
 				"cell_type": "markdown",
@@ -219,7 +219,7 @@
 					"allTypesDf.write.format(\"com.microsoft.kusto.spark.synapse.datasource\").option(\"spark.synapse.linkedService\", \"sdktestcluster\").option(\"kustoDatabase\", \"spark\").option(\"kustoTable\", \"AllDataTypesTransactionalSpark33\").option(\"tableCreateOptions\",\"CreateIfNotExist\").mode(\"Append\").save()\r\n",
 					"//allTypesDf.write.format(\"com.microsoft.kusto.spark.synapse.datasource\").option(\"spark.synapse.linkedService\", \"sdktestcluster\").option(\"kustoDatabase\", \"spark\").option(\"kustoTable\", \"AllDataTypesQueuedSpark33\").option(\"tableCreateOptions\",\"CreateIfNotExist\").option(\"writeMode\",\"Queued\").mode(\"Append\").save()"
 				],
-				"execution_count": 6
+				"execution_count": 38
 			},
 			{
 				"cell_type": "markdown",
@@ -254,7 +254,7 @@
 					"%%spark\r\n",
 					"allTypesDf.write.format(\"com.microsoft.kusto.spark.synapse.datasource\").option(\"spark.synapse.linkedService\", \"sdktestcluster\").option(\"kustoDatabase\", \"spark\").option(\"kustoTable\", \"AllDataTypesQueuedSpark33\").option(\"tableCreateOptions\",\"CreateIfNotExist\").option(\"writeMode\",\"Queued\").mode(\"Append\").save()"
 				],
-				"execution_count": 15
+				"execution_count": 39
 			},
 			{
 				"cell_type": "code",
@@ -288,7 +288,7 @@
 					"\r\n",
 					"display(kustoDfAllTypes)"
 				],
-				"execution_count": 9
+				"execution_count": 40
 			},
 			{
 				"cell_type": "code",
@@ -321,7 +321,7 @@
 					"\r\n",
 					"display(transactionalModeCount)"
 				],
-				"execution_count": 10
+				"execution_count": 41
 			},
 			{
 				"cell_type": "code",
@@ -353,7 +353,7 @@
 					"\r\n",
 					"display(queuedModeCount)"
 				],
-				"execution_count": 17
+				"execution_count": 42
 			}
 		]
 	}
