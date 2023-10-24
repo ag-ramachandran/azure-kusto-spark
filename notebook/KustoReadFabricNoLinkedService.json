@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "e10e7b19-19f5-4b06-9187-f3f34f316756"
+				"spark.autotune.trackingId": "62d8261e-2912-4f93-90fd-0dbc69e42062"
 			}
 		},
 		"metadata": {
@@ -90,7 +90,7 @@
 				"source": [
 					"access_token = mssparkutils.credentials.getConnectionStringOrCreds(\"FabricKustoLS\")"
 				],
-				"execution_count": 1
+				"execution_count": 11
 			},
 			{
 				"cell_type": "code",
@@ -112,7 +112,7 @@
 					"%%spark\n",
 					"val accessToken = mssparkutils.credentials.getConnectionStringOrCreds(\"FabricKustoLS\")"
 				],
-				"execution_count": 2
+				"execution_count": 12
 			},
 			{
 				"cell_type": "code",
@@ -144,7 +144,7 @@
 					"display(kustoDf)\n",
 					""
 				],
-				"execution_count": 3
+				"execution_count": 13
 			},
 			{
 				"cell_type": "markdown",
@@ -194,7 +194,7 @@
 					"display(kustoDfDistributed)\r\n",
 					""
 				],
-				"execution_count": 5
+				"execution_count": 14
 			},
 			{
 				"cell_type": "markdown",
@@ -248,7 +248,7 @@
 					".mode(\"Append\").save()\r\n",
 					"//allTypesDf.write.format(\"com.microsoft.kusto.spark.synapse.datasource\").option(\"spark.synapse.linkedService\", \"FabricKustoLS\").option(\"kustoDatabase\", \"Stocks\").option(\"kustoTable\", \"AllDataTypesQueuedSpark33\").option(\"tableCreateOptions\",\"CreateIfNotExist\").option(\"writeMode\",\"Queued\").mode(\"Append\").save()"
 				],
-				"execution_count": 6
+				"execution_count": 15
 			},
 			{
 				"cell_type": "markdown",
@@ -291,7 +291,7 @@
 					".mode(\"Append\").save()\r\n",
 					""
 				],
-				"execution_count": 7
+				"execution_count": 16
 			},
 			{
 				"cell_type": "code",
@@ -326,7 +326,7 @@
 					"\r\n",
 					"display(kustoDfAllTypes)"
 				],
-				"execution_count": null
+				"execution_count": 17
 			},
 			{
 				"cell_type": "code",
@@ -360,7 +360,7 @@
 					"\r\n",
 					"display(transactionalModeCount)"
 				],
-				"execution_count": 8
+				"execution_count": 18
 			},
 			{
 				"cell_type": "code",
@@ -393,7 +393,7 @@
 					"\r\n",
 					"display(queuedModeCount)"
 				],
-				"execution_count": 10
+				"execution_count": 19
 			}
 		]
 	}
