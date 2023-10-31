@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "deff2f6d-86d7-4979-921b-60146a71f6a3"
+				"spark.autotune.trackingId": "0f6fbafe-c4d0-40a5-abf3-ee083463f0da"
 			}
 		},
 		"metadata": {
@@ -154,7 +154,7 @@
 					"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\r\n",
 					"    .option(\"spark.synapse.linkedService\", \"FabricKustoLS\") \\\r\n",
 					"    .option(\"kustoDatabase\", \"Stocks\") \\\r\n",
-					"    .option(\"kustoQuery\", \"KustoAirlineDataParquetQueued | take 10000\") \\\r\n",
+					"    .option(\"kustoQuery\", \"KustoAirlineDataParquetQueued | take 10\") \\\r\n",
 					"    .option(\"readMode\", \"ForceDistributedMode\") \\\r\n",
 					"    .load()\r\n",
 					"\r\n",
@@ -278,7 +278,7 @@
 					"\r\n",
 					"display(kustoDfAllTypes)"
 				],
-				"execution_count": 9
+				"execution_count": 6
 			},
 			{
 				"cell_type": "code",
@@ -311,7 +311,7 @@
 					"\r\n",
 					"display(transactionalModeCount)"
 				],
-				"execution_count": 10
+				"execution_count": 7
 			},
 			{
 				"cell_type": "code",
@@ -343,7 +343,7 @@
 					"\r\n",
 					"display(queuedModeCount)"
 				],
-				"execution_count": 8
+				"execution_count": 9
 			}
 		]
 	}

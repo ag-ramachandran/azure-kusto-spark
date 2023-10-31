@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "0cd8f1c5-d191-4c01-80ba-dcc167a4eb6d"
+				"spark.autotune.trackingId": "8944e31b-3ab5-4fbf-9a8f-67a790164f41"
 			}
 		},
 		"metadata": {
@@ -68,7 +68,7 @@
 					"%%spark\n",
 					"println(spark.conf.get(\"spark.synapse.vhd.id\"))"
 				],
-				"execution_count": 1
+				"execution_count": 7
 			},
 			{
 				"cell_type": "code",
@@ -90,7 +90,7 @@
 					"    { \"linkedService\" : \"synapsekustosparktest\"}  \r\n",
 					")  "
 				],
-				"execution_count": 2
+				"execution_count": 8
 			},
 			{
 				"cell_type": "code",
@@ -109,7 +109,7 @@
 					"!pip install dbldatagen\r\n",
 					"!pip install jmespath"
 				],
-				"execution_count": 3
+				"execution_count": 9
 			},
 			{
 				"cell_type": "code",
@@ -205,7 +205,7 @@
 				"source": [
 					"spark.conf.set(\"spark.sql.streaming.checkpointLocation\", \"/20230803/2023080303\")"
 				],
-				"execution_count": 5
+				"execution_count": 11
 			},
 			{
 				"cell_type": "code",
@@ -230,7 +230,7 @@
 					"    .trigger(processingTime='2 seconds')\r\n",
 					"txnq.start().awaitTermination(60*3)"
 				],
-				"execution_count": 7
+				"execution_count": 12
 			},
 			{
 				"cell_type": "code",
@@ -256,7 +256,7 @@
 					"    .trigger(processingTime='2 seconds')\r\n",
 					"queuedq.start().awaitTermination(60*3)"
 				],
-				"execution_count": 8
+				"execution_count": 13
 			},
 			{
 				"cell_type": "code",
@@ -288,7 +288,7 @@
 					"\r\n",
 					"display(transactionalModeCount)"
 				],
-				"execution_count": 9
+				"execution_count": 14
 			},
 			{
 				"cell_type": "code",
@@ -315,12 +315,12 @@
 					"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\r\n",
 					"    .option(\"spark.synapse.linkedService\", \"FabricKustoLS\") \\\r\n",
 					"    .option(\"kustoDatabase\", \"Stocks\") \\\r\n",
-					"    .option(\"kustoQuery\", \"StreamIngestTest33Transactional | project DiffSecs = datetime_diff('second',ingestion_time(),todatetime(event_ts)) | summarize  count(),min(DiffSecs),max(DiffSecs),avg(DiffSecs)\") \\\r\n",
+					"    .option(\"kustoQuery\", \"StreamIngestTest33Queued | project DiffSecs = datetime_diff('second',ingestion_time(),todatetime(event_ts)) | summarize  count(),min(DiffSecs),max(DiffSecs),avg(DiffSecs)\") \\\r\n",
 					"    .load()\r\n",
 					"\r\n",
 					"display(queuedModeCount)"
 				],
-				"execution_count": 1
+				"execution_count": 21
 			},
 			{
 				"cell_type": "code",
@@ -352,7 +352,7 @@
 					"\r\n",
 					"display(functionModeCount)"
 				],
-				"execution_count": 2
+				"execution_count": 20
 			}
 		]
 	}
