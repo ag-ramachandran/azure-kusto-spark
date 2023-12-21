@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "6edd8e42-e53d-41f9-ad8c-1fd0d4e81f0f"
+				"spark.autotune.trackingId": "12708e65-e2f4-4804-9721-374e6a21ab62"
 			}
 		},
 		"metadata": {
@@ -105,14 +105,16 @@
 					"kustoDf  = spark.read \\\n",
 					"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\n",
 					"    .option(\"spark.synapse.linkedService\", \"sdktestcluster\") \\\n",
-					"    .option(\"kustoDatabase\", \"spark\") \\\n",
-					"    .option(\"kustoQuery\", \"KustoAirlineDataParquetTransactional2\t | take 2\") \\\n",
+					"    .option(\"kustoDatabase\", \"e2e\") \\\n",
+					"    .option(\"kustoQuery\", \"SparkSpecialChars | extend UserPrincipalName = base64_encode_tostring(UserPrincipalName)\") \\\n",
 					"    .load()\n",
 					"\n",
-					"display(kustoDf)\n",
+					"from pyspark.sql.functions import unbase64\n",
+					"\n",
+					"display(kustoDf.withColumn('UserPrincipalName2', unbase64(kustoDf.UserPrincipalName).cast(\"string\")))\n",
 					""
 				],
-				"execution_count": 2
+				"execution_count": 4
 			},
 			{
 				"cell_type": "markdown",
