@@ -1,0 +1,2662 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"workspaceName": {
+			"type": "string",
+			"metadata": "Workspace name",
+			"defaultValue": "sdktestssynapse"
+		},
+		"FabricKustoLS_servicePrincipalKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'servicePrincipalKey' of 'FabricKustoLS'"
+		},
+		"sdktestcluster_servicePrincipalKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'servicePrincipalKey' of 'sdktestcluster'"
+		},
+		"sdktestssynapse-WorkspaceDefaultSqlServer_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'sdktestssynapse-WorkspaceDefaultSqlServer'",
+			"defaultValue": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:sdktestssynapse.sql.azuresynapse-test.azure.net,1433;Initial Catalog=@{linkedService().DBName}"
+		},
+		"synapsekustosparkppe-WorkspaceDefaultSqlServer_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'synapsekustosparkppe-WorkspaceDefaultSqlServer'",
+			"defaultValue": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:synapsekustosparkppe.sql.azuresynapse-test.azure.net,1433;Initial Catalog=@{linkedService().DBName}"
+		},
+		"synapsekustosparktest_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'synapsekustosparktest'"
+		},
+		"FabricKustoLS_properties_typeProperties_tenant": {
+			"type": "string",
+			"defaultValue": "72f988bf-86f1-41af-91ab-2d7cd011db47"
+		},
+		"FabricKustoLS_properties_typeProperties_servicePrincipalId": {
+			"type": "string",
+			"defaultValue": "314cd011-52fd-4093-9c2f-6f6c3c85b60c"
+		},
+		"FabricKustoLS_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "Stocks"
+		},
+		"sdktestcluster_properties_typeProperties_tenant": {
+			"type": "string",
+			"defaultValue": "72f988bf-86f1-41af-91ab-2d7cd011db47"
+		},
+		"sdktestcluster_properties_typeProperties_servicePrincipalId": {
+			"type": "string",
+			"defaultValue": "314cd011-52fd-4093-9c2f-6f6c3c85b60c"
+		},
+		"sdktestcluster_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "spark"
+		},
+		"sdktestssynapse-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://sdkteststorage.dfs.core.windows.net"
+		},
+		"synapsekustosparkppe-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://sdke2eteststorageadls.dfs.core.windows.net"
+		},
+		"synapsekustosparktest_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://synapsekustosparktest.dfs.core.windows.net"
+		}
+	},
+	"variables": {
+		"workspaceId": "[concat('Microsoft.Synapse/workspaces/', parameters('workspaceName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('workspaceName'), '/spark34')]",
+			"type": "Microsoft.Synapse/workspaces/bigDataPools",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/FabricKustoLS')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "AzureDataExplorer",
+				"typeProperties": {
+					"endpoint": "https://tridr7n160xjhpumzqnns9.z0.kusto.data.microsoft.com",
+					"tenant": "[parameters('FabricKustoLS_properties_typeProperties_tenant')]",
+					"servicePrincipalId": "[parameters('FabricKustoLS_properties_typeProperties_servicePrincipalId')]",
+					"servicePrincipalKey": {
+						"type": "SecureString",
+						"value": "[parameters('FabricKustoLS_servicePrincipalKey')]"
+					},
+					"database": "[parameters('FabricKustoLS_properties_typeProperties_database')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/sdktestcluster')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"description": "sdktestcluster",
+				"annotations": [],
+				"type": "AzureDataExplorer",
+				"typeProperties": {
+					"endpoint": "https://sdktestcluster.southeastasia.dev.kusto.windows.net",
+					"tenant": "[parameters('sdktestcluster_properties_typeProperties_tenant')]",
+					"servicePrincipalId": "[parameters('sdktestcluster_properties_typeProperties_servicePrincipalId')]",
+					"servicePrincipalKey": {
+						"type": "SecureString",
+						"value": "[parameters('sdktestcluster_servicePrincipalKey')]"
+					},
+					"database": "[parameters('sdktestcluster_properties_typeProperties_database')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/sdktestssynapse-WorkspaceDefaultSqlServer')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"parameters": {
+					"DBName": {
+						"type": "String"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlDW",
+				"typeProperties": {
+					"connectionString": "[parameters('sdktestssynapse-WorkspaceDefaultSqlServer_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/sdktestssynapse-WorkspaceDefaultStorage')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('sdktestssynapse-WorkspaceDefaultStorage_properties_typeProperties_url')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/synapsekustosparkppe-WorkspaceDefaultSqlServer')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"parameters": {
+					"DBName": {
+						"type": "String"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlDW",
+				"typeProperties": {
+					"connectionString": "[parameters('synapsekustosparkppe-WorkspaceDefaultSqlServer_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/synapsekustosparkppe-WorkspaceDefaultStorage')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('synapsekustosparkppe-WorkspaceDefaultStorage_properties_typeProperties_url')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/synapsekustosparktest')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('synapsekustosparktest_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('synapsekustosparktest_accountKey')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/AutoResolveIntegrationRuntime')]",
+			"type": "Microsoft.Synapse/workspaces/integrationRuntimes",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"type": "Managed",
+				"typeProperties": {
+					"computeProperties": {
+						"location": "AutoResolve",
+						"dataFlowProperties": {
+							"computeType": "General",
+							"coreCount": 8,
+							"timeToLive": 0
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/UserManagedId')]",
+			"type": "Microsoft.Synapse/workspaces/credentials",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"type": "ManagedIdentity",
+				"typeProperties": {
+					"resourceId": "/subscriptions/216ca57c-8613-4c54-8960-1e5821b6dc8d/resourcegroups/SDK_E2E_TEST/providers/Microsoft.ManagedIdentity/userAssignedIdentities/abhi-managed-user"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/WorkspaceSystemIdentity')]",
+			"type": "Microsoft.Synapse/workspaces/credentials",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"type": "ManagedIdentity",
+				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/KustoRead')]",
+			"type": "Microsoft.Synapse/workspaces/notebooks",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"nbformat": 4,
+				"nbformat_minor": 2,
+				"bigDataPool": {
+					"referenceName": "spark34",
+					"type": "BigDataPoolReference"
+				},
+				"sessionProperties": {
+					"driverMemory": "28g",
+					"driverCores": 4,
+					"executorMemory": "28g",
+					"executorCores": 4,
+					"numExecutors": 2,
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2",
+						"spark.autotune.trackingId": "aef0ab3b-08c5-4ebe-992c-e4694ad50bd2"
+					}
+				},
+				"metadata": {
+					"saveOutput": true,
+					"enableDebugMode": false,
+					"kernelspec": {
+						"name": "synapse_pyspark",
+						"display_name": "Synapse PySpark"
+					},
+					"language_info": {
+						"name": "python"
+					},
+					"a365ComputeOptions": {
+						"id": "/subscriptions/216ca57c-8613-4c54-8960-1e5821b6dc8d/resourceGroups/SDK_E2E_TEST/providers/Microsoft.Synapse/workspaces/sdktestssynapse/bigDataPools/spark34",
+						"name": "spark34",
+						"type": "Spark",
+						"endpoint": "https://sdktestssynapse.dev.azuresynapse-test.azure.net/livyApi/versions/2019-11-01-preview/sparkPools/spark34",
+						"auth": {
+							"type": "AAD",
+							"authResource": "https://dev.azuresynapse.net"
+						},
+						"sparkVersion": "3.4",
+						"nodeCount": 10,
+						"cores": 4,
+						"memory": 28,
+						"automaticScaleJobs": false
+					},
+					"sessionKeepAliveTimeout": 30
+				},
+				"cells": [
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "scala"
+							}
+						},
+						"source": [
+							"%%spark\n",
+							"println(spark.conf.get(\"spark.synapse.vhd.id\"))"
+						],
+						"outputs": [],
+						"execution_count": 1
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"**Run in single mode**"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "python"
+							},
+							"collapsed": false
+						},
+						"source": [
+							"%%pyspark\n",
+							"kustoDf  = spark.read \\\n",
+							"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\n",
+							"    .option(\"spark.synapse.linkedService\", \"sdktestcluster\") \\\n",
+							"    .option(\"kustoDatabase\", \"e2e\") \\\n",
+							"    .option(\"kustoQuery\", \"SparkSpecialChars | extend UserPrincipalName = base64_encode_tostring(UserPrincipalName)\") \\\n",
+							"    .load()\n",
+							"\n",
+							"from pyspark.sql.functions import unbase64\n",
+							"\n",
+							"display(kustoDf.withColumn('UserPrincipalName2', unbase64(kustoDf.UserPrincipalName).cast(\"string\")))\n",
+							""
+						],
+						"outputs": [],
+						"execution_count": 4
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"**Run in distributed mode**"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "python"
+							},
+							"collapsed": false
+						},
+						"source": [
+							"%%pyspark\n",
+							"kustoDfAad  = spark.read \\\n",
+							"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\n",
+							"    .option(\"kustoDatabase\", \"spark\") \\\n",
+							"    .option(\"kustoCluster\", \"https://sdktestcluster.southeastasia.dev.kusto.windows.net\") \\\n",
+							"    .option(\"kustoQuery\", \"KustoAirlineDataParquetTransactional2\t | take 2\") \\\n",
+							"    .load()\n",
+							"\n",
+							"display(kustoDfAad)\n",
+							"\n",
+							""
+						],
+						"outputs": [],
+						"execution_count": 3
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "python"
+							},
+							"collapsed": false
+						},
+						"source": [
+							"%%pyspark\r\n",
+							"\r\n",
+							"# Read data from Azure Data Explorer table(s)\r\n",
+							"# Full Sample Code available at: https://github.com/Azure/azure-kusto-spark/blob/master/samples/src/main/python/SynapseSample.py\r\n",
+							"\r\n",
+							"kustoDfDistributed  = spark.read \\\r\n",
+							"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\r\n",
+							"    .option(\"spark.synapse.linkedService\", \"sdktestcluster\") \\\r\n",
+							"    .option(\"kustoDatabase\", \"spark\") \\\r\n",
+							"    .option(\"kustoQuery\", \"KustoAirlineDataParquetTransactional2 | where Year >= 1987\t| take 10000\") \\\r\n",
+							"    .option(\"readMode\", \"ForceDistributedMode\") \\\r\n",
+							"    .load()\r\n",
+							"\r\n",
+							"display(kustoDfDistributed)\r\n",
+							""
+						],
+						"outputs": [],
+						"execution_count": 4
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"**Create a set of random data with all the datatpes**"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "scala"
+							}
+						},
+						"source": [
+							"%%spark\n",
+							"val creds = mssparkutils.credentials.getConnectionStringOrCreds(\"sdktestcluster\")\n",
+							"val clusterUrl = mssparkutils.credentials.getFullConnectionString(\"sdktestcluster\")"
+						],
+						"outputs": [],
+						"execution_count": null
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "scala"
+							}
+						},
+						"source": [
+							"%%spark\r\n",
+							"\r\n",
+							"import scala.util.Random\r\n",
+							"import java.time.Instant\r\n",
+							"import java.util.UUID\r\n",
+							"\r\n",
+							"val aDynamic = s\"\"\"{\"itemid\":\"X-Wing-${Random.nextInt()}\" , \"price\": ${Random.nextInt()},\"quantity\": ${Random.nextInt()}\"\"\" //s\"\"\"{\"itemid\":  , \"in_stock\": true,\"price\": ${Random.nextInt()},\"quantity\": 23 }\"\"\"\r\n",
+							"\r\n",
+							"val data = 1 to 100000 map(x =>  (Random.nextBoolean(), Instant.now().toString() , aDynamic ,UUID.randomUUID().toString() ,Random.nextInt(),Random.nextLong(),Random.nextDouble(),Random.nextString(5),123456789.12345678910d))\r\n",
+							"\r\n",
+							"val allTypesDf = spark.sqlContext.createDataFrame(data).toDF(\"BoolType\", \"DateTimeType\", \"DynamicType\",\"GuidType\", \"IntType\", \"LongType\",\"RealType\",\"StringType\",\"DecimalType\")\r\n",
+							"//(BoolType:bool,DateTimeType:datetime,DynamicType:dynamic,GuidType:guid,IntType:int,LongType:long,RealType:real,StringType:string,DecimalType:decimal)\r\n",
+							"\r\n",
+							"allTypesDf.write.format(\"com.microsoft.kusto.spark.synapse.datasource\").option(\"accessToken\", creds).option(\"kustoDatabase\", \"spark\").option(\"kustoTable\", \"AllDataTypesTransactionalSpark33\").option(\"tableCreateOptions\",\"CreateIfNotExist\").option(\"kustoCluster\",clusterUrl).mode(\"Append\").save()\r\n",
+							"//allTypesDf.write.format(\"com.microsoft.kusto.spark.synapse.datasource\").option(\"spark.synapse.linkedService\", \"sdktestcluster\").option(\"kustoDatabase\", \"spark\").option(\"kustoTable\", \"AllDataTypesQueuedSpark33\").option(\"tableCreateOptions\",\"CreateIfNotExist\").option(\"writeMode\",\"Queued\").mode(\"Append\").save()"
+						],
+						"outputs": [],
+						"execution_count": 5
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"**This will not load immediately, but is a good test for the _queued_ mode**"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "scala"
+							}
+						},
+						"source": [
+							"%%spark\r\n",
+							"allTypesDf.write.format(\"com.microsoft.kusto.spark.synapse.datasource\").option(\"spark.synapse.linkedService\", \"sdktestcluster\").option(\"kustoDatabase\", \"spark\").option(\"kustoTable\", \"[All-DataTypes-QueuedSpark33]\").option(\"tableCreateOptions\",\"CreateIfNotExist\").option(\"writeMode\",\"Queued\").mode(\"Append\").save()"
+						],
+						"outputs": [],
+						"execution_count": 6
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "python"
+							},
+							"collapsed": false
+						},
+						"source": [
+							"%%pyspark\r\n",
+							"\r\n",
+							"# Read data from Azure Data Explorer table(s)\r\n",
+							"# Full Sample Code available at: https://github.com/Azure/azure-kusto-spark/blob/master/samples/src/main/python/SynapseSample.py\r\n",
+							"kustoDfAllTypes  = spark.read \\\r\n",
+							"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\r\n",
+							"    .option(\"spark.synapse.linkedService\", \"sdktestcluster\") \\\r\n",
+							"    .option(\"kustoDatabase\", \"spark\") \\\r\n",
+							"    .option(\"kustoQuery\", \"KustoAirlineDataParquetTransactional2 | where Year >= 1987\t | take 100\") \\\r\n",
+							"    .option(\"readMode\", \"ForceDistributedMode\") \\\r\n",
+							"    .load()\r\n",
+							"\r\n",
+							"display(kustoDfAllTypes)"
+						],
+						"outputs": [],
+						"execution_count": null
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "python"
+							},
+							"collapsed": false
+						},
+						"source": [
+							"%%pyspark\r\n",
+							"\r\n",
+							"# Read data from Azure Data Explorer table(s)\r\n",
+							"# Full Sample Code available at: https://github.com/Azure/azure-kusto-spark/blob/master/samples/src/main/python/SynapseSample.py\r\n",
+							"transactionalModeCount  = spark.read \\\r\n",
+							"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\r\n",
+							"    .option(\"spark.synapse.linkedService\", \"sdktestcluster\") \\\r\n",
+							"    .option(\"kustoDatabase\", \"spark\") \\\r\n",
+							"    .option(\"kustoQuery\", \"AllDataTypesTransactionalSpark33 | project DiffSecs = datetime_diff('second',ingestion_time(),todatetime(DateTimeType)) | summarize  count(),min(DiffSecs),max(DiffSecs),avg(DiffSecs)\") \\\r\n",
+							"    .load()\r\n",
+							"\r\n",
+							"display(transactionalModeCount)"
+						],
+						"outputs": [],
+						"execution_count": 11
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "python"
+							},
+							"collapsed": false
+						},
+						"source": [
+							"%%pyspark\r\n",
+							"# Read data from Azure Data Explorer table(s)\r\n",
+							"# Full Sample Code available at: https://github.com/Azure/azure-kusto-spark/blob/master/samples/src/main/python/SynapseSample.py\r\n",
+							"queuedModeCount  = spark.read \\\r\n",
+							"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\r\n",
+							"    .option(\"spark.synapse.linkedService\", \"sdktestcluster\") \\\r\n",
+							"    .option(\"kustoDatabase\", \"spark\") \\\r\n",
+							"    .option(\"kustoQuery\", \"['All-DataTypes-QueuedSpark33'] | project DiffSecs = datetime_diff('second',ingestion_time(),todatetime(DateTimeType)) | summarize  count(),min(DiffSecs),max(DiffSecs),avg(DiffSecs)\") \\\r\n",
+							"    .load()\r\n",
+							"\r\n",
+							"display(queuedModeCount)"
+						],
+						"outputs": [],
+						"execution_count": 13
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/KustoReadFabric')]",
+			"type": "Microsoft.Synapse/workspaces/notebooks",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"nbformat": 4,
+				"nbformat_minor": 2,
+				"bigDataPool": {
+					"referenceName": "spark34a2",
+					"type": "BigDataPoolReference"
+				},
+				"sessionProperties": {
+					"driverMemory": "28g",
+					"driverCores": 4,
+					"executorMemory": "28g",
+					"executorCores": 4,
+					"numExecutors": 2,
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2",
+						"spark.autotune.trackingId": "0f6fbafe-c4d0-40a5-abf3-ee083463f0da"
+					}
+				},
+				"metadata": {
+					"saveOutput": true,
+					"enableDebugMode": false,
+					"kernelspec": {
+						"name": "synapse_pyspark",
+						"display_name": "Synapse PySpark"
+					},
+					"language_info": {
+						"name": "python"
+					},
+					"a365ComputeOptions": {
+						"id": "/subscriptions/216ca57c-8613-4c54-8960-1e5821b6dc8d/resourceGroups/SDK_E2E_TEST/providers/Microsoft.Synapse/workspaces/synapsekustosparkppe/bigDataPools/spark34a2",
+						"name": "spark34a2",
+						"type": "Spark",
+						"endpoint": "https://synapsekustosparkppe.dev.azuresynapse-test.azure.net/livyApi/versions/2019-11-01-preview/sparkPools/spark34a2",
+						"auth": {
+							"type": "AAD",
+							"authResource": "https://dev.azuresynapse.net"
+						},
+						"sparkVersion": "3.4",
+						"nodeCount": 3,
+						"cores": 4,
+						"memory": 28
+					},
+					"sessionKeepAliveTimeout": 30
+				},
+				"cells": [
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"**Run in single mode**"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "scala"
+							}
+						},
+						"source": [
+							"%%spark\n",
+							"println(spark.conf.get(\"spark.synapse.vhd.id\"))"
+						],
+						"outputs": [],
+						"execution_count": 1
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "python"
+							},
+							"collapsed": false
+						},
+						"source": [
+							"%%pyspark\n",
+							"kustoDf  = spark.read \\\n",
+							"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\n",
+							"    .option(\"spark.synapse.linkedService\", \"FabricKustoLS\") \\\n",
+							"    .option(\"kustoDatabase\", \"Stocks\") \\\n",
+							"    .option(\"kustoQuery\", \"KustoAirlineDataParquetQueued\t | take 10\") \\\n",
+							"    .load()\n",
+							"\n",
+							"display(kustoDf)\n",
+							""
+						],
+						"outputs": [],
+						"execution_count": 2
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"**Run in distributed mode**"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "python"
+							},
+							"collapsed": false
+						},
+						"source": [
+							"%%pyspark\r\n",
+							"\r\n",
+							"# Read data from Azure Data Explorer table(s)\r\n",
+							"# Full Sample Code available at: https://github.com/Azure/azure-kusto-spark/blob/master/samples/src/main/python/SynapseSample.py\r\n",
+							"\r\n",
+							"kustoDfDistributed  = spark.read \\\r\n",
+							"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\r\n",
+							"    .option(\"spark.synapse.linkedService\", \"FabricKustoLS\") \\\r\n",
+							"    .option(\"kustoDatabase\", \"Stocks\") \\\r\n",
+							"    .option(\"kustoQuery\", \"KustoAirlineDataParquetQueued | take 10\") \\\r\n",
+							"    .option(\"readMode\", \"ForceDistributedMode\") \\\r\n",
+							"    .load()\r\n",
+							"\r\n",
+							"display(kustoDfDistributed)\r\n",
+							""
+						],
+						"outputs": [],
+						"execution_count": 3
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"**Create a set of random data with all the datatpes**"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "scala"
+							}
+						},
+						"source": [
+							"%%spark\r\n",
+							"\r\n",
+							"import scala.util.Random\r\n",
+							"import java.time.Instant\r\n",
+							"import java.util.UUID\r\n",
+							"\r\n",
+							"val aDynamic = s\"\"\"{\"itemid\":\"X-Wing-${Random.nextInt()}\" , \"price\": ${Random.nextInt()},\"quantity\": ${Random.nextInt()}\"\"\" //s\"\"\"{\"itemid\":  , \"in_stock\": true,\"price\": ${Random.nextInt()},\"quantity\": 23 }\"\"\"\r\n",
+							"\r\n",
+							"val data = 1 to 100000 map(x =>  (Random.nextBoolean(), Instant.now().toString() , aDynamic ,UUID.randomUUID().toString() ,Random.nextInt(),Random.nextLong(),Random.nextDouble(),Random.nextString(5),123456789.12345678910d))\r\n",
+							"\r\n",
+							"val allTypesDf = spark.sqlContext.createDataFrame(data).toDF(\"BoolType\", \"DateTimeType\", \"DynamicType\",\"GuidType\", \"IntType\", \"LongType\",\"RealType\",\"StringType\",\"DecimalType\")\r\n",
+							"//(BoolType:bool,DateTimeType:datetime,DynamicType:dynamic,GuidType:guid,IntType:int,LongType:long,RealType:real,StringType:string,DecimalType:decimal)\r\n",
+							"\r\n",
+							"allTypesDf.write.format(\"com.microsoft.kusto.spark.synapse.datasource\").option(\"spark.synapse.linkedService\", \"FabricKustoLS\").option(\"kustoDatabase\", \"Stocks\").option(\"kustoTable\", \"AllDataTypesTransactionalSpark33\").option(\"tableCreateOptions\",\"CreateIfNotExist\").mode(\"Append\").save()\r\n",
+							"//allTypesDf.write.format(\"com.microsoft.kusto.spark.synapse.datasource\").option(\"spark.synapse.linkedService\", \"FabricKustoLS\").option(\"kustoDatabase\", \"Stocks\").option(\"kustoTable\", \"AllDataTypesQueuedSpark33\").option(\"tableCreateOptions\"\"CreateIfNotExist\").option(\"writeMode\",\"Queued\").mode(\"Append\").save(),"
+						],
+						"outputs": [],
+						"execution_count": 4
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"**This will not load immediately, but is a good test for the _queued_ mode**"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "scala"
+							}
+						},
+						"source": [
+							"%%spark\r\n",
+							"allTypesDf.write.format(\"com.microsoft.kusto.spark.synapse.datasource\").option(\"spark.synapse.linkedService\", \"FabricKustoLS\").option(\"kustoDatabase\", \"Stocks\").option(\"kustoTable\", \"AllDataTypesQueuedSpark33\").option(\"tableCreateOptions\",\"CreateIfNotExist\").option(\"writeMode\",\"Queued\").mode(\"Append\").save()"
+						],
+						"outputs": [],
+						"execution_count": 5
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "python"
+							},
+							"collapsed": false
+						},
+						"source": [
+							"%%pyspark\r\n",
+							"\r\n",
+							"# Read data from Azure Data Explorer table(s)\r\n",
+							"# Full Sample Code available at: https://github.com/Azure/azure-kusto-spark/blob/master/samples/src/main/python/SynapseSample.py\r\n",
+							"kustoDfAllTypes  = spark.read \\\r\n",
+							"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\r\n",
+							"    .option(\"spark.synapse.linkedService\", \"FabricKustoLS\") \\\r\n",
+							"    .option(\"kustoDatabase\", \"Stocks\") \\\r\n",
+							"    .option(\"kustoQuery\", \"TaxiData | take 100\") \\\r\n",
+							"    .option(\"readMode\", \"ForceDistributedMode\") \\\r\n",
+							"    .load()\r\n",
+							"\r\n",
+							"display(kustoDfAllTypes)"
+						],
+						"outputs": [],
+						"execution_count": 6
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "python"
+							},
+							"collapsed": false
+						},
+						"source": [
+							"%%pyspark\r\n",
+							"\r\n",
+							"# Read data from Azure Data Explorer table(s)\r\n",
+							"# Full Sample Code available at: https://github.com/Azure/azure-kusto-spark/blob/master/samples/src/main/python/SynapseSample.py\r\n",
+							"transactionalModeCount  = spark.read \\\r\n",
+							"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\r\n",
+							"    .option(\"spark.synapse.linkedService\", \"FabricKustoLS\") \\\r\n",
+							"    .option(\"kustoDatabase\", \"Stocks\") \\\r\n",
+							"    .option(\"kustoQuery\", \"AllDataTypesTransactionalSpark33 | project DiffSecs = datetime_diff('second',ingestion_time(),todatetime(DateTimeType)) | summarize  count(),min(DiffSecs),max(DiffSecs),avg(DiffSecs)\") \\\r\n",
+							"    .load()\r\n",
+							"\r\n",
+							"display(transactionalModeCount)"
+						],
+						"outputs": [],
+						"execution_count": 7
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "python"
+							},
+							"collapsed": false
+						},
+						"source": [
+							"%%pyspark\r\n",
+							"# Read data from Azure Data Explorer table(s)\r\n",
+							"# Full Sample Code available at: https://github.com/Azure/azure-kusto-spark/blob/master/samples/src/main/python/SynapseSample.py\r\n",
+							"queuedModeCount  = spark.read \\\r\n",
+							"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\r\n",
+							"    .option(\"spark.synapse.linkedService\", \"FabricKustoLS\") \\\r\n",
+							"    .option(\"kustoDatabase\", \"Stocks\") \\\r\n",
+							"    .option(\"kustoQuery\", \"AllDataTypesQueuedSpark33 | project DiffSecs = datetime_diff('second',ingestion_time(),todatetime(DateTimeType)) | summarize  count(),min(DiffSecs),max(DiffSecs),avg(DiffSecs)\") \\\r\n",
+							"    .load()\r\n",
+							"\r\n",
+							"display(queuedModeCount)"
+						],
+						"outputs": [],
+						"execution_count": 9
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/KustoReadFabricNoLinkedService')]",
+			"type": "Microsoft.Synapse/workspaces/notebooks",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"nbformat": 4,
+				"nbformat_minor": 2,
+				"bigDataPool": {
+					"referenceName": "spark34a2",
+					"type": "BigDataPoolReference"
+				},
+				"sessionProperties": {
+					"driverMemory": "28g",
+					"driverCores": 4,
+					"executorMemory": "28g",
+					"executorCores": 4,
+					"numExecutors": 2,
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2",
+						"spark.autotune.trackingId": "453b4f12-ba26-40ba-9c12-bbdfdc45701c"
+					}
+				},
+				"metadata": {
+					"saveOutput": true,
+					"enableDebugMode": false,
+					"kernelspec": {
+						"name": "synapse_pyspark",
+						"display_name": "Synapse PySpark"
+					},
+					"language_info": {
+						"name": "python"
+					},
+					"a365ComputeOptions": {
+						"id": "/subscriptions/216ca57c-8613-4c54-8960-1e5821b6dc8d/resourceGroups/SDK_E2E_TEST/providers/Microsoft.Synapse/workspaces/synapsekustosparkppe/bigDataPools/spark34a2",
+						"name": "spark34a2",
+						"type": "Spark",
+						"endpoint": "https://synapsekustosparkppe.dev.azuresynapse-test.azure.net/livyApi/versions/2019-11-01-preview/sparkPools/spark34a2",
+						"auth": {
+							"type": "AAD",
+							"authResource": "https://dev.azuresynapse.net"
+						},
+						"sparkVersion": "3.4",
+						"nodeCount": 3,
+						"cores": 4,
+						"memory": 28
+					},
+					"sessionKeepAliveTimeout": 30
+				},
+				"cells": [
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							""
+						]
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"**Run in single mode**"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "scala"
+							}
+						},
+						"source": [
+							"%%spark\n",
+							"println(spark.conf.get(\"spark.synapse.vhd.id\"))"
+						],
+						"outputs": [],
+						"execution_count": 1
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"access_token = mssparkutils.credentials.getConnectionStringOrCreds(\"FabricKustoLS\")"
+						],
+						"outputs": [],
+						"execution_count": 2
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "scala"
+							}
+						},
+						"source": [
+							"%%spark\n",
+							"val accessToken = mssparkutils.credentials.getConnectionStringOrCreds(\"FabricKustoLS\")"
+						],
+						"outputs": [],
+						"execution_count": 3
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "python"
+							},
+							"collapsed": false
+						},
+						"source": [
+							"%%pyspark\n",
+							"kustoDf  = spark.read \\\n",
+							"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\n",
+							"    .option(\"kustoCluster\", \"https://trdp-1665b5eybxs0tbett.z8.kusto.fabric.microsoft.com\") \\\n",
+							"    .option(\"kustoDatabase\", \"sdktests\") \\\n",
+							"    .option(\"authToken\",access_token) \\\n",
+							"    .option(\"kustoQuery\", \"KustoAirlineData\t | take 10\") \\\n",
+							"    .load()\n",
+							"\n",
+							"display(kustoDf)\n",
+							""
+						],
+						"outputs": [],
+						"execution_count": 4
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"**Run in distributed mode**"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "python"
+							},
+							"collapsed": false
+						},
+						"source": [
+							"%%pyspark\r\n",
+							"\r\n",
+							"# Read data from Azure Data Explorer table(s)\r\n",
+							"# Full Sample Code available at: https://github.com/Azure/azure-kusto-spark/blob/master/samples/src/main/python/SynapseSample.py\r\n",
+							"\r\n",
+							"kustoDfDistributed  = spark.read \\\r\n",
+							"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\r\n",
+							"    .option(\"kustoCluster\", \"https://trdp-1665b5eybxs0tbett.z8.kusto.fabric.microsoft.com\") \\\r\n",
+							"    .option(\"kustoDatabase\", \"sdktests\") \\\r\n",
+							"    .option(\"authToken\",access_token) \\\r\n",
+							"    .option(\"kustoQuery\", \"KustoAirlineData | take 10000\") \\\r\n",
+							"    .option(\"readMode\", \"ForceDistributedMode\") \\\r\n",
+							"    .load()\r\n",
+							"\r\n",
+							"display(kustoDfDistributed)\r\n",
+							""
+						],
+						"outputs": [],
+						"execution_count": 5
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"**Create a set of random data with all the datatpes**"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "scala"
+							}
+						},
+						"source": [
+							"%%spark\r\n",
+							"\r\n",
+							"import scala.util.Random\r\n",
+							"import java.time.Instant\r\n",
+							"import java.util.UUID\r\n",
+							"\r\n",
+							"val aDynamic = s\"\"\"{\"itemid\":\"X-Wing-${Random.nextInt()}\" , \"price\": ${Random.nextInt()},\"quantity\": ${Random.nextInt()}\"\"\" //s\"\"\"{\"itemid\":  , \"in_stock\": true,\"price\": ${Random.nextInt()},\"quantity\": 23 }\"\"\"\r\n",
+							"\r\n",
+							"val data = 1 to 100000 map(x =>  (Random.nextBoolean(), Instant.now().toString() , aDynamic ,UUID.randomUUID().toString() ,Random.nextInt(),Random.nextLong(),Random.nextDouble(),Random.nextString(5),123456789.12345678910d))\r\n",
+							"\r\n",
+							"val allTypesDf = spark.sqlContext.createDataFrame(data).toDF(\"BoolType\", \"DateTimeType\", \"DynamicType\",\"GuidType\", \"IntType\", \"LongType\",\"RealType\",\"StringType\",\"DecimalType\")\r\n",
+							"//(BoolType:bool,DateTimeType:datetime,DynamicType:dynamic,GuidType:guid,IntType:int,LongType:long,RealType:real,StringType:string,DecimalType:decimal)\r\n",
+							"\r\n",
+							"allTypesDf.write.format(\"com.microsoft.kusto.spark.synapse.datasource\")\r\n",
+							".option(\"kustoTable\", \"AllDataTypesTransactionalSpark33\")\r\n",
+							".option(\"kustoCluster\", \"https://trdp-1665b5eybxs0tbett.z8.kusto.fabric.microsoft.com\")\r\n",
+							".option(\"kustoDatabase\", \"sdktests\")\r\n",
+							".option(\"tableCreateOptions\",\"CreateIfNotExist\")\r\n",
+							".option(\"authToken\",accessToken)\r\n",
+							".mode(\"Append\").save()\r\n",
+							"//allTypesDf.write.format(\"com.microsoft.kusto.spark.synapse.datasource\").option(\"spark.synapse.linkedService\", \"FabricKustoLS\").option(\"kustoDatabase\", \"Stocks\").option(\"kustoTable\", \"AllDataTypesQueuedSpark33\").option(\"tableCreateOptions\",\"CreateIfNotExist\").option(\"writeMode\",\"Queued\").mode(\"Append\").save()"
+						],
+						"outputs": [],
+						"execution_count": 6
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"**This will not load immediately, but is a good test for the _queued_ mode**"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "scala"
+							}
+						},
+						"source": [
+							"%%spark\r\n",
+							"allTypesDf.write.format(\"com.microsoft.kusto.spark.synapse.datasource\") \r\n",
+							".option(\"writeMode\",\"Queued\")\r\n",
+							".option(\"kustoTable\", \"AllDataTypesQueuedSpark33\")\r\n",
+							".option(\"kustoCluster\", \"https://trdp-1665b5eybxs0tbett.z8.kusto.fabric.microsoft.com\")\r\n",
+							".option(\"kustoDatabase\", \"sdktests\")\r\n",
+							".option(\"tableCreateOptions\",\"CreateIfNotExist\")\r\n",
+							".option(\"authToken\",accessToken)\r\n",
+							".mode(\"Append\").save()\r\n",
+							""
+						],
+						"outputs": [],
+						"execution_count": 7
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "python"
+							},
+							"collapsed": false
+						},
+						"source": [
+							"%%pyspark\r\n",
+							"\r\n",
+							"# Read data from Azure Data Explorer table(s)\r\n",
+							"# Full Sample Code available at: https://github.com/Azure/azure-kusto-spark/blob/master/samples/src/main/python/SynapseSample.py\r\n",
+							"kustoDfAllTypes  = spark.read \\\r\n",
+							"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\r\n",
+							"    .option(\"kustoCluster\", \"https://trdp-1665b5eybxs0tbett.z8.kusto.fabric.microsoft.com\") \\\r\n",
+							"    .option(\"kustoDatabase\", \"sdktests\") \\\r\n",
+							"    .option(\"authToken\",access_token) \\\r\n",
+							"    .option(\"kustoQuery\", \"KustoAirlineData | take 100\") \\\r\n",
+							"    .option(\"readMode\", \"ForceDistributedMode\") \\\r\n",
+							"    .load()\r\n",
+							"\r\n",
+							"display(kustoDfAllTypes)"
+						],
+						"outputs": [],
+						"execution_count": 8
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "python"
+							},
+							"collapsed": false
+						},
+						"source": [
+							"%%pyspark\r\n",
+							"\r\n",
+							"# Read data from Azure Data Explorer table(s)\r\n",
+							"# Full Sample Code available at: https://github.com/Azure/azure-kusto-spark/blob/master/samples/src/main/python/SynapseSample.py\r\n",
+							"transactionalModeCount  = spark.read \\\r\n",
+							"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\r\n",
+							"    .option(\"kustoCluster\", \"https://trdp-1665b5eybxs0tbett.z8.kusto.fabric.microsoft.com\") \\\r\n",
+							"    .option(\"authToken\",access_token) \\\r\n",
+							"    .option(\"kustoDatabase\", \"sdktests\") \\\r\n",
+							"    .option(\"kustoQuery\", \"AllDataTypesTransactionalSpark33 | project DiffSecs = datetime_diff('second',ingestion_time(),todatetime(DateTimeType)) | summarize  count(),min(DiffSecs),max(DiffSecs),avg(DiffSecs)\") \\\r\n",
+							"    .load()\r\n",
+							"\r\n",
+							"display(transactionalModeCount)"
+						],
+						"outputs": [],
+						"execution_count": 9
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "python"
+							},
+							"collapsed": false
+						},
+						"source": [
+							"%%pyspark\r\n",
+							"# Read data from Azure Data Explorer table(s)\r\n",
+							"# Full Sample Code available at: https://github.com/Azure/azure-kusto-spark/blob/master/samples/src/main/python/SynapseSample.py\r\n",
+							"queuedModeCount  = spark.read \\\r\n",
+							"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\r\n",
+							"    .option(\"kustoCluster\", \"https://trdp-1665b5eybxs0tbett.z8.kusto.fabric.microsoft.com\") \\\r\n",
+							"    .option(\"authToken\",access_token) \\\r\n",
+							"    .option(\"kustoDatabase\", \"sdktests\") \\\r\n",
+							"    .option(\"kustoQuery\", \"AllDataTypesQueuedSpark33 | project DiffSecs = datetime_diff('second',ingestion_time(),todatetime(DateTimeType)) | summarize  count(),min(DiffSecs),max(DiffSecs),avg(DiffSecs)\") \\\r\n",
+							"    .load()\r\n",
+							"\r\n",
+							"display(queuedModeCount)"
+						],
+						"outputs": [],
+						"execution_count": 11
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/StreamingIngest')]",
+			"type": "Microsoft.Synapse/workspaces/notebooks",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"nbformat": 4,
+				"nbformat_minor": 2,
+				"bigDataPool": {
+					"referenceName": "spark34a2",
+					"type": "BigDataPoolReference"
+				},
+				"sessionProperties": {
+					"driverMemory": "28g",
+					"driverCores": 4,
+					"executorMemory": "28g",
+					"executorCores": 4,
+					"numExecutors": 2,
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2",
+						"spark.autotune.trackingId": "17ee2a3b-aaef-4249-a2bd-8c667dbfe2fc"
+					}
+				},
+				"metadata": {
+					"saveOutput": true,
+					"enableDebugMode": false,
+					"kernelspec": {
+						"name": "synapse_pyspark",
+						"display_name": "Synapse PySpark"
+					},
+					"language_info": {
+						"name": "python"
+					},
+					"a365ComputeOptions": {
+						"id": "/subscriptions/216ca57c-8613-4c54-8960-1e5821b6dc8d/resourceGroups/SDK_E2E_TEST/providers/Microsoft.Synapse/workspaces/synapsekustosparkppe/bigDataPools/spark34a2",
+						"name": "spark34a2",
+						"type": "Spark",
+						"endpoint": "https://synapsekustosparkppe.dev.azuresynapse-test.azure.net/livyApi/versions/2019-11-01-preview/sparkPools/spark34a2",
+						"auth": {
+							"type": "AAD",
+							"authResource": "https://dev.azuresynapse.net"
+						},
+						"sparkVersion": "3.4",
+						"nodeCount": 3,
+						"cores": 4,
+						"memory": 28
+					},
+					"sessionKeepAliveTimeout": 30
+				},
+				"cells": [
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "scala"
+							}
+						},
+						"source": [
+							"%%spark\n",
+							"println(spark.conf.get(\"spark.synapse.vhd.id\"))"
+						],
+						"outputs": [],
+						"execution_count": 1
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"mssparkutils.fs.mount(  \r\n",
+							"    \"abfss://synapseppe@synapsekustosparktest.dfs.core.windows.net/\", #ADLS GEN 2 PATH  \r\n",
+							"    \"/20231024\", #Mount Point Name  \r\n",
+							"    { \"linkedService\" : \"synapsekustosparktest\"}  \r\n",
+							")  "
+						],
+						"outputs": [],
+						"execution_count": 2
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"!pip install dbldatagen\r\n",
+							"!pip install jmespath"
+						],
+						"outputs": [],
+						"execution_count": 3
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"## Generate random streaming data : https://databrickslabs.github.io/dbldatagen/public_docs/using_streaming_data.html\r\n",
+							"\r\n",
+							"import time\r\n",
+							"time_to_run = 180\r\n",
+							"\r\n",
+							"from pyspark.sql.types import LongType, IntegerType, StringType\r\n",
+							"\r\n",
+							"import dbldatagen as dg\r\n",
+							"\r\n",
+							"device_population = 1000\r\n",
+							"data_rows = 1000 * 1000\r\n",
+							"partitions_requested = 8\r\n",
+							"\r\n",
+							"country_codes = ['CN', 'US', 'FR', 'CA', 'IN', 'JM', 'IE', 'PK', 'GB', 'IL', 'AU', 'SG',\r\n",
+							"                 'ES', 'GE', 'MX', 'ET', 'SA', 'LB', 'NL']\r\n",
+							"country_weights = [1300, 365, 67, 38, 1300, 3, 7, 212, 67, 9, 25, 6, 47, 83, 126, 109, 58,\r\n",
+							"                   8, 17]\r\n",
+							"\r\n",
+							"manufacturers = ['Delta corp', 'Xyzzy Inc.', 'Lakehouse Ltd', 'Acme Corp', 'Embanks Devices']\r\n",
+							"\r\n",
+							"lines = ['delta', 'xyzzy', 'lakehouse', 'gadget', 'droid']\r\n",
+							"\r\n",
+							"testDataSpec = (\r\n",
+							"    dg.DataGenerator(spark, name=\"device_data_set\", rows=data_rows,\r\n",
+							"                     partitions=partitions_requested,\r\n",
+							"                     verbose=True)\r\n",
+							"    .withIdOutput()\r\n",
+							"    # we'll use hash of the base field to generate the ids to\r\n",
+							"    # avoid a simple incrementing sequence\r\n",
+							"    .withColumn(\"internal_device_id\", LongType(), minValue=0x1000000000000,\r\n",
+							"                uniqueValues=device_population, omit=True, baseColumnType=\"hash\")\r\n",
+							"\r\n",
+							"    # note for format strings, we must use \"%lx\" not \"%x\" as the\r\n",
+							"    # underlying value is a long\r\n",
+							"    .withColumn(\"device_id\", StringType(), format=\"0x%013x\",\r\n",
+							"                baseColumn=\"internal_device_id\")\r\n",
+							"\r\n",
+							"    # the device / user attributes will be the same for the same device id\r\n",
+							"    # so lets use the internal device id as the base column for these attribute\r\n",
+							"    .withColumn(\"country\", StringType(), values=country_codes,\r\n",
+							"                weights=country_weights, baseColumn=\"internal_device_id\")\r\n",
+							"    .withColumn(\"manufacturer\", StringType(), values=manufacturers,\r\n",
+							"                baseColumn=\"internal_device_id\")\r\n",
+							"\r\n",
+							"    # use omit = True if you don't want a column to appear in the final output\r\n",
+							"    # but just want to use it as part of generation of another column\r\n",
+							"    .withColumn(\"line\", StringType(), values=lines, baseColumn=\"manufacturer\",\r\n",
+							"                baseColumnType=\"hash\", omit=True)\r\n",
+							"    .withColumn(\"model_ser\", IntegerType(), minValue=1, maxValue=11,\r\n",
+							"                baseColumn=\"device_id\", baseColumnType=\"hash\", omit=True)\r\n",
+							"\r\n",
+							"    .withColumn(\"model_line\", StringType(), expr=\"concat(line, '#', model_ser)\",\r\n",
+							"                baseColumn=[\"line\", \"model_ser\"])\r\n",
+							"    .withColumn(\"event_type\", StringType(),\r\n",
+							"                values=[\"activation\", \"deactivation\", \"plan change\",\r\n",
+							"                        \"telecoms activity\", \"internet activity\", \"device error\"],\r\n",
+							"                random=True)\r\n",
+							"    .withColumn(\"event_ts\", \"timestamp\", expr=\"now()\")\r\n",
+							"    )\r\n",
+							"\r\n",
+							"dfTestDataStreaming = testDataSpec.build(withStreaming=True, options={'rowsPerSecond': 1500})"
+						],
+						"outputs": [],
+						"execution_count": 4
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"spark.conf.set(\"spark.sql.streaming.checkpointLocation\", \"/20231022/2023062701\")"
+						],
+						"outputs": [],
+						"execution_count": 5
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"txnq = dfTestDataStreaming.writeStream \\\r\n",
+							"    .format(\"com.microsoft.kusto.spark.synapse.datasink.KustoSynapseSinkProvider\") \\\r\n",
+							"    .option(\"spark.synapse.linkedService\", \"sdktestcluster\") \\\r\n",
+							"    .option(\"kustoDatabase\", \"spark\") \\\r\n",
+							"    .option(\"kustoTable\", \"StreamIngestTest33Transactional\") \\\r\n",
+							"    .option(\"tableCreateOptions\",\"CreateIfNotExist\") \\\r\n",
+							"    .trigger(processingTime='2 seconds')\r\n",
+							"txnq.start().awaitTermination(60*1)"
+						],
+						"outputs": [],
+						"execution_count": 6
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"queuedq = dfTestDataStreaming.writeStream \\\r\n",
+							"    .format(\"com.microsoft.kusto.spark.synapse.datasink.KustoSynapseSinkProvider\") \\\r\n",
+							"    .option(\"spark.synapse.linkedService\", \"sdktestcluster\") \\\r\n",
+							"    .option(\"kustoDatabase\", \"spark\") \\\r\n",
+							"    .option(\"kustoTable\", \"StreamIngestTest33Queued\") \\\r\n",
+							"    .option(\"writeMode\", \"Queued\") \\\r\n",
+							"    .option(\"tableCreateOptions\",\"CreateIfNotExist\") \\\r\n",
+							"    .trigger(processingTime='2 seconds')\r\n",
+							"queuedq.start().awaitTermination(60*1)"
+						],
+						"outputs": [],
+						"execution_count": 7
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "python"
+							},
+							"collapsed": false
+						},
+						"source": [
+							"%%pyspark\r\n",
+							"# Read data from Azure Data Explorer table(s)\r\n",
+							"# Full Sample Code available at: https://github.com/Azure/azure-kusto-spark/blob/master/samples/src/main/python/SynapseSample.py\r\n",
+							"transactionalModeCount  = spark.read \\\r\n",
+							"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\r\n",
+							"    .option(\"spark.synapse.linkedService\", \"sdktestcluster\") \\\r\n",
+							"    .option(\"kustoDatabase\", \"spark\") \\\r\n",
+							"    .option(\"kustoQuery\", \"StreamIngestTest33Transactional | project DiffSecs = datetime_diff('second',ingestion_time(),todatetime(event_ts)) | summarize  count(),min(DiffSecs),max(DiffSecs),avg(DiffSecs)\") \\\r\n",
+							"    .load()\r\n",
+							"\r\n",
+							"display(transactionalModeCount)"
+						],
+						"outputs": [],
+						"execution_count": 8
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "python"
+							},
+							"collapsed": false
+						},
+						"source": [
+							"%%pyspark\r\n",
+							"# Read data from Azure Data Explorer table(s)\r\n",
+							"# Full Sample Code available at: https://github.com/Azure/azure-kusto-spark/blob/master/samples/src/main/python/SynapseSample.py\r\n",
+							"queuedModeCount  = spark.read \\\r\n",
+							"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\r\n",
+							"    .option(\"spark.synapse.linkedService\", \"sdktestcluster\") \\\r\n",
+							"    .option(\"kustoDatabase\", \"spark\") \\\r\n",
+							"    .option(\"kustoQuery\", \"StreamIngestTest33Transactional | project DiffSecs = datetime_diff('second',ingestion_time(),todatetime(event_ts)) | summarize  count(),min(DiffSecs),max(DiffSecs),avg(DiffSecs)\") \\\r\n",
+							"    .load()\r\n",
+							"\r\n",
+							"display(queuedModeCount)"
+						],
+						"outputs": [],
+						"execution_count": 9
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "python"
+							},
+							"collapsed": false
+						},
+						"source": [
+							"%%pyspark\r\n",
+							"# Read data from Azure Data Explorer table(s)\r\n",
+							"# Full Sample Code available at: https://github.com/Azure/azure-kusto-spark/blob/master/samples/src/main/python/SynapseSample.py\r\n",
+							"functionModeCount  = spark.read \\\r\n",
+							"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\r\n",
+							"    .option(\"spark.synapse.linkedService\", \"sdktestcluster\") \\\r\n",
+							"    .option(\"kustoDatabase\", \"spark\") \\\r\n",
+							"    .option(\"kustoQuery\", \"SparkTableIngestStats('StreamIngestTest33Queued')\") \\\r\n",
+							"    .load()\r\n",
+							"\r\n",
+							"display(functionModeCount)"
+						],
+						"outputs": [],
+						"execution_count": 10
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/StreamingIngestFabric')]",
+			"type": "Microsoft.Synapse/workspaces/notebooks",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"nbformat": 4,
+				"nbformat_minor": 2,
+				"bigDataPool": {
+					"referenceName": "spark34a2",
+					"type": "BigDataPoolReference"
+				},
+				"sessionProperties": {
+					"driverMemory": "28g",
+					"driverCores": 4,
+					"executorMemory": "28g",
+					"executorCores": 4,
+					"numExecutors": 2,
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2",
+						"spark.autotune.trackingId": "8944e31b-3ab5-4fbf-9a8f-67a790164f41"
+					}
+				},
+				"metadata": {
+					"saveOutput": true,
+					"enableDebugMode": false,
+					"kernelspec": {
+						"name": "synapse_pyspark",
+						"display_name": "Synapse PySpark"
+					},
+					"language_info": {
+						"name": "python"
+					},
+					"a365ComputeOptions": {
+						"id": "/subscriptions/216ca57c-8613-4c54-8960-1e5821b6dc8d/resourceGroups/SDK_E2E_TEST/providers/Microsoft.Synapse/workspaces/synapsekustosparkppe/bigDataPools/spark34a2",
+						"name": "spark34a2",
+						"type": "Spark",
+						"endpoint": "https://synapsekustosparkppe.dev.azuresynapse-test.azure.net/livyApi/versions/2019-11-01-preview/sparkPools/spark34a2",
+						"auth": {
+							"type": "AAD",
+							"authResource": "https://dev.azuresynapse.net"
+						},
+						"sparkVersion": "3.4",
+						"nodeCount": 3,
+						"cores": 4,
+						"memory": 28
+					},
+					"sessionKeepAliveTimeout": 30
+				},
+				"cells": [
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "scala"
+							}
+						},
+						"source": [
+							"%%spark\n",
+							"println(spark.conf.get(\"spark.synapse.vhd.id\"))"
+						],
+						"outputs": [],
+						"execution_count": 7
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"mssparkutils.fs.mount(  \r\n",
+							"    \"abfss://synapseppe@synapsekustosparktest.dfs.core.windows.net/\", #ADLS GEN 2 PATH  \r\n",
+							"    \"/2023080302\", #Mount Point Name  \r\n",
+							"    { \"linkedService\" : \"synapsekustosparktest\"}  \r\n",
+							")  "
+						],
+						"outputs": [],
+						"execution_count": 8
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"!pip install dbldatagen\r\n",
+							"!pip install jmespath"
+						],
+						"outputs": [],
+						"execution_count": 9
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"## Generate random streaming data : https://databrickslabs.github.io/dbldatagen/public_docs/using_streaming_data.html\r\n",
+							"\r\n",
+							"import time\r\n",
+							"time_to_run = 180\r\n",
+							"\r\n",
+							"from pyspark.sql.types import LongType, IntegerType, StringType\r\n",
+							"\r\n",
+							"import dbldatagen as dg\r\n",
+							"\r\n",
+							"device_population = 1000\r\n",
+							"data_rows = 1000 * 1000\r\n",
+							"partitions_requested = 8\r\n",
+							"\r\n",
+							"country_codes = ['CN', 'US', 'FR', 'CA', 'IN', 'JM', 'IE', 'PK', 'GB', 'IL', 'AU', 'SG',\r\n",
+							"                 'ES', 'GE', 'MX', 'ET', 'SA', 'LB', 'NL']\r\n",
+							"country_weights = [1300, 365, 67, 38, 1300, 3, 7, 212, 67, 9, 25, 6, 47, 83, 126, 109, 58,\r\n",
+							"                   8, 17]\r\n",
+							"\r\n",
+							"manufacturers = ['Delta corp', 'Xyzzy Inc.', 'Lakehouse Ltd', 'Acme Corp', 'Embanks Devices']\r\n",
+							"\r\n",
+							"lines = ['delta', 'xyzzy', 'lakehouse', 'gadget', 'droid']\r\n",
+							"\r\n",
+							"testDataSpec = (\r\n",
+							"    dg.DataGenerator(spark, name=\"device_data_set\", rows=data_rows,\r\n",
+							"                     partitions=partitions_requested,\r\n",
+							"                     verbose=True)\r\n",
+							"    .withIdOutput()\r\n",
+							"    # we'll use hash of the base field to generate the ids to\r\n",
+							"    # avoid a simple incrementing sequence\r\n",
+							"    .withColumn(\"internal_device_id\", LongType(), minValue=0x1000000000000,\r\n",
+							"                uniqueValues=device_population, omit=True, baseColumnType=\"hash\")\r\n",
+							"\r\n",
+							"    # note for format strings, we must use \"%lx\" not \"%x\" as the\r\n",
+							"    # underlying value is a long\r\n",
+							"    .withColumn(\"device_id\", StringType(), format=\"0x%013x\",\r\n",
+							"                baseColumn=\"internal_device_id\")\r\n",
+							"\r\n",
+							"    # the device / user attributes will be the same for the same device id\r\n",
+							"    # so lets use the internal device id as the base column for these attribute\r\n",
+							"    .withColumn(\"country\", StringType(), values=country_codes,\r\n",
+							"                weights=country_weights, baseColumn=\"internal_device_id\")\r\n",
+							"    .withColumn(\"manufacturer\", StringType(), values=manufacturers,\r\n",
+							"                baseColumn=\"internal_device_id\")\r\n",
+							"\r\n",
+							"    # use omit = True if you don't want a column to appear in the final output\r\n",
+							"    # but just want to use it as part of generation of another column\r\n",
+							"    .withColumn(\"line\", StringType(), values=lines, baseColumn=\"manufacturer\",\r\n",
+							"                baseColumnType=\"hash\", omit=True)\r\n",
+							"    .withColumn(\"model_ser\", IntegerType(), minValue=1, maxValue=11,\r\n",
+							"                baseColumn=\"device_id\", baseColumnType=\"hash\", omit=True)\r\n",
+							"\r\n",
+							"    .withColumn(\"model_line\", StringType(), expr=\"concat(line, '#', model_ser)\",\r\n",
+							"                baseColumn=[\"line\", \"model_ser\"])\r\n",
+							"    .withColumn(\"event_type\", StringType(),\r\n",
+							"                values=[\"activation\", \"deactivation\", \"plan change\",\r\n",
+							"                        \"telecoms activity\", \"internet activity\", \"device error\"],\r\n",
+							"                random=True)\r\n",
+							"    .withColumn(\"event_ts\", \"timestamp\", expr=\"now()\")\r\n",
+							"    )\r\n",
+							"\r\n",
+							"dfTestDataStreaming = testDataSpec.build(withStreaming=True, options={'rowsPerSecond': 1500})"
+						],
+						"outputs": [],
+						"execution_count": null
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"spark.conf.set(\"spark.sql.streaming.checkpointLocation\", \"/20230803/2023080303\")"
+						],
+						"outputs": [],
+						"execution_count": 11
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"txnq = dfTestDataStreaming.writeStream \\\r\n",
+							"    .format(\"com.microsoft.kusto.spark.synapse.datasink.KustoSynapseSinkProvider\") \\\r\n",
+							"    .option(\"spark.synapse.linkedService\", \"FabricKustoLS\") \\\r\n",
+							"    .option(\"kustoDatabase\", \"Stocks\") \\\r\n",
+							"    .option(\"kustoTable\", \"StreamIngestTest33Transactional\") \\\r\n",
+							"    .option(\"tableCreateOptions\",\"CreateIfNotExist\") \\\r\n",
+							"    .trigger(processingTime='2 seconds')\r\n",
+							"txnq.start().awaitTermination(60*3)"
+						],
+						"outputs": [],
+						"execution_count": 12
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"queuedq = dfTestDataStreaming.writeStream \\\r\n",
+							"    .format(\"com.microsoft.kusto.spark.synapse.datasink.KustoSynapseSinkProvider\") \\\r\n",
+							"    .option(\"spark.synapse.linkedService\", \"FabricKustoLS\") \\\r\n",
+							"    .option(\"kustoDatabase\", \"Stocks\") \\\r\n",
+							"    .option(\"kustoTable\", \"StreamIngestTest33Queued\") \\\r\n",
+							"    .option(\"writeMode\", \"Queued\") \\\r\n",
+							"    .option(\"tableCreateOptions\",\"CreateIfNotExist\") \\\r\n",
+							"    .trigger(processingTime='2 seconds')\r\n",
+							"queuedq.start().awaitTermination(60*3)"
+						],
+						"outputs": [],
+						"execution_count": 13
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "python"
+							},
+							"collapsed": false
+						},
+						"source": [
+							"%%pyspark\r\n",
+							"# Read data from Azure Data Explorer table(s)\r\n",
+							"# Full Sample Code available at: https://github.com/Azure/azure-kusto-spark/blob/master/samples/src/main/python/SynapseSample.py\r\n",
+							"transactionalModeCount  = spark.read \\\r\n",
+							"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\r\n",
+							"    .option(\"spark.synapse.linkedService\", \"FabricKustoLS\") \\\r\n",
+							"    .option(\"kustoDatabase\", \"Stocks\") \\\r\n",
+							"    .option(\"kustoQuery\", \"StreamIngestTest33Transactional | project DiffSecs = datetime_diff('second',ingestion_time(),todatetime(event_ts)) | summarize  count(),min(DiffSecs),max(DiffSecs),avg(DiffSecs)\") \\\r\n",
+							"    .load()\r\n",
+							"\r\n",
+							"display(transactionalModeCount)"
+						],
+						"outputs": [],
+						"execution_count": 14
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "python"
+							},
+							"collapsed": false
+						},
+						"source": [
+							"%%pyspark\r\n",
+							"# Read data from Azure Data Explorer table(s)\r\n",
+							"# Full Sample Code available at: https://github.com/Azure/azure-kusto-spark/blob/master/samples/src/main/python/SynapseSample.py\r\n",
+							"queuedModeCount  = spark.read \\\r\n",
+							"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\r\n",
+							"    .option(\"spark.synapse.linkedService\", \"FabricKustoLS\") \\\r\n",
+							"    .option(\"kustoDatabase\", \"Stocks\") \\\r\n",
+							"    .option(\"kustoQuery\", \"StreamIngestTest33Queued | project DiffSecs = datetime_diff('second',ingestion_time(),todatetime(event_ts)) | summarize  count(),min(DiffSecs),max(DiffSecs),avg(DiffSecs)\") \\\r\n",
+							"    .load()\r\n",
+							"\r\n",
+							"display(queuedModeCount)"
+						],
+						"outputs": [],
+						"execution_count": 21
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "python"
+							},
+							"collapsed": false
+						},
+						"source": [
+							"%%pyspark\r\n",
+							"# Read data from Azure Data Explorer table(s)\r\n",
+							"# Full Sample Code available at: https://github.com/Azure/azure-kusto-spark/blob/master/samples/src/main/python/SynapseSample.py\r\n",
+							"functionModeCount  = spark.read \\\r\n",
+							"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\r\n",
+							"    .option(\"spark.synapse.linkedService\", \"FabricKustoLS\") \\\r\n",
+							"    .option(\"kustoDatabase\", \"Stocks\") \\\r\n",
+							"    .option(\"kustoQuery\", \"SparkTableIngestStats('StreamIngestTest33Queued')\") \\\r\n",
+							"    .load()\r\n",
+							"\r\n",
+							"display(functionModeCount)"
+						],
+						"outputs": [],
+						"execution_count": 20
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/StreamingIngestFabricNoLinkedService')]",
+			"type": "Microsoft.Synapse/workspaces/notebooks",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"nbformat": 4,
+				"nbformat_minor": 2,
+				"bigDataPool": {
+					"referenceName": "spark34a2",
+					"type": "BigDataPoolReference"
+				},
+				"sessionProperties": {
+					"driverMemory": "28g",
+					"driverCores": 4,
+					"executorMemory": "28g",
+					"executorCores": 4,
+					"numExecutors": 2,
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2",
+						"spark.autotune.trackingId": "b077fde2-cd71-48cd-82ca-718e6dd8f1c4"
+					}
+				},
+				"metadata": {
+					"saveOutput": true,
+					"enableDebugMode": false,
+					"kernelspec": {
+						"name": "synapse_pyspark",
+						"display_name": "Synapse PySpark"
+					},
+					"language_info": {
+						"name": "python"
+					},
+					"a365ComputeOptions": {
+						"id": "/subscriptions/216ca57c-8613-4c54-8960-1e5821b6dc8d/resourceGroups/SDK_E2E_TEST/providers/Microsoft.Synapse/workspaces/synapsekustosparkppe/bigDataPools/spark34a2",
+						"name": "spark34a2",
+						"type": "Spark",
+						"endpoint": "https://synapsekustosparkppe.dev.azuresynapse-test.azure.net/livyApi/versions/2019-11-01-preview/sparkPools/spark34a2",
+						"auth": {
+							"type": "AAD",
+							"authResource": "https://dev.azuresynapse.net"
+						},
+						"sparkVersion": "3.4",
+						"nodeCount": 3,
+						"cores": 4,
+						"memory": 28
+					},
+					"sessionKeepAliveTimeout": 30
+				},
+				"cells": [
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "scala"
+							}
+						},
+						"source": [
+							"%%spark\n",
+							"println(spark.conf.get(\"spark.synapse.vhd.id\"))"
+						],
+						"outputs": [],
+						"execution_count": 1
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"mssparkutils.fs.mount(  \r\n",
+							"    \"abfss://synapseppe@synapsekustosparktest.dfs.core.windows.net/\", #ADLS GEN 2 PATH  \r\n",
+							"    \"/2023103104\", #Mount Point Name  \r\n",
+							"    { \"linkedService\" : \"synapsekustosparktest\"}  \r\n",
+							")  "
+						],
+						"outputs": [],
+						"execution_count": 2
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"!pip install dbldatagen\r\n",
+							"!pip install jmespath"
+						],
+						"outputs": [],
+						"execution_count": 3
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"access_token = mssparkutils.credentials.getConnectionStringOrCreds(\"FabricKustoLS\")"
+						],
+						"outputs": [],
+						"execution_count": 4
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"## Generate random streaming data : https://databrickslabs.github.io/dbldatagen/public_docs/using_streaming_data.html\r\n",
+							"\r\n",
+							"import time\r\n",
+							"time_to_run = 180\r\n",
+							"\r\n",
+							"from pyspark.sql.types import LongType, IntegerType, StringType\r\n",
+							"\r\n",
+							"import dbldatagen as dg\r\n",
+							"\r\n",
+							"device_population = 1000\r\n",
+							"data_rows = 1000 * 1000\r\n",
+							"partitions_requested = 8\r\n",
+							"\r\n",
+							"country_codes = ['CN', 'US', 'FR', 'CA', 'IN', 'JM', 'IE', 'PK', 'GB', 'IL', 'AU', 'SG',\r\n",
+							"                 'ES', 'GE', 'MX', 'ET', 'SA', 'LB', 'NL']\r\n",
+							"country_weights = [1300, 365, 67, 38, 1300, 3, 7, 212, 67, 9, 25, 6, 47, 83, 126, 109, 58,\r\n",
+							"                   8, 17]\r\n",
+							"\r\n",
+							"manufacturers = ['Delta corp', 'Xyzzy Inc.', 'Lakehouse Ltd', 'Acme Corp', 'Embanks Devices']\r\n",
+							"\r\n",
+							"lines = ['delta', 'xyzzy', 'lakehouse', 'gadget', 'droid']\r\n",
+							"\r\n",
+							"testDataSpec = (\r\n",
+							"    dg.DataGenerator(spark, name=\"device_data_set\", rows=data_rows,\r\n",
+							"                     partitions=partitions_requested,\r\n",
+							"                     verbose=True)\r\n",
+							"    .withIdOutput()\r\n",
+							"    # we'll use hash of the base field to generate the ids to\r\n",
+							"    # avoid a simple incrementing sequence\r\n",
+							"    .withColumn(\"internal_device_id\", LongType(), minValue=0x1000000000000,\r\n",
+							"                uniqueValues=device_population, omit=True, baseColumnType=\"hash\")\r\n",
+							"\r\n",
+							"    # note for format strings, we must use \"%lx\" not \"%x\" as the\r\n",
+							"    # underlying value is a long\r\n",
+							"    .withColumn(\"device_id\", StringType(), format=\"0x%013x\",\r\n",
+							"                baseColumn=\"internal_device_id\")\r\n",
+							"\r\n",
+							"    # the device / user attributes will be the same for the same device id\r\n",
+							"    # so lets use the internal device id as the base column for these attribute\r\n",
+							"    .withColumn(\"country\", StringType(), values=country_codes,\r\n",
+							"                weights=country_weights, baseColumn=\"internal_device_id\")\r\n",
+							"    .withColumn(\"manufacturer\", StringType(), values=manufacturers,\r\n",
+							"                baseColumn=\"internal_device_id\")\r\n",
+							"\r\n",
+							"    # use omit = True if you don't want a column to appear in the final output\r\n",
+							"    # but just want to use it as part of generation of another column\r\n",
+							"    .withColumn(\"line\", StringType(), values=lines, baseColumn=\"manufacturer\",\r\n",
+							"                baseColumnType=\"hash\", omit=True)\r\n",
+							"    .withColumn(\"model_ser\", IntegerType(), minValue=1, maxValue=11,\r\n",
+							"                baseColumn=\"device_id\", baseColumnType=\"hash\", omit=True)\r\n",
+							"\r\n",
+							"    .withColumn(\"model_line\", StringType(), expr=\"concat(line, '#', model_ser)\",\r\n",
+							"                baseColumn=[\"line\", \"model_ser\"])\r\n",
+							"    .withColumn(\"event_type\", StringType(),\r\n",
+							"                values=[\"activation\", \"deactivation\", \"plan change\",\r\n",
+							"                        \"telecoms activity\", \"internet activity\", \"device error\"],\r\n",
+							"                random=True)\r\n",
+							"    .withColumn(\"event_ts\", \"timestamp\", expr=\"now()\")\r\n",
+							"    )\r\n",
+							"\r\n",
+							"dfTestDataStreaming = testDataSpec.build(withStreaming=True, options={'rowsPerSecond': 1500})"
+						],
+						"outputs": [],
+						"execution_count": 5
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"spark.conf.set(\"spark.sql.streaming.checkpointLocation\", \"/2023103104/2023080303\")"
+						],
+						"outputs": [],
+						"execution_count": 6
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"txnq = dfTestDataStreaming.writeStream \\\r\n",
+							"    .format(\"com.microsoft.kusto.spark.synapse.datasink.KustoSynapseSinkProvider\") \\\r\n",
+							"    .option(\"kustoCluster\", \"https://trdp-1665b5eybxs0tbett.z8.kusto.fabric.microsoft.com\") \\\r\n",
+							"    .option(\"kustoDatabase\", \"sdktests\") \\\r\n",
+							"    .option(\"authToken\",access_token) \\\r\n",
+							"    .option(\"kustoTable\", \"StreamIngestTest33Transactional\") \\\r\n",
+							"    .option(\"tableCreateOptions\",\"CreateIfNotExist\") \\\r\n",
+							"    .trigger(processingTime='2 seconds')\r\n",
+							"txnq.start().awaitTermination(60*3)"
+						],
+						"outputs": [],
+						"execution_count": 7
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"queuedq = dfTestDataStreaming.writeStream \\\r\n",
+							"    .format(\"com.microsoft.kusto.spark.synapse.datasink.KustoSynapseSinkProvider\") \\\r\n",
+							"    .option(\"kustoCluster\", \"https://trdp-1665b5eybxs0tbett.z8.kusto.fabric.microsoft.com\") \\\r\n",
+							"    .option(\"kustoDatabase\", \"sdktests\") \\\r\n",
+							"    .option(\"authToken\",access_token) \\\r\n",
+							"    .option(\"kustoTable\", \"StreamIngestTest33Queued\") \\\r\n",
+							"    .option(\"writeMode\", \"Queued\") \\\r\n",
+							"    .option(\"tableCreateOptions\",\"CreateIfNotExist\") \\\r\n",
+							"    .trigger(processingTime='2 seconds')\r\n",
+							"queuedq.start().awaitTermination(60*3)"
+						],
+						"outputs": [],
+						"execution_count": 8
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "python"
+							},
+							"collapsed": false
+						},
+						"source": [
+							"%%pyspark\r\n",
+							"# Read data from Azure Data Explorer table(s)\r\n",
+							"# Full Sample Code available at: https://github.com/Azure/azure-kusto-spark/blob/master/samples/src/main/python/SynapseSample.py\r\n",
+							"transactionalModeCount  = spark.read \\\r\n",
+							"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\r\n",
+							"    .option(\"kustoCluster\", \"https://trdp-1665b5eybxs0tbett.z8.kusto.fabric.microsoft.com\") \\\r\n",
+							"    .option(\"kustoDatabase\", \"sdktests\") \\\r\n",
+							"    .option(\"authToken\",access_token) \\\r\n",
+							"    .option(\"kustoQuery\", \"StreamIngestTest33Transactional | project DiffSecs = datetime_diff('second',ingestion_time(),todatetime(event_ts)) | summarize  count(),min(DiffSecs),max(DiffSecs),avg(DiffSecs)\") \\\r\n",
+							"    .load()\r\n",
+							"\r\n",
+							"display(transactionalModeCount)"
+						],
+						"outputs": [],
+						"execution_count": 9
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "python"
+							},
+							"collapsed": false
+						},
+						"source": [
+							"%%pyspark\r\n",
+							"# Read data from Azure Data Explorer table(s)\r\n",
+							"# Full Sample Code available at: https://github.com/Azure/azure-kusto-spark/blob/master/samples/src/main/python/SynapseSample.py\r\n",
+							"queuedModeCount  = spark.read \\\r\n",
+							"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\r\n",
+							"    .option(\"kustoCluster\", \"https://trdp-1665b5eybxs0tbett.z8.kusto.fabric.microsoft.com\") \\\r\n",
+							"    .option(\"kustoDatabase\", \"sdktests\") \\\r\n",
+							"    .option(\"authToken\",access_token) \\\r\n",
+							"    .option(\"kustoQuery\", \"StreamIngestTest33Transactional | project DiffSecs = datetime_diff('second',ingestion_time(),todatetime(event_ts)) | summarize  count(),min(DiffSecs),max(DiffSecs),avg(DiffSecs)\") \\\r\n",
+							"    .load()\r\n",
+							"\r\n",
+							"display(queuedModeCount)"
+						],
+						"outputs": [],
+						"execution_count": 10
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "python"
+							},
+							"collapsed": false
+						},
+						"source": [
+							"%%pyspark\r\n",
+							"# Read data from Azure Data Explorer table(s)\r\n",
+							"# Full Sample Code available at: https://github.com/Azure/azure-kusto-spark/blob/master/samples/src/main/python/SynapseSample.py\r\n",
+							"functionModeCount  = spark.read \\\r\n",
+							"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\r\n",
+							"    .option(\"kustoCluster\", \"https://trdp-1665b5eybxs0tbett.z8.kusto.fabric.microsoft.com\") \\\r\n",
+							"    .option(\"kustoDatabase\", \"sdktests\") \\\r\n",
+							"    .option(\"authToken\",access_token) \\\r\n",
+							"    .option(\"kustoQuery\", \"SparkTableIngestStats('StreamIngestTest33Queued')\") \\\r\n",
+							"    .load()\r\n",
+							"\r\n",
+							"display(functionModeCount)"
+						],
+						"outputs": [],
+						"execution_count": 11
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/spark34')]",
+			"type": "Microsoft.Synapse/workspaces/bigDataPools",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"autoPause": {
+					"enabled": true,
+					"delayInMinutes": 15
+				},
+				"autoScale": {
+					"enabled": true,
+					"maxNodeCount": 10,
+					"minNodeCount": 3
+				},
+				"nodeCount": 10,
+				"nodeSize": "Small",
+				"nodeSizeFamily": "MemoryOptimized",
+				"sparkVersion": "3.4",
+				"isComputeIsolationEnabled": false,
+				"sessionLevelPackagesEnabled": false,
+				"annotations": []
+			},
+			"dependsOn": [],
+			"location": "southcentralus"
+		}
+	]
+}

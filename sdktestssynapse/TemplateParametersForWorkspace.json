@@ -1,0 +1,51 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"workspaceName": {
+			"value": "sdktestssynapse"
+		},
+		"FabricKustoLS_servicePrincipalKey": {
+			"value": ""
+		},
+		"sdktestcluster_servicePrincipalKey": {
+			"value": ""
+		},
+		"sdktestssynapse-WorkspaceDefaultSqlServer_connectionString": {
+			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:sdktestssynapse.sql.azuresynapse-test.azure.net,1433;Initial Catalog=@{linkedService().DBName}"
+		},
+		"synapsekustosparkppe-WorkspaceDefaultSqlServer_connectionString": {
+			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:synapsekustosparkppe.sql.azuresynapse-test.azure.net,1433;Initial Catalog=@{linkedService().DBName}"
+		},
+		"synapsekustosparktest_accountKey": {
+			"value": ""
+		},
+		"FabricKustoLS_properties_typeProperties_tenant": {
+			"value": "72f988bf-86f1-41af-91ab-2d7cd011db47"
+		},
+		"FabricKustoLS_properties_typeProperties_servicePrincipalId": {
+			"value": "314cd011-52fd-4093-9c2f-6f6c3c85b60c"
+		},
+		"FabricKustoLS_properties_typeProperties_database": {
+			"value": "Stocks"
+		},
+		"sdktestcluster_properties_typeProperties_tenant": {
+			"value": "72f988bf-86f1-41af-91ab-2d7cd011db47"
+		},
+		"sdktestcluster_properties_typeProperties_servicePrincipalId": {
+			"value": "314cd011-52fd-4093-9c2f-6f6c3c85b60c"
+		},
+		"sdktestcluster_properties_typeProperties_database": {
+			"value": "spark"
+		},
+		"sdktestssynapse-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://sdkteststorage.dfs.core.windows.net"
+		},
+		"synapsekustosparkppe-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://sdke2eteststorageadls.dfs.core.windows.net"
+		},
+		"synapsekustosparktest_properties_typeProperties_url": {
+			"value": "https://synapsekustosparktest.dfs.core.windows.net"
+		}
+	}
+}
