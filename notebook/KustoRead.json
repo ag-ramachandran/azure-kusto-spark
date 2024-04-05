@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "8185238f-294d-46f9-bebf-f7ac7ed55f18"
+				"spark.autotune.trackingId": "adc506ea-4179-49a1-afbb-2bc571cda523"
 			}
 		},
 		"metadata": {
@@ -231,7 +231,7 @@
 					"val creds = mssparkutils.credentials.getConnectionStringOrCreds(\"sdktestcluster\")\n",
 					"val clusterUrl = mssparkutils.credentials.getFullConnectionString(\"sdktestcluster\")"
 				],
-				"execution_count": 4
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
