@@ -13,11 +13,12 @@
 			"executorMemory": "28g",
 			"executorCores": 4,
 			"numExecutors": 2,
+			"runAsWorkspaceSystemIdentity": true,
 			"conf": {
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "7db3bddf-5d5b-4c66-a5c0-20677bfca3a3"
+				"spark.autotune.trackingId": "93423359-64f6-43f8-95b8-531e81e93fea"
 			}
 		},
 		"metadata": {
@@ -40,7 +41,7 @@
 					"authResource": "https://dev.azuresynapse.net"
 				},
 				"sparkVersion": "3.4",
-				"nodeCount": 10,
+				"nodeCount": 3,
 				"cores": 4,
 				"memory": 28,
 				"automaticScaleJobs": false
