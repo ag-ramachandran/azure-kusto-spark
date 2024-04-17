@@ -4,7 +4,7 @@
 		"nbformat": 4,
 		"nbformat_minor": 2,
 		"bigDataPool": {
-			"referenceName": "spark33v1",
+			"referenceName": "spark34f",
 			"type": "BigDataPoolReference"
 		},
 		"sessionProperties": {
@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "ed6de063-a7c1-4812-ae01-1266f5c43343"
+				"spark.autotune.trackingId": "aebc2d59-6de0-4240-b5b8-7d8945652688"
 			}
 		},
 		"metadata": {
@@ -32,16 +32,16 @@
 				"name": "python"
 			},
 			"a365ComputeOptions": {
-				"id": "/subscriptions/216ca57c-8613-4c54-8960-1e5821b6dc8d/resourceGroups/SDK_E2E_TEST/providers/Microsoft.Synapse/workspaces/sdktestssynapse2/bigDataPools/spark33v1",
-				"name": "spark33v1",
+				"id": "/subscriptions/216ca57c-8613-4c54-8960-1e5821b6dc8d/resourceGroups/SDK_E2E_TEST/providers/Microsoft.Synapse/workspaces/sdktestssynapseas/bigDataPools/spark34f",
+				"name": "spark34f",
 				"type": "Spark",
-				"endpoint": "https://sdktestssynapse2.dev.azuresynapse-test.azure.net/livyApi/versions/2019-11-01-preview/sparkPools/spark33v1",
+				"endpoint": "https://sdktestssynapseas.dev.azuresynapse-test.azure.net/livyApi/versions/2019-11-01-preview/sparkPools/spark34f",
 				"auth": {
 					"type": "AAD",
 					"authResource": "https://dev.azuresynapse.net"
 				},
-				"sparkVersion": "3.3",
-				"nodeCount": 10,
+				"sparkVersion": "3.4",
+				"nodeCount": 3,
 				"cores": 4,
 				"memory": 28,
 				"automaticScaleJobs": false
@@ -69,7 +69,7 @@
 					"%%spark\n",
 					"println(spark.conf.get(\"spark.synapse.vhd.id\"))"
 				],
-				"execution_count": 1
+				"execution_count": 6
 			},
 			{
 				"cell_type": "markdown",
@@ -101,14 +101,14 @@
 				"source": [
 					"kustoDfSingle  = spark.read \\\n",
 					"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\n",
-					"    .option(\"spark.synapse.linkedService\", \"synapsemisdktestcluster\") \\\n",
+					"    .option(\"spark.synapse.linkedService\", \"sdktestcluster\") \\\n",
 					"    .option(\"kustoDatabase\", \"spark\") \\\n",
 					"    .option(\"kustoQuery\", \"KustoAirlineDataTransactional | where Year >= 1987\t| take 10000\") \\\n",
 					"    .load()\n",
 					"\n",
 					"display(kustoDfSingle)"
 				],
-				"execution_count": null
+				"execution_count": 7
 			},
 			{
 				"cell_type": "markdown",
@@ -157,7 +157,7 @@
 					"display(kustoDfDistributed)\r\n",
 					""
 				],
-				"execution_count": 15
+				"execution_count": 8
 			},
 			{
 				"cell_type": "markdown",
@@ -205,7 +205,7 @@
 					"allTypesDf.write.format(\"com.microsoft.kusto.spark.synapse.datasource\").option(\"kustoDatabase\", \"spark\").option(\"kustoTable\", \"AllDataTypesTransactionalSpark34\").option(\"tableCreateOptions\",\"CreateIfNotExist\").option(\"spark.synapse.linkedService\", \"sdktestcluster\").mode(\"Append\").save()\r\n",
 					"//allTypesDf.write.format(\"com.microsoft.kusto.spark.synapse.datasource\").option(\"spark.synapse.linkedService\", \"sdktestcluster\").option(\"kustoDatabase\", \"spark\").option(\"kustoTable\", \"AllDataTypesQueuedSpark33\").option(\"tableCreateOptions\",\"CreateIfNotExist\").option(\"writeMode\",\"Queued\").mode(\"Append\").save()"
 				],
-				"execution_count": 7
+				"execution_count": 9
 			},
 			{
 				"cell_type": "markdown",
@@ -240,7 +240,7 @@
 					"%%spark\r\n",
 					"allTypesDf.write.format(\"com.microsoft.kusto.spark.synapse.datasource\").option(\"spark.synapse.linkedService\", \"sdktestcluster\").option(\"kustoDatabase\", \"spark\").option(\"kustoTable\", \"[All-DataTypes-QueuedSpark34]\").option(\"tableCreateOptions\",\"CreateIfNotExist\").option(\"writeMode\",\"Queued\").mode(\"Append\").save()"
 				],
-				"execution_count": 11
+				"execution_count": 10
 			},
 			{
 				"cell_type": "code",
@@ -267,13 +267,13 @@
 					"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\r\n",
 					"    .option(\"spark.synapse.linkedService\", \"sdktestcluster\") \\\r\n",
 					"    .option(\"kustoDatabase\", \"spark\") \\\r\n",
-					"    .option(\"kustoQuery\", \"KustoAirlineDataParquetTransactional2 | where Year >= 1987\t | take 100\") \\\r\n",
+					"    .option(\"kustoQuery\", \"AllDataTypesTransactionalSpark34\t | take 100\") \\\r\n",
 					"    .option(\"readMode\", \"ForceDistributedMode\") \\\r\n",
 					"    .load()\r\n",
 					"\r\n",
 					"display(kustoDfAllTypes)"
 				],
-				"execution_count": null
+				"execution_count": 12
 			},
 			{
 				"cell_type": "code",
@@ -338,7 +338,7 @@
 					"\r\n",
 					"display(queuedModeCount)"
 				],
-				"execution_count": 12
+				"execution_count": 14
 			}
 		]
 	}
