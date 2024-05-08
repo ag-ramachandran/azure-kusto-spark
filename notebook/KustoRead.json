@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "d90afce6-ead1-431d-b092-368e4cc707f0"
+				"spark.autotune.trackingId": "c9d6e46e-b4db-45c9-8fad-363c08227db0"
 			}
 		},
 		"metadata": {
@@ -90,20 +90,17 @@
 				"source": [
 					"%%spark\r\n",
 					"val creds = mssparkutils.credentials.getConnectionStringOrCreds(\"adxmi\")\r\n",
-					"\r\n",
-					"\r\n",
-					"\r\n",
-					"kustoDfSingle  = spark.read \\\r\n",
-					"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\r\n",
+					"val kustoDfSingle  = spark.read\r\n",
+					"    .format(\"com.microsoft.kusto.spark.synapse.datasource\")\r\n",
 					"    .option(\"accessToken\", creds)\r\n",
 					"    .option(\"kustoCluster\", \"sdktestcluster.southeastasia\" )\r\n",
-					"    .option(\"kustoDatabase\", \"spark\") \\\r\n",
-					"    .option(\"kustoQuery\", \"KustoAirlineDataTransactional | where Year >= 1987\t| take 10000\") \\\r\n",
+					"    .option(\"kustoDatabase\", \"spark\")\r\n",
+					"    .option(\"kustoQuery\", \"KustoAirlineDataTransactional | where Year >= 1987\t| take 10000\")\r\n",
 					"    .load()\r\n",
 					"\r\n",
 					"display(kustoDfSingle)"
 				],
-				"execution_count": null
+				"execution_count": 14
 			},
 			{
 				"cell_type": "markdown",
