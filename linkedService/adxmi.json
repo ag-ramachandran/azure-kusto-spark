@@ -1,0 +1,15 @@
+{
+	"name": "adxmi",
+	"properties": {
+		"annotations": [],
+		"type": "AzureDataExplorer",
+		"typeProperties": {
+			"endpoint": "https://sdktestcluster.southeastasia.dev.kusto.windows.net",
+			"database": "spark"
+		},
+		"connectVia": {
+			"referenceName": "AutoResolveIntegrationRuntime",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
