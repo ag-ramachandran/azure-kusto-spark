@@ -1776,7 +1776,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "1773c216-24a5-4d89-a18b-13f5292195f0"
+						"spark.autotune.trackingId": "e817ab91-eb0c-4ef9-abe9-670ff868691e"
 					}
 				},
 				"metadata": {
@@ -1828,7 +1828,7 @@
 							"println(spark.conf.get(\"spark.synapse.vhd.id\"))"
 						],
 						"outputs": [],
-						"execution_count": 12
+						"execution_count": 20
 					},
 					{
 						"cell_type": "code",
@@ -1847,11 +1847,11 @@
 							"mssparkutils.fs.mount(  \r\n",
 							"    \"abfss://synapseppe@synapsekustosparktest.dfs.core.windows.net/\", #ADLS GEN 2 PATH  \r\n",
 							"    \"/20240521\", #Mount Point Name  \r\n",
-							"    { \"linkedService\" : \"sdktestssynapse2-WorkspaceDefaultStorage\"}  \r\n",
+							"    { \"linkedService\" : \"synapsekustosparktest\"}  \r\n",
 							")  "
 						],
 						"outputs": [],
-						"execution_count": 15
+						"execution_count": 19
 					},
 					{
 						"cell_type": "code",
@@ -1871,7 +1871,7 @@
 							"!pip install jmespath"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 21
 					},
 					{
 						"cell_type": "code",
@@ -1950,7 +1950,7 @@
 							"dfTestDataStreaming = testDataSpec.build(withStreaming=True, options={'rowsPerSecond': 1500})"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 22
 					},
 					{
 						"cell_type": "code",
@@ -1966,10 +1966,10 @@
 							}
 						},
 						"source": [
-							"spark.conf.set(\"spark.sql.streaming.checkpointLocation\", \"/20231022/2023062701\")"
+							"spark.conf.set(\"spark.sql.streaming.checkpointLocation\", \"/20240521/1\")"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 24
 					},
 					{
 						"cell_type": "code",
@@ -1987,7 +1987,7 @@
 						"source": [
 							"txnq = dfTestDataStreaming.writeStream \\\r\n",
 							"    .format(\"com.microsoft.kusto.spark.synapse.datasink.KustoSynapseSinkProvider\") \\\r\n",
-							"    .option(\"spark.synapse.linkedService\", \"sdktestcluster\") \\\r\n",
+							"    .option(\"spark.synapse.linkedService\", \"adxmi\") \\\r\n",
 							"    .option(\"kustoDatabase\", \"spark\") \\\r\n",
 							"    .option(\"kustoTable\", \"StreamIngestTest33Transactional\") \\\r\n",
 							"    .option(\"tableCreateOptions\",\"CreateIfNotExist\") \\\r\n",
@@ -1995,7 +1995,7 @@
 							"txnq.start().awaitTermination(60*1)"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 26
 					},
 					{
 						"cell_type": "code",
@@ -2013,7 +2013,7 @@
 						"source": [
 							"queuedq = dfTestDataStreaming.writeStream \\\r\n",
 							"    .format(\"com.microsoft.kusto.spark.synapse.datasink.KustoSynapseSinkProvider\") \\\r\n",
-							"    .option(\"spark.synapse.linkedService\", \"sdktestcluster\") \\\r\n",
+							"    .option(\"spark.synapse.linkedService\", \"adxmi\") \\\r\n",
 							"    .option(\"kustoDatabase\", \"spark\") \\\r\n",
 							"    .option(\"kustoTable\", \"StreamIngestTest33Queued\") \\\r\n",
 							"    .option(\"writeMode\", \"Queued\") \\\r\n",
@@ -2047,7 +2047,7 @@
 							"# Full Sample Code available at: https://github.com/Azure/azure-kusto-spark/blob/master/samples/src/main/python/SynapseSample.py\r\n",
 							"transactionalModeCount  = spark.read \\\r\n",
 							"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\r\n",
-							"    .option(\"spark.synapse.linkedService\", \"sdktestcluster\") \\\r\n",
+							"    .option(\"spark.synapse.linkedService\", \"adxmi\") \\\r\n",
 							"    .option(\"kustoDatabase\", \"spark\") \\\r\n",
 							"    .option(\"kustoQuery\", \"StreamIngestTest33Transactional | project DiffSecs = datetime_diff('second',ingestion_time(),todatetime(event_ts)) | summarize  count(),min(DiffSecs),max(DiffSecs),avg(DiffSecs)\") \\\r\n",
 							"    .load()\r\n",
@@ -2080,7 +2080,7 @@
 							"# Full Sample Code available at: https://github.com/Azure/azure-kusto-spark/blob/master/samples/src/main/python/SynapseSample.py\r\n",
 							"queuedModeCount  = spark.read \\\r\n",
 							"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\r\n",
-							"    .option(\"spark.synapse.linkedService\", \"sdktestcluster\") \\\r\n",
+							"    .option(\"spark.synapse.linkedService\", \"adxmi\") \\\r\n",
 							"    .option(\"kustoDatabase\", \"spark\") \\\r\n",
 							"    .option(\"kustoQuery\", \"StreamIngestTest33Transactional | project DiffSecs = datetime_diff('second',ingestion_time(),todatetime(event_ts)) | summarize  count(),min(DiffSecs),max(DiffSecs),avg(DiffSecs)\") \\\r\n",
 							"    .load()\r\n",
@@ -2113,7 +2113,7 @@
 							"# Full Sample Code available at: https://github.com/Azure/azure-kusto-spark/blob/master/samples/src/main/python/SynapseSample.py\r\n",
 							"functionModeCount  = spark.read \\\r\n",
 							"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\r\n",
-							"    .option(\"spark.synapse.linkedService\", \"sdktestcluster\") \\\r\n",
+							"    .option(\"spark.synapse.linkedService\", \"adxmi\") \\\r\n",
 							"    .option(\"kustoDatabase\", \"spark\") \\\r\n",
 							"    .option(\"kustoQuery\", \"SparkTableIngestStats('StreamIngestTest33Queued')\") \\\r\n",
 							"    .load()\r\n",
