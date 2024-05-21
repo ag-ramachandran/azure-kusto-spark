@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "eafe7784-c35c-460d-9e79-4b557b14b08f"
+				"spark.autotune.trackingId": "655c77be-e965-4d5b-a959-6d0ccaa5eaa4"
 			}
 		},
 		"metadata": {
@@ -90,7 +90,7 @@
 					"    { \"linkedService\" : \"synapsekustosparktest\"}  \r\n",
 					")  "
 				],
-				"execution_count": 8
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",

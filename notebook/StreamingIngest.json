@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "94fd8856-8500-4848-9e9e-aa4c86a3e68c"
+				"spark.autotune.trackingId": "6e6a3805-096b-4173-9f85-6c8c3d61d2b1"
 			}
 		},
 		"metadata": {
@@ -188,7 +188,7 @@
 					"\r\n",
 					"dfTestDataStreaming = testDataSpec.build(withStreaming=True, options={'rowsPerSecond': 1500})"
 				],
-				"execution_count": 4
+				"execution_count": 9
 			},
 			{
 				"cell_type": "code",
@@ -204,9 +204,9 @@
 					}
 				},
 				"source": [
-					"spark.conf.set(\"spark.sql.streaming.checkpointLocation\", \"/20240521/1\")"
+					"spark.conf.set(\"spark.sql.streaming.checkpointLocation\", \"/20240521/2\")"
 				],
-				"execution_count": 6
+				"execution_count": 11
 			},
 			{
 				"cell_type": "code",
@@ -232,7 +232,7 @@
 					"\r\n",
 					"txnq.start().awaitTermination(60*1)"
 				],
-				"execution_count": 7
+				"execution_count": 12
 			},
 			{
 				"cell_type": "code",
