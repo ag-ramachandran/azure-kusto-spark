@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "29f0220b-9e01-492c-8bb4-68816a11c23d"
+				"spark.autotune.trackingId": "d78232da-b010-400c-8144-d8081da85cf4"
 			}
 		},
 		"metadata": {
@@ -69,7 +69,7 @@
 					"%%spark\n",
 					"println(spark.conf.get(\"spark.synapse.vhd.id\"))"
 				],
-				"execution_count": 12
+				"execution_count": 16
 			},
 			{
 				"cell_type": "code",
@@ -88,10 +88,10 @@
 					"mssparkutils.fs.mount(  \r\n",
 					"    \"abfss://synapseppe@synapsekustosparktest.dfs.core.windows.net/\", #ADLS GEN 2 PATH  \r\n",
 					"    \"/20240521\", #Mount Point Name  \r\n",
-					"    { \"linkedService\" : \"sdktestssynapse2-WorkspaceDefaultStorage\"}  \r\n",
+					"    { \"linkedService\" : \"synapsekustosparktest\"}  \r\n",
 					")  "
 				],
-				"execution_count": 15
+				"execution_count": 18
 			},
 			{
 				"cell_type": "code",
