@@ -31,10 +31,6 @@
 			"metadata": "Secure string for 'connectionString' of 'synapsekustosparkppe-WorkspaceDefaultSqlServer'",
 			"defaultValue": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:synapsekustosparkppe.sql.azuresynapse-test.azure.net,1433;Initial Catalog=@{linkedService().DBName}"
 		},
-		"synapsekustosparktest_accountKey": {
-			"type": "secureString",
-			"metadata": "Secure string for 'accountKey' of 'synapsekustosparktest'"
-		},
 		"FabricKustoLS_properties_typeProperties_database": {
 			"type": "string",
 			"defaultValue": "Stocks"
@@ -321,11 +317,7 @@
 				"annotations": [],
 				"type": "AzureBlobFS",
 				"typeProperties": {
-					"url": "[parameters('synapsekustosparktest_properties_typeProperties_url')]",
-					"accountKey": {
-						"type": "SecureString",
-						"value": "[parameters('synapsekustosparktest_accountKey')]"
-					}
+					"url": "[parameters('synapsekustosparktest_properties_typeProperties_url')]"
 				},
 				"connectVia": {
 					"referenceName": "AutoResolveIntegrationRuntime",
@@ -1784,7 +1776,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "a3bbdd8b-4ca5-442d-a6b8-c15b18c2c630"
+						"spark.autotune.trackingId": "1773c216-24a5-4d89-a18b-13f5292195f0"
 					}
 				},
 				"metadata": {
@@ -1836,7 +1828,7 @@
 							"println(spark.conf.get(\"spark.synapse.vhd.id\"))"
 						],
 						"outputs": [],
-						"execution_count": 1
+						"execution_count": 12
 					},
 					{
 						"cell_type": "code",
@@ -1854,12 +1846,12 @@
 						"source": [
 							"mssparkutils.fs.mount(  \r\n",
 							"    \"abfss://synapseppe@synapsekustosparktest.dfs.core.windows.net/\", #ADLS GEN 2 PATH  \r\n",
-							"    \"/20231024\", #Mount Point Name  \r\n",
-							"    { \"linkedService\" : \"synapsekustosparktest\"}  \r\n",
+							"    \"/20240521\", #Mount Point Name  \r\n",
+							"    { \"linkedService\" : \"sdktestssynapse2-WorkspaceDefaultStorage\"}  \r\n",
 							")  "
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 15
 					},
 					{
 						"cell_type": "code",

@@ -20,9 +20,6 @@
 		"synapsekustosparkppe-WorkspaceDefaultSqlServer_connectionString": {
 			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:synapsekustosparkppe.sql.azuresynapse-test.azure.net,1433;Initial Catalog=@{linkedService().DBName}"
 		},
-		"synapsekustosparktest_accountKey": {
-			"value": ""
-		},
 		"FabricKustoLS_properties_typeProperties_database": {
 			"value": "Stocks"
 		},
