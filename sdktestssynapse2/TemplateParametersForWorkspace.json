@@ -8,9 +8,6 @@
 		"sdktestssynapse-WorkspaceDefaultSqlServer_connectionString": {
 			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:sdktestssynapse.sql.azuresynapse-test.azure.net,1433;Initial Catalog=@{linkedService().DBName}"
 		},
-		"sdktestssynapse-WorkspaceDefaultStorage_accountKey": {
-			"value": ""
-		},
 		"sdktestssynapse2-WorkspaceDefaultSqlServer_connectionString": {
 			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:sdktestssynapse2.sql.azuresynapse-test.azure.net,1433;Initial Catalog=@{linkedService().DBName}"
 		},
@@ -39,7 +36,7 @@
 			"value": "https://sdkteststorage.dfs.core.windows.net"
 		},
 		"synapsekustosparkppe-WorkspaceDefaultStorage_properties_typeProperties_url": {
-			"value": "https://sdke2eteststorageadls.dfs.core.windows.net"
+			"value": "https://sdkteststorage.dfs.core.windows.net"
 		},
 		"synapsekustosparktest_properties_typeProperties_url": {
 			"value": "https://synapsekustosparktest.dfs.core.windows.net"

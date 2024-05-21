@@ -12,10 +12,6 @@
 			"metadata": "Secure string for 'connectionString' of 'sdktestssynapse-WorkspaceDefaultSqlServer'",
 			"defaultValue": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:sdktestssynapse.sql.azuresynapse-test.azure.net,1433;Initial Catalog=@{linkedService().DBName}"
 		},
-		"sdktestssynapse-WorkspaceDefaultStorage_accountKey": {
-			"type": "secureString",
-			"metadata": "Secure string for 'accountKey' of 'sdktestssynapse-WorkspaceDefaultStorage'"
-		},
 		"sdktestssynapse2-WorkspaceDefaultSqlServer_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'sdktestssynapse2-WorkspaceDefaultSqlServer'",
@@ -57,7 +53,7 @@
 		},
 		"synapsekustosparkppe-WorkspaceDefaultStorage_properties_typeProperties_url": {
 			"type": "string",
-			"defaultValue": "https://sdke2eteststorageadls.dfs.core.windows.net"
+			"defaultValue": "https://sdkteststorage.dfs.core.windows.net"
 		},
 		"synapsekustosparktest_properties_typeProperties_url": {
 			"type": "string",
@@ -165,11 +161,7 @@
 				"annotations": [],
 				"type": "AzureBlobFS",
 				"typeProperties": {
-					"url": "[parameters('sdktestssynapse-WorkspaceDefaultStorage_properties_typeProperties_url')]",
-					"accountKey": {
-						"type": "SecureString",
-						"value": "[parameters('sdktestssynapse-WorkspaceDefaultStorage_accountKey')]"
-					}
+					"url": "[parameters('sdktestssynapse-WorkspaceDefaultStorage_properties_typeProperties_url')]"
 				},
 				"connectVia": {
 					"referenceName": "AutoResolveIntegrationRuntime",
@@ -1776,7 +1768,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "e817ab91-eb0c-4ef9-abe9-670ff868691e"
+						"spark.autotune.trackingId": "94fd8856-8500-4848-9e9e-aa4c86a3e68c"
 					}
 				},
 				"metadata": {
@@ -1801,8 +1793,7 @@
 						"sparkVersion": "3.4",
 						"nodeCount": 3,
 						"cores": 4,
-						"memory": 28,
-						"automaticScaleJobs": false
+						"memory": 28
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -1828,7 +1819,7 @@
 							"println(spark.conf.get(\"spark.synapse.vhd.id\"))"
 						],
 						"outputs": [],
-						"execution_count": 20
+						"execution_count": 1
 					},
 					{
 						"cell_type": "code",
@@ -1851,7 +1842,7 @@
 							")  "
 						],
 						"outputs": [],
-						"execution_count": 19
+						"execution_count": 2
 					},
 					{
 						"cell_type": "code",
@@ -1871,7 +1862,7 @@
 							"!pip install jmespath"
 						],
 						"outputs": [],
-						"execution_count": 21
+						"execution_count": 3
 					},
 					{
 						"cell_type": "code",
@@ -1950,7 +1941,7 @@
 							"dfTestDataStreaming = testDataSpec.build(withStreaming=True, options={'rowsPerSecond': 1500})"
 						],
 						"outputs": [],
-						"execution_count": 22
+						"execution_count": 4
 					},
 					{
 						"cell_type": "code",
@@ -1969,7 +1960,7 @@
 							"spark.conf.set(\"spark.sql.streaming.checkpointLocation\", \"/20240521/1\")"
 						],
 						"outputs": [],
-						"execution_count": 24
+						"execution_count": 6
 					},
 					{
 						"cell_type": "code",
@@ -1992,10 +1983,11 @@
 							"    .option(\"kustoTable\", \"StreamIngestTest33Transactional\") \\\r\n",
 							"    .option(\"tableCreateOptions\",\"CreateIfNotExist\") \\\r\n",
 							"    .trigger(processingTime='2 seconds')\r\n",
+							"\r\n",
 							"txnq.start().awaitTermination(60*1)"
 						],
 						"outputs": [],
-						"execution_count": 26
+						"execution_count": 7
 					},
 					{
 						"cell_type": "code",
