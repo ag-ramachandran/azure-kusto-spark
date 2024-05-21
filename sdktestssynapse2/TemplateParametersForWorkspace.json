@@ -5,12 +5,6 @@
 		"workspaceName": {
 			"value": "sdktestssynapse2"
 		},
-		"FabricKustoLS_servicePrincipalKey": {
-			"value": ""
-		},
-		"sdktestcluster_servicePrincipalKey": {
-			"value": ""
-		},
 		"sdktestssynapse-WorkspaceDefaultSqlServer_connectionString": {
 			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:sdktestssynapse.sql.azuresynapse-test.azure.net,1433;Initial Catalog=@{linkedService().DBName}"
 		},
@@ -26,20 +20,11 @@
 		"synapsekustosparktest_accountKey": {
 			"value": ""
 		},
-		"FabricKustoLS_properties_typeProperties_tenant": {
-			"value": "72f988bf-86f1-41af-91ab-2d7cd011db47"
-		},
-		"FabricKustoLS_properties_typeProperties_servicePrincipalId": {
-			"value": "9f07d10e-0afb-47f0-a19e-0bf7b3f589cc"
-		},
 		"FabricKustoLS_properties_typeProperties_database": {
 			"value": "Stocks"
 		},
-		"sdktestcluster_properties_typeProperties_tenant": {
-			"value": "72f988bf-86f1-41af-91ab-2d7cd011db47"
-		},
-		"sdktestcluster_properties_typeProperties_servicePrincipalId": {
-			"value": " 9f07d10e-0afb-47f0-a19e-0bf7b3f589cc"
+		"adxmi_properties_typeProperties_database": {
+			"value": "spark"
 		},
 		"sdktestcluster_properties_typeProperties_database": {
 			"value": "spark"
