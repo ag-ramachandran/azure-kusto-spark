@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "d751ed8e-3e4d-48eb-a090-56409d66216f"
+				"spark.autotune.trackingId": "4f8f4d39-0d9b-428f-8a7b-e7de3435ddfe"
 			}
 		},
 		"metadata": {
@@ -206,7 +206,7 @@
 				"source": [
 					"spark.conf.set(\"spark.sql.streaming.checkpointLocation\", \"abfss://synapseppe@synapsekustosparktest.dfs.core.windows.net/20240521/2\")"
 				],
-				"execution_count": 8
+				"execution_count": 6
 			},
 			{
 				"cell_type": "code",
@@ -232,7 +232,7 @@
 					"\r\n",
 					"txnq.start().awaitTermination(60*1)"
 				],
-				"execution_count": 9
+				"execution_count": 7
 			},
 			{
 				"cell_type": "code",
@@ -259,7 +259,7 @@
 					"    \r\n",
 					"queuedq.start().awaitTermination(60*1)"
 				],
-				"execution_count": 10
+				"execution_count": 8
 			},
 			{
 				"cell_type": "code",
@@ -291,7 +291,7 @@
 					"\r\n",
 					"display(transactionalModeCount)"
 				],
-				"execution_count": 12
+				"execution_count": 9
 			},
 			{
 				"cell_type": "code",
@@ -323,7 +323,7 @@
 					"\r\n",
 					"display(queuedModeCount)"
 				],
-				"execution_count": 13
+				"execution_count": 10
 			},
 			{
 				"cell_type": "code",
@@ -355,7 +355,7 @@
 					"\r\n",
 					"display(functionModeCount)"
 				],
-				"execution_count": 15
+				"execution_count": 11
 			}
 		]
 	}
