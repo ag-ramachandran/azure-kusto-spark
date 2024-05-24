@@ -18,7 +18,7 @@
 			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:synapsekustosparkppe.sql.azuresynapse-test.azure.net,1433;Initial Catalog=@{linkedService().DBName}"
 		},
 		"FabricKustoLS_properties_typeProperties_database": {
-			"value": "Stocks"
+			"value": "Sample"
 		},
 		"adxmi_properties_typeProperties_database": {
 			"value": "spark"

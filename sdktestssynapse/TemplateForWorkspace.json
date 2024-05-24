@@ -29,7 +29,7 @@
 		},
 		"FabricKustoLS_properties_typeProperties_database": {
 			"type": "string",
-			"defaultValue": "Stocks"
+			"defaultValue": "Sample"
 		},
 		"adxmi_properties_typeProperties_database": {
 			"type": "string",
@@ -76,7 +76,7 @@
 				"annotations": [],
 				"type": "AzureDataExplorer",
 				"typeProperties": {
-					"endpoint": "https://tridr7n160xjhpumzqnns9.z0.kusto.data.microsoft.com",
+					"endpoint": "https://trd-2mef4pj1u4g783gj30.z4.kusto.fabric.microsoft.com",
 					"database": "[parameters('FabricKustoLS_properties_typeProperties_database')]"
 				},
 				"connectVia": {
@@ -403,7 +403,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "c688752c-d7d6-4229-847b-ebda6113e21f"
+						"spark.autotune.trackingId": "a466c4bd-994f-4674-b0d2-723718f656d0"
 					}
 				},
 				"metadata": {
