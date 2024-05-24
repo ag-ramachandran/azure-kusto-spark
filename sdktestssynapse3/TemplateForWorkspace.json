@@ -19,7 +19,7 @@
 		},
 		"FabricKustoLS_properties_typeProperties_database": {
 			"type": "string",
-			"defaultValue": "37cb6954-3282-42c6-9984-0ad2a1133475"
+			"defaultValue": "6c0c7bb1-f1c6-4549-bc75-6e2e06fecc78"
 		},
 		"adxmi_properties_typeProperties_database": {
 			"type": "string",
@@ -46,7 +46,7 @@
 				"annotations": [],
 				"type": "AzureDataExplorer",
 				"typeProperties": {
-					"endpoint": "https://trd-2mef4pj1u4g783gj30.z4.kusto.fabric.microsoft.com",
+					"endpoint": "https://tridr7n160xjhpumzqnns9.z0.kusto.data.microsoft.com",
 					"database": "[parameters('FabricKustoLS_properties_typeProperties_database')]"
 				},
 				"connectVia": {
@@ -659,7 +659,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "92a7d15c-9b5a-44c3-86c1-2494a8796ac7"
+						"spark.autotune.trackingId": "3eb0da66-4246-4179-aa1c-f7a30f2a8504"
 					}
 				},
 				"metadata": {
@@ -724,7 +724,7 @@
 							"println(spark.conf.get(\"spark.synapse.vhd.id\"))"
 						],
 						"outputs": [],
-						"execution_count": 3
+						"execution_count": 1
 					},
 					{
 						"cell_type": "code",
@@ -756,7 +756,7 @@
 							""
 						],
 						"outputs": [],
-						"execution_count": 5
+						"execution_count": 2
 					},
 					{
 						"cell_type": "markdown",
