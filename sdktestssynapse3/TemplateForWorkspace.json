@@ -1626,7 +1626,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "981dcfef-07d4-4392-a457-8c33431dc0f9"
+						"spark.autotune.trackingId": "7e765948-ac28-4bd2-94e8-e5c60b0c394b"
 					}
 				},
 				"metadata": {
@@ -1651,8 +1651,7 @@
 						"sparkVersion": "3.4",
 						"nodeCount": 3,
 						"cores": 4,
-						"memory": 28,
-						"automaticScaleJobs": false
+						"memory": 28
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -2001,7 +2000,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "2e9d3a81-c25b-4f2a-b777-d120c184665d"
+						"spark.autotune.trackingId": "562e8d5e-f7da-409b-8a01-0006b666261c"
 					}
 				},
 				"metadata": {
@@ -2053,7 +2052,7 @@
 							"println(spark.conf.get(\"spark.synapse.vhd.id\"))"
 						],
 						"outputs": [],
-						"execution_count": 1
+						"execution_count": 8
 					},
 					{
 						"cell_type": "code",
@@ -2071,12 +2070,12 @@
 						"source": [
 							"mssparkutils.fs.mount(  \r\n",
 							"    \"abfss://synapseppe@synapsekustosparktest.dfs.core.windows.net/\", #ADLS GEN 2 PATH  \r\n",
-							"    \"/20240521\", #Mount Point Name  \r\n",
+							"    \"/20240524\", #Mount Point Name  \r\n",
 							"    { \"linkedService\" : \"synapsekustosparktest\"}  \r\n",
 							")  "
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 9
 					},
 					{
 						"cell_type": "code",
@@ -2096,7 +2095,7 @@
 							"!pip install jmespath"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 10
 					},
 					{
 						"cell_type": "code",
@@ -2175,7 +2174,7 @@
 							"dfTestDataStreaming = testDataSpec.build(withStreaming=True, options={'rowsPerSecond': 1500})"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 11
 					},
 					{
 						"cell_type": "code",
@@ -2194,7 +2193,7 @@
 							"spark.conf.set(\"spark.sql.streaming.checkpointLocation\", \"abfss://synapseppe@synapsekustosparktest.dfs.core.windows.net/20240524/3\")"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 12
 					},
 					{
 						"cell_type": "code",
@@ -2220,7 +2219,7 @@
 							"txnq.start().awaitTermination(60*1)"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 13
 					},
 					{
 						"cell_type": "code",
@@ -2247,7 +2246,7 @@
 							"queuedq.start().awaitTermination(60*1)"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 14
 					},
 					{
 						"cell_type": "code",
@@ -2280,7 +2279,7 @@
 							"display(transactionalModeCount)"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 15
 					},
 					{
 						"cell_type": "code",
@@ -2313,7 +2312,7 @@
 							"display(queuedModeCount)"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 16
 					},
 					{
 						"cell_type": "code",
@@ -2346,7 +2345,7 @@
 							"display(functionModeCount)"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 17
 					}
 				]
 			},
@@ -2374,7 +2373,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "255527d2-20f4-4721-8303-b384b4d86bcd"
+						"spark.autotune.trackingId": "77bc5895-7453-4d33-9a7b-841d3fafab6d"
 					}
 				},
 				"metadata": {
@@ -2399,7 +2398,8 @@
 						"sparkVersion": "3.4",
 						"nodeCount": 3,
 						"cores": 4,
-						"memory": 28
+						"memory": 28,
+						"automaticScaleJobs": false
 					},
 					"sessionKeepAliveTimeout": 30
 				},
