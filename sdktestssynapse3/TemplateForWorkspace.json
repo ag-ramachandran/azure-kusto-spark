@@ -1626,7 +1626,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "6bd44b98-1fe1-4441-8eb4-54ceace6c102"
+						"spark.autotune.trackingId": "becd439c-aac3-47d9-b37b-51222e91105a"
 					}
 				},
 				"metadata": {
@@ -1696,7 +1696,7 @@
 						"source": [
 							"mssparkutils.fs.mount(  \r\n",
 							"    \"abfss://synapseppe@synapsekustosparktest.dfs.core.windows.net/\", #ADLS GEN 2 PATH  \r\n",
-							"    \"/20240521\", #Mount Point Name  \r\n",
+							"    \"/20240524\", #Mount Point Name  \r\n",
 							"    { \"linkedService\" : \"synapsekustosparktest\"}  \r\n",
 							")  "
 						],
@@ -1816,7 +1816,7 @@
 							}
 						},
 						"source": [
-							"spark.conf.set(\"spark.sql.streaming.checkpointLocation\", \"abfss://synapseppe@synapsekustosparktest.dfs.core.windows.net/20240521/2\")"
+							"spark.conf.set(\"spark.sql.streaming.checkpointLocation\", \"abfss://synapseppe@synapsekustosparktest.dfs.core.windows.net/20240524/2\")"
 						],
 						"outputs": [],
 						"execution_count": null
