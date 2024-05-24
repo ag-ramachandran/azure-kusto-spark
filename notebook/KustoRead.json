@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "483f1282-ae68-4065-b9c3-be5e9f92824d"
+				"spark.autotune.trackingId": "80c2643b-cd0d-4eb7-a808-d79c1643b738"
 			}
 		},
 		"metadata": {
@@ -91,7 +91,7 @@
 					"%%spark\n",
 					"println(mssparkutils.env.getClusterId)"
 				],
-				"execution_count": null
+				"execution_count": 2
 			},
 			{
 				"cell_type": "code",
@@ -123,7 +123,7 @@
 					"\r\n",
 					"display(kustoDfSingle)"
 				],
-				"execution_count": null
+				"execution_count": 4
 			},
 			{
 				"cell_type": "markdown",
