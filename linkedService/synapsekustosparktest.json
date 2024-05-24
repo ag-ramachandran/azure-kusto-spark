@@ -1,0 +1,15 @@
+{
+	"name": "synapsekustosparktest",
+	"properties": {
+		"annotations": [],
+		"type": "AzureBlobStorage",
+		"typeProperties": {
+			"serviceEndpoint": "https://synapsekustosparktest.blob.core.windows.net",
+			"accountKind": "BlobStorage"
+		},
+		"connectVia": {
+			"referenceName": "AutoResolveIntegrationRuntime",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
