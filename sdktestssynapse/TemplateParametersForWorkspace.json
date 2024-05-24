@@ -8,40 +8,10 @@
 		"sdktestssynapse-WorkspaceDefaultSqlServer_connectionString": {
 			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:sdktestssynapse.sql.azuresynapse-test.azure.net,1433;Initial Catalog=@{linkedService().DBName}"
 		},
-		"sdktestssynapse2-WorkspaceDefaultSqlServer_connectionString": {
-			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:sdktestssynapse2.sql.azuresynapse-test.azure.net,1433;Initial Catalog=@{linkedService().DBName}"
-		},
-		"sdktestssynapseas-WorkspaceDefaultSqlServer_connectionString": {
-			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:sdktestssynapseas.sql.azuresynapse-test.azure.net,1433;Initial Catalog=@{linkedService().DBName}"
-		},
-		"synapsekustosparkppe-WorkspaceDefaultSqlServer_connectionString": {
-			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:synapsekustosparkppe.sql.azuresynapse-test.azure.net,1433;Initial Catalog=@{linkedService().DBName}"
-		},
-		"FabricKustoLS_properties_typeProperties_database": {
-			"value": "Sample"
-		},
-		"adxmi_properties_typeProperties_database": {
-			"value": "spark"
-		},
-		"sdktestcluster_properties_typeProperties_database": {
-			"value": "spark"
-		},
 		"sdktestssynapse-WorkspaceDefaultStorage_properties_typeProperties_url": {
 			"value": "https://sdkteststorage.dfs.core.windows.net"
 		},
-		"sdktestssynapse2-WorkspaceDefaultStorage_properties_typeProperties_url": {
-			"value": "https://sdkteststorage.dfs.core.windows.net"
-		},
-		"sdktestssynapseas-WorkspaceDefaultStorage_properties_typeProperties_url": {
-			"value": "https://sdkteststorage.dfs.core.windows.net"
-		},
-		"synapsekustosparkppe-WorkspaceDefaultStorage_properties_typeProperties_url": {
-			"value": "https://sdkteststorage.dfs.core.windows.net"
-		},
-		"synapsekustosparktest_properties_typeProperties_url": {
-			"value": "https://synapsekustosparktest.dfs.core.windows.net"
-		},
-		"synapsemisdktestcluster_properties_typeProperties_database": {
+		"adxmi_properties_typeProperties_database": {
 			"value": "spark"
 		}
 	}
