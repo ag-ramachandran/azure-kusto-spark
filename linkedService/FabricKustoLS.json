@@ -4,8 +4,8 @@
 		"annotations": [],
 		"type": "AzureDataExplorer",
 		"typeProperties": {
-			"endpoint": "https://tridr7n160xjhpumzqnns9.z0.kusto.data.microsoft.com",
-			"database": "Stocks"
+			"endpoint": "https://trd-2mef4pj1u4g783gj30.z4.kusto.fabric.microsoft.com",
+			"database": "Sample"
 		},
 		"connectVia": {
 			"referenceName": "AutoResolveIntegrationRuntime",
