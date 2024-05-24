@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "0c6fabbc-41f3-4b92-9efe-afd8e9d325a2"
+				"spark.autotune.trackingId": "7e765948-ac28-4bd2-94e8-e5c60b0c394b"
 			}
 		},
 		"metadata": {
@@ -259,7 +259,7 @@
 					"    \r\n",
 					"queuedq.start().awaitTermination(60*1)"
 				],
-				"execution_count": null
+				"execution_count": 11
 			},
 			{
 				"cell_type": "code",
@@ -291,7 +291,7 @@
 					"\r\n",
 					"display(transactionalModeCount)"
 				],
-				"execution_count": null
+				"execution_count": 12
 			},
 			{
 				"cell_type": "code",
@@ -323,7 +323,7 @@
 					"\r\n",
 					"display(queuedModeCount)"
 				],
-				"execution_count": null
+				"execution_count": 13
 			},
 			{
 				"cell_type": "code",
@@ -355,7 +355,7 @@
 					"\r\n",
 					"display(functionModeCount)"
 				],
-				"execution_count": null
+				"execution_count": 14
 			}
 		]
 	}
