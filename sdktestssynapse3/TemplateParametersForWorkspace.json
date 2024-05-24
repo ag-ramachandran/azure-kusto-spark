@@ -22,6 +22,9 @@
 		},
 		"sdktestssynapse3-WorkspaceDefaultStorage_properties_typeProperties_url": {
 			"value": "https://sdkteststorage.dfs.core.windows.net"
+		},
+		"synapsekustosparktest_properties_typeProperties_serviceEndpoint": {
+			"value": "https://synapsekustosparktest.blob.core.windows.net"
 		}
 	}
 }
