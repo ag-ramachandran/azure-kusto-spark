@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "e0af4708-071b-4891-9959-b9c28e20bd7b"
+				"spark.autotune.trackingId": "0c6fabbc-41f3-4b92-9efe-afd8e9d325a2"
 			}
 		},
 		"metadata": {
@@ -69,7 +69,7 @@
 					"%%spark\n",
 					"println(spark.conf.get(\"spark.synapse.vhd.id\"))"
 				],
-				"execution_count": 1
+				"execution_count": 5
 			},
 			{
 				"cell_type": "code",
@@ -91,7 +91,7 @@
 					"    { \"linkedService\" : \"synapsekustosparktest\"}  \r\n",
 					")  "
 				],
-				"execution_count": 2
+				"execution_count": 6
 			},
 			{
 				"cell_type": "code",
@@ -110,7 +110,7 @@
 					"!pip install dbldatagen\r\n",
 					"!pip install jmespath"
 				],
-				"execution_count": null
+				"execution_count": 7
 			},
 			{
 				"cell_type": "code",
@@ -188,7 +188,7 @@
 					"\r\n",
 					"dfTestDataStreaming = testDataSpec.build(withStreaming=True, options={'rowsPerSecond': 1500})"
 				],
-				"execution_count": null
+				"execution_count": 8
 			},
 			{
 				"cell_type": "code",
@@ -206,7 +206,7 @@
 				"source": [
 					"spark.conf.set(\"spark.sql.streaming.checkpointLocation\", \"abfss://synapseppe@synapsekustosparktest.dfs.core.windows.net/20240524/2\")"
 				],
-				"execution_count": null
+				"execution_count": 9
 			},
 			{
 				"cell_type": "code",
@@ -232,7 +232,7 @@
 					"\r\n",
 					"txnq.start().awaitTermination(60*1)"
 				],
-				"execution_count": null
+				"execution_count": 10
 			},
 			{
 				"cell_type": "code",
