@@ -1,15 +1,15 @@
 {
 	"name": "sdktestssynapse-WorkspaceDefaultStorage",
+	"type": "Microsoft.Synapse/workspaces/linkedservices",
 	"properties": {
-		"annotations": [],
-		"type": "AzureBlobFS",
 		"typeProperties": {
 			"url": "https://sdkteststorage.dfs.core.windows.net"
 		},
+		"type": "AzureBlobFS",
 		"connectVia": {
 			"referenceName": "AutoResolveIntegrationRuntime",
 			"type": "IntegrationRuntimeReference"
-		}
-	},
-	"type": "Microsoft.Synapse/workspaces/linkedservices"
+		},
+		"annotations": []
+	}
 }
