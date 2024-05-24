@@ -13,12 +13,12 @@
 			"executorMemory": "28g",
 			"executorCores": 4,
 			"numExecutors": 2,
-			"runAsWorkspaceSystemIdentity": true,
+			"runAsWorkspaceSystemIdentity": false,
 			"conf": {
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "80c2643b-cd0d-4eb7-a808-d79c1643b738"
+				"spark.autotune.trackingId": "ba100121-df07-46f0-b050-a83c376db66c"
 			}
 		},
 		"metadata": {
@@ -107,12 +107,33 @@
 					},
 					"microsoft": {
 						"language": "scala"
+					}
+				},
+				"source": [
+					"%%spark\n",
+					"val creds = mssparkutils.credentials.getConnectionStringOrCreds(\"synapsemisdktestcluster\")"
+				],
+				"execution_count": 7
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "scala"
 					},
 					"collapsed": false
 				},
 				"source": [
 					"%%spark\r\n",
-					"val creds = mssparkutils.credentials.getConnectionStringOrCreds(\"adxmi\")\r\n",
 					"val kustoDfSingle  = spark.read\r\n",
 					"    .format(\"com.microsoft.kusto.spark.synapse.datasource\")\r\n",
 					"    .option(\"accessToken\", creds)\r\n",
@@ -123,7 +144,7 @@
 					"\r\n",
 					"display(kustoDfSingle)"
 				],
-				"execution_count": 4
+				"execution_count": null
 			},
 			{
 				"cell_type": "markdown",
