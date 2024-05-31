@@ -4,7 +4,7 @@
 		"nbformat": 4,
 		"nbformat_minor": 2,
 		"bigDataPool": {
-			"referenceName": "spark34a",
+			"referenceName": "spark34b",
 			"type": "BigDataPoolReference"
 		},
 		"sessionProperties": {
@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "99c09359-d53a-4149-9ef7-ed04bd9cf356"
+				"spark.autotune.trackingId": "8cd3c569-2a1b-4d61-a2b3-1a5eb2df4531"
 			}
 		},
 		"metadata": {
@@ -32,10 +32,10 @@
 				"name": "python"
 			},
 			"a365ComputeOptions": {
-				"id": "/subscriptions/216ca57c-8613-4c54-8960-1e5821b6dc8d/resourceGroups/SDK_E2E_TEST/providers/Microsoft.Synapse/workspaces/sdktestssynapse3/bigDataPools/spark34a",
-				"name": "spark34a",
+				"id": "/subscriptions/216ca57c-8613-4c54-8960-1e5821b6dc8d/resourceGroups/SDK_E2E_TEST/providers/Microsoft.Synapse/workspaces/sdktestssynapse3/bigDataPools/spark34b",
+				"name": "spark34b",
 				"type": "Spark",
-				"endpoint": "https://sdktestssynapse3.dev.azuresynapse-test.azure.net/livyApi/versions/2019-11-01-preview/sparkPools/spark34a",
+				"endpoint": "https://sdktestssynapse3.dev.azuresynapse-test.azure.net/livyApi/versions/2019-11-01-preview/sparkPools/spark34b",
 				"auth": {
 					"type": "AAD",
 					"authResource": "https://dev.azuresynapse.net"
@@ -69,7 +69,7 @@
 					"%%spark\n",
 					"println(spark.conf.get(\"spark.synapse.vhd.id\"))"
 				],
-				"execution_count": 2
+				"execution_count": 16
 			},
 			{
 				"cell_type": "code",
@@ -91,7 +91,7 @@
 					"%%spark\n",
 					"println(mssparkutils.env.getClusterId)"
 				],
-				"execution_count": 3
+				"execution_count": 17
 			},
 			{
 				"cell_type": "code",
@@ -113,7 +113,7 @@
 					"%%spark\n",
 					"val creds = mssparkutils.credentials.getConnectionStringOrCreds(\"adxmi\")"
 				],
-				"execution_count": 4
+				"execution_count": 18
 			},
 			{
 				"cell_type": "code",
@@ -144,7 +144,7 @@
 					"\r\n",
 					"display(kustoDfSingle)"
 				],
-				"execution_count": 5
+				"execution_count": 19
 			},
 			{
 				"cell_type": "markdown",
@@ -183,7 +183,7 @@
 					"\n",
 					"display(kustoDfSingle)"
 				],
-				"execution_count": 7
+				"execution_count": 20
 			},
 			{
 				"cell_type": "markdown",
@@ -232,7 +232,7 @@
 					"display(kustoDfDistributed)\r\n",
 					""
 				],
-				"execution_count": 8
+				"execution_count": 21
 			},
 			{
 				"cell_type": "markdown",
@@ -280,7 +280,7 @@
 					"allTypesDf.write.format(\"com.microsoft.kusto.spark.synapse.datasource\").option(\"kustoDatabase\", \"spark\").option(\"kustoTable\", \"AllDataTypesTransactionalSpark34\").option(\"tableCreateOptions\",\"CreateIfNotExist\").option(\"spark.synapse.linkedService\", \"adxmi\").mode(\"Append\").save()\r\n",
 					"//allTypesDf.write.format(\"com.microsoft.kusto.spark.synapse.datasource\").option(\"spark.synapse.linkedService\", \"adxmi\").option(\"kustoDatabase\", \"spark\").option(\"kustoTable\", \"AllDataTypesQueuedSpark33\").option(\"tableCreateOptions\",\"CreateIfNotExist\").option(\"writeMode\",\"Queued\").mode(\"Append\").save()"
 				],
-				"execution_count": 9
+				"execution_count": 22
 			},
 			{
 				"cell_type": "markdown",
@@ -315,7 +315,7 @@
 					"%%spark\r\n",
 					"allTypesDf.write.format(\"com.microsoft.kusto.spark.synapse.datasource\").option(\"spark.synapse.linkedService\", \"adxmi\").option(\"kustoDatabase\", \"spark\").option(\"kustoTable\", \"[All-DataTypes-QueuedSpark34]\").option(\"tableCreateOptions\",\"CreateIfNotExist\").option(\"writeMode\",\"Queued\").mode(\"Append\").save()"
 				],
-				"execution_count": 10
+				"execution_count": 23
 			},
 			{
 				"cell_type": "code",
@@ -348,7 +348,7 @@
 					"\r\n",
 					"display(kustoDfAllTypes)"
 				],
-				"execution_count": 11
+				"execution_count": 24
 			},
 			{
 				"cell_type": "code",
@@ -381,7 +381,7 @@
 					"\r\n",
 					"display(transactionalModeCount)"
 				],
-				"execution_count": 12
+				"execution_count": 25
 			},
 			{
 				"cell_type": "code",
@@ -413,7 +413,7 @@
 					"\r\n",
 					"display(queuedModeCount)"
 				],
-				"execution_count": 13
+				"execution_count": 26
 			}
 		]
 	}
