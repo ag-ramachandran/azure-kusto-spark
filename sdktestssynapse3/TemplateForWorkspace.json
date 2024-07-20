@@ -261,7 +261,7 @@
 				"nbformat": 4,
 				"nbformat_minor": 2,
 				"bigDataPool": {
-					"referenceName": "spark34a",
+					"referenceName": "spark32pool",
 					"type": "BigDataPoolReference"
 				},
 				"sessionProperties": {
@@ -272,10 +272,10 @@
 					"numExecutors": 2,
 					"runAsWorkspaceSystemIdentity": true,
 					"conf": {
-						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.enabled": "true",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "f067cac8-4fed-4a4f-a4d6-f67013cecff6"
+						"spark.autotune.trackingId": "73c803f3-3ac3-4a4f-be93-8641429dfcab"
 					}
 				},
 				"metadata": {
@@ -289,18 +289,19 @@
 						"name": "python"
 					},
 					"a365ComputeOptions": {
-						"id": "/subscriptions/216ca57c-8613-4c54-8960-1e5821b6dc8d/resourceGroups/SDK_E2E_TEST/providers/Microsoft.Synapse/workspaces/sdktestssynapse3/bigDataPools/spark34a",
-						"name": "spark34a",
+						"id": "/subscriptions/216ca57c-8613-4c54-8960-1e5821b6dc8d/resourceGroups/SDK_E2E_TEST/providers/Microsoft.Synapse/workspaces/sdktestssynapse3/bigDataPools/spark32pool",
+						"name": "spark32pool",
 						"type": "Spark",
-						"endpoint": "https://sdktestssynapse3.dev.azuresynapse-test.azure.net/livyApi/versions/2019-11-01-preview/sparkPools/spark34a",
+						"endpoint": "https://sdktestssynapse3.dev.azuresynapse-test.azure.net/livyApi/versions/2019-11-01-preview/sparkPools/spark32pool",
 						"auth": {
 							"type": "AAD",
 							"authResource": "https://dev.azuresynapse.net"
 						},
-						"sparkVersion": "3.4",
+						"sparkVersion": "3.2",
 						"nodeCount": 3,
 						"cores": 4,
-						"memory": 28
+						"memory": 28,
+						"automaticScaleJobs": false
 					},
 					"sessionKeepAliveTimeout": 90
 				},
@@ -349,7 +350,7 @@
 							"println(mssparkutils.env.getClusterId)"
 						],
 						"outputs": [],
-						"execution_count": 3
+						"execution_count": 2
 					},
 					{
 						"cell_type": "code",
@@ -404,7 +405,7 @@
 							"display(kustoDfSingle)"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 4
 					},
 					{
 						"cell_type": "markdown",
@@ -448,7 +449,7 @@
 							"display(kustoDfSingle)"
 						],
 						"outputs": [],
-						"execution_count": 20
+						"execution_count": 5
 					},
 					{
 						"cell_type": "markdown",
@@ -613,12 +614,13 @@
 							"    .option(\"kustoDatabase\", \"sdktestdb\") \\\r\n",
 							"    .option(\"kustoQuery\", \"AllDataTypesTransactionalSpark34\t | take 100\") \\\r\n",
 							"    .option(\"readMode\", \"ForceDistributedMode\") \\\r\n",
+							"    .option(\"kustoExportOptionsJson\", \"{\\\"useNativeParquetWriter\\\":\\\"false\\\"}\") \\\r\n",
 							"    .load()\r\n",
 							"\r\n",
 							"display(kustoDfAllTypes)"
 						],
 						"outputs": [],
-						"execution_count": 9
+						"execution_count": 12
 					},
 					{
 						"cell_type": "code",
@@ -652,7 +654,7 @@
 							"display(transactionalModeCount)"
 						],
 						"outputs": [],
-						"execution_count": 10
+						"execution_count": null
 					},
 					{
 						"cell_type": "code",
@@ -685,7 +687,7 @@
 							"display(queuedModeCount)"
 						],
 						"outputs": [],
-						"execution_count": 11
+						"execution_count": null
 					},
 					{
 						"cell_type": "code",
@@ -709,7 +711,7 @@
 							"var crp = new com.microsoft.azure.kusto.data.ClientRequestProperties();"
 						],
 						"outputs": [],
-						"execution_count": 13
+						"execution_count": null
 					},
 					{
 						"cell_type": "code",
@@ -730,7 +732,7 @@
 							""
 						],
 						"outputs": [],
-						"execution_count": 17
+						"execution_count": null
 					},
 					{
 						"cell_type": "code",
@@ -2488,7 +2490,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "6726db47-797d-4b52-beab-ba2dfa6f2b3e"
+						"spark.autotune.trackingId": "9f3a493a-3cbf-472e-baa3-37ca55eab525"
 					}
 				},
 				"metadata": {
@@ -2513,8 +2515,7 @@
 						"sparkVersion": "3.4",
 						"nodeCount": 3,
 						"cores": 4,
-						"memory": 28,
-						"automaticScaleJobs": false
+						"memory": 28
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -2975,11 +2976,11 @@
 				},
 				"autoScale": {
 					"enabled": false,
-					"maxNodeCount": 3,
-					"minNodeCount": 3
+					"maxNodeCount": 0,
+					"minNodeCount": 0
 				},
 				"nodeCount": 3,
-				"nodeSize": "Medium",
+				"nodeSize": "Small",
 				"nodeSizeFamily": "MemoryOptimized",
 				"sparkVersion": "3.2",
 				"isComputeIsolationEnabled": false,
@@ -2988,6 +2989,50 @@
 			},
 			"dependsOn": [],
 			"location": "southcentralus"
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/spark31pool')]",
+			"type": "Microsoft.Synapse/workspaces/bigDataPools",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"autoPause": {
+					"enabled": false,
+					"delayInMinutes": 0
+				},
+				"autoScale": {
+					"enabled": false,
+					"maxNodeCount": 0,
+					"minNodeCount": 0
+				},
+				"nodeCount": 3,
+				"nodeSize": "Small",
+				"nodeSizeFamily": "MemoryOptimized",
+				"sparkVersion": "3.1",
+				"isComputeIsolationEnabled": false,
+				"sessionLevelPackagesEnabled": false,
+				"annotations": []
+			},
+			"dependsOn": [],
+			"location": "southcentralus"
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/SparkParquet')]",
+			"type": "Microsoft.Synapse/workspaces/sparkConfigurations",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"configs": {
+					"parquet.split.files": "false",
+					"spark.sql.parquet.enableVectorizedReader": "false"
+				},
+				"created": "2024-07-20T19:28:27.5400000+05:30",
+				"createdBy": "ramacg@microsoft.com",
+				"annotations": [],
+				"configMergeRule": {
+					"artifact.currentOperation.parquet.split.files": "replace",
+					"artifact.currentOperation.spark.sql.parquet.enableVectorizedReader": "replace"
+				}
+			},
+			"dependsOn": []
 		}
 	]
 }
