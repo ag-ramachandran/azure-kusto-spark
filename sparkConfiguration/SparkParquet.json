@@ -1,0 +1,16 @@
+{
+	"name": "SparkParquet",
+	"properties": {
+		"configs": {
+			"parquet.split.files": "false",
+			"spark.sql.parquet.enableVectorizedReader": "false"
+		},
+		"created": "2024-07-20T19:28:27.5400000+05:30",
+		"createdBy": "ramacg@microsoft.com",
+		"annotations": [],
+		"configMergeRule": {
+			"artifact.currentOperation.parquet.split.files": "replace",
+			"artifact.currentOperation.spark.sql.parquet.enableVectorizedReader": "replace"
+		}
+	}
+}
