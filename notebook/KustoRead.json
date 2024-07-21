@@ -4,7 +4,7 @@
 		"nbformat": 4,
 		"nbformat_minor": 2,
 		"bigDataPool": {
-			"referenceName": "spark32pool",
+			"referenceName": "spv34",
 			"type": "BigDataPoolReference"
 		},
 		"sessionProperties": {
@@ -15,10 +15,10 @@
 			"numExecutors": 2,
 			"runAsWorkspaceSystemIdentity": true,
 			"conf": {
-				"spark.dynamicAllocation.enabled": "true",
+				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "872b0d51-3b5f-4078-a682-5419f560ac33"
+				"spark.autotune.trackingId": "17dac626-8400-4e3a-9a3b-4eb96443c5ba"
 			}
 		},
 		"metadata": {
@@ -32,15 +32,15 @@
 				"name": "python"
 			},
 			"a365ComputeOptions": {
-				"id": "/subscriptions/216ca57c-8613-4c54-8960-1e5821b6dc8d/resourceGroups/SDK_E2E_TEST/providers/Microsoft.Synapse/workspaces/sdktestssynapse3/bigDataPools/spark32pool",
-				"name": "spark32pool",
+				"id": "/subscriptions/216ca57c-8613-4c54-8960-1e5821b6dc8d/resourceGroups/SDK_E2E_TEST/providers/Microsoft.Synapse/workspaces/sdktestssynapseas/bigDataPools/spv34",
+				"name": "spv34",
 				"type": "Spark",
-				"endpoint": "https://sdktestssynapse3.dev.azuresynapse-test.azure.net/livyApi/versions/2019-11-01-preview/sparkPools/spark32pool",
+				"endpoint": "https://sdktestssynapseas.dev.azuresynapse-test.azure.net/livyApi/versions/2019-11-01-preview/sparkPools/spv34",
 				"auth": {
 					"type": "AAD",
 					"authResource": "https://dev.azuresynapse.net"
 				},
-				"sparkVersion": "3.2",
+				"sparkVersion": "3.4",
 				"nodeCount": 3,
 				"cores": 4,
 				"memory": 28,
@@ -98,7 +98,7 @@
 				"metadata": {
 					"jupyter": {
 						"source_hidden": false,
-						"outputs_hidden": false
+						"outputs_hidden": true
 					},
 					"nteract": {
 						"transient": {
