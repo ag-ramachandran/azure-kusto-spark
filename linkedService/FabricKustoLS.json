@@ -4,8 +4,8 @@
 		"annotations": [],
 		"type": "AzureDataExplorer",
 		"typeProperties": {
-			"endpoint": "https://tridr7n160xjhpumzqnns9.z0.kusto.data.microsoft.com",
-			"database": "6c0c7bb1-f1c6-4549-bc75-6e2e06fecc78"
+			"endpoint": "https://trd-2mef4pj1u4g783gj30.z4.kusto.fabric.microsoft.com",
+			"database": "91984df3-ff74-440a-9881-2fa44d094648"
 		},
 		"connectVia": {
 			"referenceName": "AutoResolveIntegrationRuntime",
