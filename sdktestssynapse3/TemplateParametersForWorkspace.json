@@ -12,7 +12,7 @@
 			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:sdktestssynapse3.sql.azuresynapse-test.azure.net,1433;Initial Catalog=@{linkedService().DBName}"
 		},
 		"FabricKustoLS_properties_typeProperties_database": {
-			"value": "6c0c7bb1-f1c6-4549-bc75-6e2e06fecc78"
+			"value": "91984df3-ff74-440a-9881-2fa44d094648"
 		},
 		"adxmi_properties_typeProperties_database": {
 			"value": "spark"
