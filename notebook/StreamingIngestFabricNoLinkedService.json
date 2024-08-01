@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "9d7d4e1f-ab81-40e0-b808-d0ad9b81ca18"
+				"spark.autotune.trackingId": "fa70826a-6a86-425c-b296-b586db28b1e2"
 			}
 		},
 		"metadata": {
@@ -70,6 +70,30 @@
 					"println(spark.conf.get(\"spark.synapse.vhd.id\"))"
 				],
 				"execution_count": 2
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "scala"
+					}
+				},
+				"source": [
+					"%%spark\n",
+					"val wasbs_path = \"wasbs://nyctlc@azureopendatastorage.blob.core.windows.net/yellow\"\n",
+					"val nyctlc = spark.read.parquet(wasbs_path)\n",
+					"display(nyctlc)"
+				],
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
