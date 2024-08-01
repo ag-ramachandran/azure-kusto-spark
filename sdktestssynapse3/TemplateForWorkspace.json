@@ -275,7 +275,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "425b85d1-5431-4281-b335-a911103260b6"
+						"spark.autotune.trackingId": "49950044-397a-4347-8e70-2c281be41807"
 					}
 				},
 				"metadata": {
@@ -300,8 +300,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 4,
-						"memory": 28,
-						"automaticScaleJobs": false
+						"memory": 28
 					},
 					"sessionKeepAliveTimeout": 90
 				},
@@ -327,7 +326,33 @@
 							"println(spark.conf.get(\"spark.synapse.vhd.id\"))"
 						],
 						"outputs": [],
-						"execution_count": 1
+						"execution_count": 4
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "scala"
+							},
+							"collapsed": false
+						},
+						"source": [
+							"%%spark\n",
+							"val wasbs_path = \"wasbs://nyctlc@azureopendatastorage.blob.core.windows.net/yellow\"\n",
+							"val nyctlc = spark.read.parquet(wasbs_path)\n",
+							"display(nyctlc)"
+						],
+						"outputs": [],
+						"execution_count": 5
 					},
 					{
 						"cell_type": "code",
@@ -350,7 +375,7 @@
 							"println(mssparkutils.env.getClusterId)"
 						],
 						"outputs": [],
-						"execution_count": 2
+						"execution_count": 6
 					},
 					{
 						"cell_type": "code",
@@ -373,7 +398,7 @@
 							"val creds = mssparkutils.credentials.getConnectionStringOrCreds(\"sdkse2etest\")"
 						],
 						"outputs": [],
-						"execution_count": 3
+						"execution_count": 7
 					},
 					{
 						"cell_type": "code",
@@ -405,7 +430,7 @@
 							"display(kustoDfSingle)"
 						],
 						"outputs": [],
-						"execution_count": 4
+						"execution_count": 8
 					},
 					{
 						"cell_type": "markdown",
@@ -449,7 +474,7 @@
 							"display(kustoDfSingle)"
 						],
 						"outputs": [],
-						"execution_count": 5
+						"execution_count": 9
 					},
 					{
 						"cell_type": "markdown",
@@ -499,7 +524,7 @@
 							""
 						],
 						"outputs": [],
-						"execution_count": 6
+						"execution_count": 10
 					},
 					{
 						"cell_type": "markdown",
@@ -549,7 +574,7 @@
 							"//allTypesDf.write.format(\"com.microsoft.kusto.spark.synapse.datasource\").option(\"spark.synapse.linkedService\", \"sdkse2etest\").option(\"kustoDatabase\", \"sdktestdb\").option(\"kustoTable\", \"AllDataTypesQueuedSpark33\").option(\"tableCreateOptions\",\"CreateIfNotExist\").option(\"writeMode\",\"Queued\").mode(\"Append\").save()"
 						],
 						"outputs": [],
-						"execution_count": 7
+						"execution_count": 11
 					},
 					{
 						"cell_type": "markdown",
@@ -585,7 +610,7 @@
 							"allTypesDf.write.format(\"com.microsoft.kusto.spark.synapse.datasource\").option(\"spark.synapse.linkedService\", \"sdkse2etest\").option(\"kustoDatabase\", \"sdktestdb\").option(\"kustoTable\", \"[All-DataTypes-QueuedSpark34]\").option(\"tableCreateOptions\",\"CreateIfNotExist\").option(\"writeMode\",\"Queued\").mode(\"Append\").save()"
 						],
 						"outputs": [],
-						"execution_count": 8
+						"execution_count": 12
 					},
 					{
 						"cell_type": "code",
@@ -619,7 +644,7 @@
 							"display(kustoDfAllTypes)"
 						],
 						"outputs": [],
-						"execution_count": 9
+						"execution_count": 13
 					},
 					{
 						"cell_type": "code",
@@ -653,7 +678,7 @@
 							"display(transactionalModeCount)"
 						],
 						"outputs": [],
-						"execution_count": 10
+						"execution_count": 14
 					},
 					{
 						"cell_type": "code",
@@ -686,7 +711,7 @@
 							"display(queuedModeCount)"
 						],
 						"outputs": [],
-						"execution_count": 11
+						"execution_count": 15
 					}
 				]
 			},
@@ -710,10 +735,10 @@
 					"executorCores": 4,
 					"numExecutors": 2,
 					"conf": {
-						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.enabled": "true",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "156f171b-8bc9-4550-b0dd-64f7ba03e02d"
+						"spark.autotune.trackingId": "536cf7bd-a6bd-4557-b945-cca515bfdc34"
 					}
 				},
 				"metadata": {
@@ -778,7 +803,33 @@
 							"println(spark.conf.get(\"spark.synapse.vhd.id\"))"
 						],
 						"outputs": [],
-						"execution_count": 2
+						"execution_count": 3
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "scala"
+							},
+							"collapsed": false
+						},
+						"source": [
+							"%%spark\n",
+							"val wasbs_path = \"wasbs://nyctlc@azureopendatastorage.blob.core.windows.net/yellow\"\n",
+							"val nyctlc = spark.read.parquet(wasbs_path)\n",
+							"display(nyctlc)"
+						],
+						"outputs": [],
+						"execution_count": 4
 					},
 					{
 						"cell_type": "code",
@@ -801,7 +852,7 @@
 							"println(spark.conf.get(\"spark.synapse.vhd.id\"))"
 						],
 						"outputs": [],
-						"execution_count": 3
+						"execution_count": 5
 					},
 					{
 						"cell_type": "code",
@@ -833,7 +884,7 @@
 							""
 						],
 						"outputs": [],
-						"execution_count": 4
+						"execution_count": 6
 					},
 					{
 						"cell_type": "markdown",
@@ -883,7 +934,7 @@
 							""
 						],
 						"outputs": [],
-						"execution_count": 5
+						"execution_count": 8
 					},
 					{
 						"cell_type": "markdown",
@@ -932,7 +983,7 @@
 							"//allTypesDf.write.format(\"com.microsoft.kusto.spark.synapse.datasource\").option(\"spark.synapse.linkedService\", \"FabricKustoLS\").option(\"kustoDatabase\", \"Sample\").option(\"kustoTable\", \"AllDataTypesQueuedSpark33\").option(\"tableCreateOptions\"\"CreateIfNotExist\").option(\"writeMode\",\"Queued\").mode(\"Append\").save(),"
 						],
 						"outputs": [],
-						"execution_count": 6
+						"execution_count": 9
 					},
 					{
 						"cell_type": "markdown",
@@ -968,7 +1019,7 @@
 							"allTypesDf.write.format(\"com.microsoft.kusto.spark.synapse.datasource\").option(\"spark.synapse.linkedService\", \"FabricKustoLS\").option(\"kustoDatabase\", \"Sample\").option(\"kustoTable\", \"AllDataTypesQueuedSpark33\").option(\"tableCreateOptions\",\"CreateIfNotExist\").option(\"writeMode\",\"Queued\").mode(\"Append\").save()"
 						],
 						"outputs": [],
-						"execution_count": 7
+						"execution_count": 13
 					},
 					{
 						"cell_type": "code",
@@ -1003,7 +1054,7 @@
 							"display(kustoDfAllTypes)"
 						],
 						"outputs": [],
-						"execution_count": 8
+						"execution_count": 10
 					},
 					{
 						"cell_type": "code",
@@ -1037,7 +1088,7 @@
 							"display(transactionalModeCount)"
 						],
 						"outputs": [],
-						"execution_count": 9
+						"execution_count": 11
 					},
 					{
 						"cell_type": "code",
@@ -1070,7 +1121,7 @@
 							"display(queuedModeCount)"
 						],
 						"outputs": [],
-						"execution_count": 10
+						"execution_count": 12
 					}
 				]
 			},
@@ -1098,7 +1149,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "1f382689-dc47-4bbf-bf1e-1068b380a5fb"
+						"spark.autotune.trackingId": "57af4a85-7e24-427c-8e2b-faf841b5c73e"
 					}
 				},
 				"metadata": {
@@ -1164,6 +1215,31 @@
 						],
 						"outputs": [],
 						"execution_count": 1
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "scala"
+							}
+						},
+						"source": [
+							"%%spark\n",
+							"val wasbs_path = \"wasbs://nyctlc@azureopendatastorage.blob.core.windows.net/yellow\"\n",
+							"val nyctlc = spark.read.parquet(wasbs_path)\n",
+							"display(nyctlc)"
+						],
+						"outputs": [],
+						"execution_count": null
 					},
 					{
 						"cell_type": "code",
@@ -1681,7 +1757,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "1096ab15-18e4-4abd-8963-8831f5b4ee27"
+						"spark.autotune.trackingId": "6befaefa-f007-4ace-a89b-4c732f67a981"
 					}
 				},
 				"metadata": {
@@ -1706,8 +1782,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 4,
-						"memory": 28,
-						"automaticScaleJobs": false
+						"memory": 28
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -1734,6 +1809,31 @@
 						],
 						"outputs": [],
 						"execution_count": 2
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "scala"
+							}
+						},
+						"source": [
+							"%%spark\n",
+							"val wasbs_path = \"wasbs://nyctlc@azureopendatastorage.blob.core.windows.net/yellow\"\n",
+							"val nyctlc = spark.read.parquet(wasbs_path)\n",
+							"display(nyctlc)"
+						],
+						"outputs": [],
+						"execution_count": null
 					},
 					{
 						"cell_type": "code",
@@ -2056,7 +2156,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "dad08da6-b711-44c3-b779-d1ad3f04bf4b"
+						"spark.autotune.trackingId": "7bd6f20b-0bf5-4bc9-81ab-a13370028341"
 					}
 				},
 				"metadata": {
@@ -2081,8 +2181,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 4,
-						"memory": 28,
-						"automaticScaleJobs": false
+						"memory": 28
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -2109,6 +2208,31 @@
 						],
 						"outputs": [],
 						"execution_count": 2
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "scala"
+							}
+						},
+						"source": [
+							"%%spark\n",
+							"val wasbs_path = \"wasbs://nyctlc@azureopendatastorage.blob.core.windows.net/yellow\"\n",
+							"val nyctlc = spark.read.parquet(wasbs_path)\n",
+							"display(nyctlc)"
+						],
+						"outputs": [],
+						"execution_count": null
 					},
 					{
 						"cell_type": "code",
@@ -2429,7 +2553,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "5f1f26b9-864b-49e8-bd0f-05a3f26399f6"
+						"spark.autotune.trackingId": "fa70826a-6a86-425c-b296-b586db28b1e2"
 					}
 				},
 				"metadata": {
@@ -2454,8 +2578,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 4,
-						"memory": 28,
-						"automaticScaleJobs": false
+						"memory": 28
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -2482,6 +2605,31 @@
 						],
 						"outputs": [],
 						"execution_count": 2
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "scala"
+							}
+						},
+						"source": [
+							"%%spark\n",
+							"val wasbs_path = \"wasbs://nyctlc@azureopendatastorage.blob.core.windows.net/yellow\"\n",
+							"val nyctlc = spark.read.parquet(wasbs_path)\n",
+							"display(nyctlc)"
+						],
+						"outputs": [],
+						"execution_count": null
 					},
 					{
 						"cell_type": "code",
@@ -2881,31 +3029,85 @@
 			"location": "southcentralus"
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/spark33poola')]",
-			"type": "Microsoft.Synapse/workspaces/bigDataPools",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('workspaceName'), '/spkv34')]",
 			"type": "Microsoft.Synapse/workspaces/bigDataPools",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
+				"autoPause": {
+					"enabled": true,
+					"delayInMinutes": 15
+				},
+				"autoScale": {
+					"enabled": false,
+					"maxNodeCount": 10,
+					"minNodeCount": 3
+				},
+				"nodeCount": 3,
+				"nodeSize": "Small",
+				"nodeSizeFamily": "MemoryOptimized",
+				"sparkVersion": "3.4",
+				"isComputeIsolationEnabled": false,
+				"sessionLevelPackagesEnabled": false,
 				"annotations": []
 			},
-			"dependsOn": []
+			"dependsOn": [],
+			"location": "southcentralus"
 		},
 		{
 			"name": "[concat(parameters('workspaceName'), '/spark31poola')]",
 			"type": "Microsoft.Synapse/workspaces/bigDataPools",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
+				"autoPause": {
+					"enabled": false,
+					"delayInMinutes": 0
+				},
+				"autoScale": {
+					"enabled": false,
+					"maxNodeCount": 3,
+					"minNodeCount": 3
+				},
+				"nodeCount": 3,
+				"nodeSize": "Small",
+				"nodeSizeFamily": "MemoryOptimized",
+				"sparkVersion": "3.1",
+				"isComputeIsolationEnabled": false,
+				"sparkConfigProperties": {
+					"configurationType": "Artifact",
+					"filename": "SparkParquet",
+					"content": "{\"name\":\"SparkParquet\",\"properties\":{\"configs\":{\"parquet.split.files\":\"false\",\"spark.sql.parquet.enableVectorizedReader\":\"false\"},\"annotations\":[],\"type\":\"Microsoft.Synapse/workspaces/sparkconfigurations\",\"description\":\"\",\"notes\":\"\",\"created\":\"2024-07-20T19:28:27.5400000+05:30\",\"createdBy\":\"ramacg@microsoft.com\",\"configMergeRule\":{\"admin.currentOperation.parquet.split.files\":\"replace\",\"admin.currentOperation.spark.sql.parquet.enableVectorizedReader\":\"replace\"}}}",
+					"time": "2024-07-30T08:17:30.4459376Z"
+				},
+				"sessionLevelPackagesEnabled": false,
 				"annotations": []
 			},
-			"dependsOn": []
+			"dependsOn": [],
+			"location": "southcentralus"
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/spark33poolb')]",
+			"type": "Microsoft.Synapse/workspaces/bigDataPools",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"autoPause": {
+					"enabled": false,
+					"delayInMinutes": 0
+				},
+				"autoScale": {
+					"enabled": false,
+					"maxNodeCount": 0,
+					"minNodeCount": 0
+				},
+				"nodeCount": 3,
+				"nodeSize": "Small",
+				"nodeSizeFamily": "MemoryOptimized",
+				"sparkVersion": "3.3",
+				"isComputeIsolationEnabled": false,
+				"sessionLevelPackagesEnabled": false,
+				"annotations": []
+			},
+			"dependsOn": [],
+			"location": "southcentralus"
 		}
 	]
 }
