@@ -11,6 +11,9 @@
 		"sdktestssynapse3-WorkspaceDefaultSqlServer_connectionString": {
 			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:sdktestssynapse3.sql.azuresynapse-test.azure.net,1433;Initial Catalog=@{linkedService().DBName}"
 		},
+		"AzureKeyVault1_properties_typeProperties_baseUrl": {
+			"value": "https://KeyVaultAbhishek.vault.azure.net/"
+		},
 		"FabricKustoLS_properties_typeProperties_database": {
 			"value": "91984df3-ff74-440a-9881-2fa44d094648"
 		},
