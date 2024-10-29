@@ -4,21 +4,21 @@
 		"nbformat": 4,
 		"nbformat_minor": 2,
 		"bigDataPool": {
-			"referenceName": "spkv34",
+			"referenceName": "spark34tests",
 			"type": "BigDataPoolReference"
 		},
 		"sessionProperties": {
-			"driverMemory": "28g",
-			"driverCores": 4,
-			"executorMemory": "28g",
-			"executorCores": 4,
+			"driverMemory": "56g",
+			"driverCores": 8,
+			"executorMemory": "56g",
+			"executorCores": 8,
 			"numExecutors": 2,
 			"runAsWorkspaceSystemIdentity": true,
 			"conf": {
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "39799997-bedb-439b-aa8c-52201526a51d"
+				"spark.autotune.trackingId": "88710379-4321-4b73-935c-ecbdea9d5b8b"
 			}
 		},
 		"metadata": {
@@ -32,18 +32,18 @@
 				"name": "python"
 			},
 			"a365ComputeOptions": {
-				"id": "/subscriptions/216ca57c-8613-4c54-8960-1e5821b6dc8d/resourceGroups/SDK_E2E_TEST/providers/Microsoft.Synapse/workspaces/sdktestssynapse3/bigDataPools/spkv34",
-				"name": "spkv34",
+				"id": "/subscriptions/216ca57c-8613-4c54-8960-1e5821b6dc8d/resourceGroups/SDK_E2E_TEST/providers/Microsoft.Synapse/workspaces/sdktestssynapse3/bigDataPools/spark34tests",
+				"name": "spark34tests",
 				"type": "Spark",
-				"endpoint": "https://sdktestssynapse3.dev.azuresynapse-test.azure.net/livyApi/versions/2019-11-01-preview/sparkPools/spkv34",
+				"endpoint": "https://sdktestssynapse3.dev.azuresynapse-test.azure.net/livyApi/versions/2019-11-01-preview/sparkPools/spark34tests",
 				"auth": {
 					"type": "AAD",
 					"authResource": "https://dev.azuresynapse.net"
 				},
 				"sparkVersion": "3.4",
-				"nodeCount": 3,
-				"cores": 4,
-				"memory": 28,
+				"nodeCount": 10,
+				"cores": 8,
+				"memory": 56,
 				"automaticScaleJobs": false
 			},
 			"sessionKeepAliveTimeout": 90
