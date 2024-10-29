@@ -51,6 +51,15 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('workspaceName'), '/spark34tests')]",
+			"type": "Microsoft.Synapse/workspaces/bigDataPools",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/AzureKeyVault1')]",
 			"type": "Microsoft.Synapse/workspaces/linkedServices",
 			"apiVersion": "2019-06-01-preview",
@@ -292,7 +301,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "fbaa7c5a-777f-4055-af00-c44058f3ee36"
+						"spark.autotune.trackingId": "ac9d0057-6c8a-4605-8b14-49294ecf2da5"
 					}
 				},
 				"metadata": {
@@ -3241,37 +3250,6 @@
 			"location": "southcentralus"
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/spark32poola')]",
-			"type": "Microsoft.Synapse/workspaces/bigDataPools",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"autoPause": {
-					"enabled": false,
-					"delayInMinutes": 0
-				},
-				"autoScale": {
-					"enabled": false,
-					"maxNodeCount": 3,
-					"minNodeCount": 3
-				},
-				"nodeCount": 3,
-				"nodeSize": "Small",
-				"nodeSizeFamily": "MemoryOptimized",
-				"sparkVersion": "3.2",
-				"isComputeIsolationEnabled": false,
-				"sparkConfigProperties": {
-					"configurationType": "Artifact",
-					"filename": "SparkParquet",
-					"content": "{\"name\":\"SparkParquet\",\"properties\":{\"configs\":{\"parquet.split.files\":\"false\",\"spark.sql.parquet.enableVectorizedReader\":\"false\"},\"annotations\":[],\"type\":\"Microsoft.Synapse/workspaces/sparkconfigurations\",\"description\":\"\",\"notes\":\"\",\"created\":\"2024-07-20T19:28:27.5400000+05:30\",\"createdBy\":\"ramacg@microsoft.com\",\"configMergeRule\":{\"admin.currentOperation.parquet.split.files\":\"replace\",\"admin.currentOperation.spark.sql.parquet.enableVectorizedReader\":\"replace\"}}}",
-					"time": "2024-07-29T16:10:03.4770474Z"
-				},
-				"sessionLevelPackagesEnabled": false,
-				"annotations": []
-			},
-			"dependsOn": [],
-			"location": "southcentralus"
-		},
-		{
 			"name": "[concat(parameters('workspaceName'), '/spkv34')]",
 			"type": "Microsoft.Synapse/workspaces/bigDataPools",
 			"apiVersion": "2019-06-01-preview",
@@ -3353,37 +3331,6 @@
 			"location": "southcentralus"
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/spark32poolNew')]",
-			"type": "Microsoft.Synapse/workspaces/bigDataPools",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"autoPause": {
-					"enabled": false,
-					"delayInMinutes": 0
-				},
-				"autoScale": {
-					"enabled": false,
-					"maxNodeCount": 3,
-					"minNodeCount": 3
-				},
-				"nodeCount": 3,
-				"nodeSize": "Small",
-				"nodeSizeFamily": "MemoryOptimized",
-				"sparkVersion": "3.2",
-				"isComputeIsolationEnabled": false,
-				"sparkConfigProperties": {
-					"configurationType": "Artifact",
-					"filename": "SparkParquet",
-					"content": "{\"name\":\"SparkParquet\",\"properties\":{\"configs\":{\"parquet.split.files\":\"false\",\"spark.sql.parquet.enableVectorizedReader\":\"false\"},\"annotations\":[],\"type\":\"Microsoft.Synapse/workspaces/sparkconfigurations\",\"description\":\"\",\"notes\":\"\",\"created\":\"2024-07-20T19:28:27.5400000+05:30\",\"createdBy\":\"ramacg@microsoft.com\",\"configMergeRule\":{\"admin.currentOperation.parquet.split.files\":\"replace\",\"admin.currentOperation.spark.sql.parquet.enableVectorizedReader\":\"replace\"}}}",
-					"time": "2024-08-08T09:34:15.1735504Z"
-				},
-				"sessionLevelPackagesEnabled": false,
-				"annotations": []
-			},
-			"dependsOn": [],
-			"location": "southcentralus"
-		},
-		{
 			"name": "[concat(parameters('workspaceName'), '/spark34')]",
 			"type": "Microsoft.Synapse/workspaces/bigDataPools",
 			"apiVersion": "2019-06-01-preview",
@@ -3409,7 +3356,7 @@
 			"location": "southcentralus"
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/vanilla34')]",
+			"name": "[concat(parameters('workspaceName'), '/spark34tests')]",
 			"type": "Microsoft.Synapse/workspaces/bigDataPools",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
@@ -3418,37 +3365,12 @@
 					"delayInMinutes": 15
 				},
 				"autoScale": {
-					"enabled": false,
-					"maxNodeCount": 10,
-					"minNodeCount": 3
-				},
-				"nodeCount": 3,
-				"nodeSize": "Small",
-				"nodeSizeFamily": "MemoryOptimized",
-				"sparkVersion": "3.4",
-				"isComputeIsolationEnabled": false,
-				"sessionLevelPackagesEnabled": false,
-				"annotations": []
-			},
-			"dependsOn": [],
-			"location": "southcentralus"
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/newstock35')]",
-			"type": "Microsoft.Synapse/workspaces/bigDataPools",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"autoPause": {
 					"enabled": true,
-					"delayInMinutes": 15
-				},
-				"autoScale": {
-					"enabled": false,
 					"maxNodeCount": 10,
 					"minNodeCount": 3
 				},
-				"nodeCount": 3,
-				"nodeSize": "Small",
+				"nodeCount": 10,
+				"nodeSize": "Medium",
 				"nodeSizeFamily": "MemoryOptimized",
 				"sparkVersion": "3.4",
 				"isComputeIsolationEnabled": false,
