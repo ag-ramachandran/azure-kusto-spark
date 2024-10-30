@@ -51,15 +51,6 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('workspaceName'), '/spark34tests')]",
-			"type": "Microsoft.Synapse/workspaces/bigDataPools",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('workspaceName'), '/AzureKeyVault1')]",
 			"type": "Microsoft.Synapse/workspaces/linkedServices",
 			"apiVersion": "2019-06-01-preview",
@@ -287,7 +278,7 @@
 				"nbformat": 4,
 				"nbformat_minor": 2,
 				"bigDataPool": {
-					"referenceName": "spkv34",
+					"referenceName": "spark31poola",
 					"type": "BigDataPoolReference"
 				},
 				"sessionProperties": {
@@ -301,7 +292,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "ac9d0057-6c8a-4605-8b14-49294ecf2da5"
+						"spark.autotune.trackingId": "de981746-d21a-4028-9490-ee8c173c33bb"
 					}
 				},
 				"metadata": {
@@ -315,15 +306,15 @@
 						"name": "python"
 					},
 					"a365ComputeOptions": {
-						"id": "/subscriptions/216ca57c-8613-4c54-8960-1e5821b6dc8d/resourceGroups/SDK_E2E_TEST/providers/Microsoft.Synapse/workspaces/sdktestssynapse3/bigDataPools/spkv34",
-						"name": "spkv34",
+						"id": "/subscriptions/216ca57c-8613-4c54-8960-1e5821b6dc8d/resourceGroups/SDK_E2E_TEST/providers/Microsoft.Synapse/workspaces/sdktestssynapse3/bigDataPools/spark31poola",
+						"name": "spark31poola",
 						"type": "Spark",
-						"endpoint": "https://sdktestssynapse3.dev.azuresynapse-test.azure.net/livyApi/versions/2019-11-01-preview/sparkPools/spkv34",
+						"endpoint": "https://sdktestssynapse3.dev.azuresynapse-test.azure.net/livyApi/versions/2019-11-01-preview/sparkPools/spark31poola",
 						"auth": {
 							"type": "AAD",
 							"authResource": "https://dev.azuresynapse.net"
 						},
-						"sparkVersion": "3.4",
+						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 4,
 						"memory": 28,
@@ -3356,7 +3347,7 @@
 			"location": "southcentralus"
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/spark34tests')]",
+			"name": "[concat(parameters('workspaceName'), '/sparka34')]",
 			"type": "Microsoft.Synapse/workspaces/bigDataPools",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
@@ -3365,12 +3356,12 @@
 					"delayInMinutes": 15
 				},
 				"autoScale": {
-					"enabled": true,
+					"enabled": false,
 					"maxNodeCount": 10,
 					"minNodeCount": 3
 				},
-				"nodeCount": 10,
-				"nodeSize": "Medium",
+				"nodeCount": 3,
+				"nodeSize": "Small",
 				"nodeSizeFamily": "MemoryOptimized",
 				"sparkVersion": "3.4",
 				"isComputeIsolationEnabled": false,
