@@ -368,7 +368,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "2df1146e-bd7b-4527-9e8f-bd0a56143e25"
+						"spark.autotune.trackingId": "5f762ff4-44b3-40ab-8554-4011bbd3c300"
 					}
 				},
 				"metadata": {
@@ -489,8 +489,7 @@
 						},
 						"source": [
 							"%%spark\n",
-							"val creds = mssparkutils.credentials.getConnectionStringOrCreds(\"\n",
-							"sdktestcluster2\")"
+							"val creds = mssparkutils.credentials.getConnectionStringOrCreds(\"sdkse2etest\")"
 						],
 						"outputs": [],
 						"execution_count": 3
@@ -828,7 +827,7 @@
 							"import json"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 8
 					},
 					{
 						"cell_type": "code",
@@ -851,7 +850,7 @@
 							"    print(i['name'])"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 10
 					},
 					{
 						"cell_type": "code",
