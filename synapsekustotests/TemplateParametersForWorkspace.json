@@ -1,0 +1,45 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"workspaceName": {
+			"value": "synapsekustotests"
+		},
+		"sdktestssynapse2-WorkspaceDefaultSqlServer_connectionString": {
+			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:sdktestssynapse2.sql.azuresynapse-test.azure.net,1433;Initial Catalog=@{linkedService().DBName}"
+		},
+		"sdktestssynapse3-WorkspaceDefaultSqlServer_connectionString": {
+			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:sdktestssynapse3.sql.azuresynapse-test.azure.net,1433;Initial Catalog=@{linkedService().DBName}"
+		},
+		"synapsekustotests-WorkspaceDefaultSqlServer_connectionString": {
+			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:synapsekustotests.sql.azuresynapse.net,1433;Initial Catalog=@{linkedService().DBName}"
+		},
+		"AzureKeyVault1_properties_typeProperties_baseUrl": {
+			"value": "https://KeyVaultAbhishek.vault.azure.net/"
+		},
+		"FabricKustoLS_properties_typeProperties_database": {
+			"value": "91984df3-ff74-440a-9881-2fa44d094648"
+		},
+		"adxmi_properties_typeProperties_database": {
+			"value": "spark"
+		},
+		"sdkse2etest_properties_typeProperties_database": {
+			"value": "sdktestdb"
+		},
+		"sdktestcluster2_properties_typeProperties_database": {
+			"value": "spark"
+		},
+		"sdktestssynapse2-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://sdke2eteststorageadls.dfs.core.windows.net"
+		},
+		"sdktestssynapse3-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://sdkteststorage.dfs.core.windows.net"
+		},
+		"synapsekustosparktest_properties_typeProperties_serviceEndpoint": {
+			"value": "https://synapsekustosparktest.blob.core.windows.net"
+		},
+		"synapsekustotests-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://sdkteststorage.dfs.core.windows.net"
+		}
+	}
+}
