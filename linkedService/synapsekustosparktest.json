@@ -5,7 +5,7 @@
 		"type": "AzureBlobStorage",
 		"typeProperties": {
 			"serviceEndpoint": "https://synapsekustosparktest.blob.core.windows.net",
-			"accountKind": "BlobStorage"
+			"accountKind": "Storage"
 		},
 		"connectVia": {
 			"referenceName": "AutoResolveIntegrationRuntime",
