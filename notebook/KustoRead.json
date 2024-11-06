@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "600c7f73-8cb8-42d3-90ec-106c686ca313"
+				"spark.autotune.trackingId": "bd531f0b-e9d9-4ef0-a4f9-cfcf614b3a17"
 			}
 		},
 		"metadata": {
@@ -481,12 +481,12 @@
 				},
 				"source": [
 					"account_url = \"https://synapsekustosparktest.blob.core.windows.net\"\n",
-					"blob_service_client = BlobServiceClient(account_url=account_url, credential=json.loads(mssparkutils.credentials.getPropertiesAll(\"synapsekustosparktest\"))['AuthKey'])\n",
+					"blob_service_client = BlobServiceClient(account_url=account_url, credential=json.loads(mssparkutils.credentials.getPropertiesAll(\"sdktestssynapse2-WorkspaceDefaultStorage\"))['AuthKey'])\n",
 					"containers = blob_service_client.list_containers(include_metadata=True)\n",
 					"for i in containers:\n",
 					"    print(i['name'])"
 				],
-				"execution_count": 13
+				"execution_count": 14
 			},
 			{
 				"cell_type": "code",
