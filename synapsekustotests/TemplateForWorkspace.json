@@ -251,7 +251,7 @@
 				"type": "AzureBlobStorage",
 				"typeProperties": {
 					"serviceEndpoint": "[parameters('synapsekustosparktest_properties_typeProperties_serviceEndpoint')]",
-					"accountKind": "BlobStorage"
+					"accountKind": "Storage"
 				},
 				"connectVia": {
 					"referenceName": "AutoResolveIntegrationRuntime",
@@ -368,7 +368,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "600c7f73-8cb8-42d3-90ec-106c686ca313"
+						"spark.autotune.trackingId": "75272916-cb2c-4008-bc10-af1d3567f630"
 					}
 				},
 				"metadata": {
@@ -393,7 +393,8 @@
 						"sparkVersion": "3.4",
 						"nodeCount": 3,
 						"cores": 4,
-						"memory": 28
+						"memory": 28,
+						"automaticScaleJobs": false
 					},
 					"sessionKeepAliveTimeout": 90
 				},
@@ -826,7 +827,7 @@
 							"import json"
 						],
 						"outputs": [],
-						"execution_count": 12
+						"execution_count": 2
 					},
 					{
 						"cell_type": "code",
@@ -849,7 +850,7 @@
 							"    print(i['name'])"
 						],
 						"outputs": [],
-						"execution_count": 13
+						"execution_count": 6
 					},
 					{
 						"cell_type": "code",
