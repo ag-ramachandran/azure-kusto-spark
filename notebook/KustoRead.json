@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "b75d6431-7eb0-493a-bdc5-0e8baa867a11"
+				"spark.autotune.trackingId": "c191cbb3-e6fb-4df7-96ea-570a656e1e4d"
 			}
 		},
 		"metadata": {
@@ -71,7 +71,7 @@
 					"\n",
 					"//7960f9e1-96dd-4e1b-93b3-f0cf157135cc"
 				],
-				"execution_count": 19
+				"execution_count": 36
 			},
 			{
 				"cell_type": "code",
@@ -96,7 +96,7 @@
 					"val nyctlc = spark.read.parquet(wasbs_path)\n",
 					"display(nyctlc)"
 				],
-				"execution_count": 20
+				"execution_count": 37
 			},
 			{
 				"cell_type": "code",
@@ -118,7 +118,7 @@
 					"%%spark\n",
 					"println(mssparkutils.env.getClusterId)"
 				],
-				"execution_count": 21
+				"execution_count": 38
 			},
 			{
 				"cell_type": "code",
@@ -140,7 +140,7 @@
 					"%%spark\n",
 					"val creds = mssparkutils.credentials.getConnectionStringOrCreds(\"sdkse2etestppe\")"
 				],
-				"execution_count": 22
+				"execution_count": 39
 			},
 			{
 				"cell_type": "code",
@@ -164,14 +164,14 @@
 					"val kustoDfSingle  = spark.read\n",
 					"    .format(\"com.microsoft.kusto.spark.synapse.datasource\")\n",
 					"    .option(\"accessToken\", creds)\n",
-					"    .option(\"kustoCluster\", \"https://trd-fr03tmwpkn9a8x2n1g.z5.kusto.fabric.microsoft.com\" )\n",
+					"    .option(\"kustoCluster\", \"https://sdkse2etestppe.westus2.kusto.windows.net\" )\n",
 					"    .option(\"kustoDatabase\", \"e2e\")\n",
 					"    .option(\"kustoQuery\", \"KustoAirlineDataTransactional34 | where Year >= 1987\t| take 10000\")\n",
 					"    .load()\n",
 					"\n",
 					"display(kustoDfSingle)"
 				],
-				"execution_count": null
+				"execution_count": 40
 			},
 			{
 				"cell_type": "markdown",
@@ -214,7 +214,7 @@
 					"\n",
 					"display(kustoDfSingle)"
 				],
-				"execution_count": null
+				"execution_count": 41
 			},
 			{
 				"cell_type": "markdown",
@@ -263,7 +263,7 @@
 					"display(kustoDfDistributed)\n",
 					""
 				],
-				"execution_count": null
+				"execution_count": 42
 			},
 			{
 				"cell_type": "markdown",
@@ -312,7 +312,7 @@
 					".option(\"tableCreateOptions\",\"CreateIfNotExist\").option(\"spark.synapse.linkedService\", \"sdkse2etestppe\").mode(\"Append\").save()\n",
 					"//allTypesDf.write.format(\"com.microsoft.kusto.spark.synapse.datasource\").option(\"spark.synapse.linkedService\", \"sdkse2etestppe\").option(\"kustoDatabase\", \"e2e\").option(\"kustoTable\", \"AllDataTypesQueuedSpark33\").option(\"tableCreateOptions\",\"CreateIfNotExist\").option(\"writeMode\",\"Queued\").mode(\"Append\").save()"
 				],
-				"execution_count": null
+				"execution_count": 43
 			},
 			{
 				"cell_type": "markdown",
@@ -347,7 +347,7 @@
 					"%%spark\n",
 					"allTypesDf.write.format(\"com.microsoft.kusto.spark.synapse.datasource\").option(\"spark.synapse.linkedService\", \"sdkse2etestppe\").option(\"kustoDatabase\", \"e2e\").option(\"kustoTable\", \"[All-DataTypes-QueuedSpark34]\").option(\"tableCreateOptions\",\"CreateIfNotExist\").option(\"writeMode\",\"Queued\").mode(\"Append\").save()"
 				],
-				"execution_count": null
+				"execution_count": 44
 			},
 			{
 				"cell_type": "code",
@@ -380,7 +380,7 @@
 					"\n",
 					"display(kustoDfAllTypes)"
 				],
-				"execution_count": null
+				"execution_count": 45
 			},
 			{
 				"cell_type": "code",
@@ -413,7 +413,7 @@
 					"\n",
 					"display(transactionalModeCount)"
 				],
-				"execution_count": null
+				"execution_count": 46
 			},
 			{
 				"cell_type": "code",
@@ -445,7 +445,7 @@
 					"\n",
 					"display(queuedModeCount)"
 				],
-				"execution_count": null
+				"execution_count": 47
 			}
 		]
 	}
