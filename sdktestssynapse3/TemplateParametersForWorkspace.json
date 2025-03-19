@@ -26,11 +26,8 @@
 		"adxmi_properties_typeProperties_database": {
 			"value": "spark"
 		},
-		"sdkse2etest_properties_typeProperties_database": {
-			"value": "sdktestdb"
-		},
-		"sdktestcluster2_properties_typeProperties_database": {
-			"value": "spark"
+		"sdkse2etestppe_properties_typeProperties_database": {
+			"value": "e2e"
 		},
 		"sdktestssynapse2-WorkspaceDefaultStorage_properties_typeProperties_url": {
 			"value": "https://sdke2eteststorageadls.dfs.core.windows.net"
