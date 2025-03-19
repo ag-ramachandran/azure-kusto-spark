@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "d1cf7a91-0ff1-4b3d-bbfb-5b82763e20c7"
+				"spark.autotune.trackingId": "f3808e34-091a-44fe-9adc-ddbc557197df"
 			}
 		},
 		"metadata": {
@@ -138,7 +138,7 @@
 				},
 				"source": [
 					"%%spark\n",
-					"val creds = mssparkutils.credentials.getConnectionStringOrCreds(\"sdkse2etest\")"
+					"val creds = mssparkutils.credentials.getConnectionStringOrCreds(\"Fabric_Order\")"
 				],
 				"execution_count": 4
 			},
@@ -164,14 +164,14 @@
 					"val kustoDfSingle  = spark.read\n",
 					"    .format(\"com.microsoft.kusto.spark.synapse.datasource\")\n",
 					"    .option(\"accessToken\", creds)\n",
-					"    .option(\"kustoCluster\", \"sdkse2etest.eastus\" )\n",
-					"    .option(\"kustoDatabase\", \"sdktestdb\")\n",
+					"    .option(\"kustoCluster\", \"https://trd-fr03tmwpkn9a8x2n1g.z5.kusto.fabric.microsoft.com\" )\n",
+					"    .option(\"kustoDatabase\", \"OrderDetails\")\n",
 					"    .option(\"kustoQuery\", \"KustoAirlineDataTransactional34 | where Year >= 1987\t| take 10000\")\n",
 					"    .load()\n",
 					"\n",
 					"display(kustoDfSingle)"
 				],
-				"execution_count": null
+				"execution_count": 9
 			},
 			{
 				"cell_type": "markdown",
@@ -206,15 +206,15 @@
 					"crp.setOption(\"norequesttimeout\", True)\n",
 					"kustoDfSingle  = spark.read \\\n",
 					"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\n",
-					"    .option(\"spark.synapse.linkedService\", \"sdkse2etest\") \\\n",
-					"    .option(\"kustoDatabase\", \"sdktestdb\") \\\n",
+					"    .option(\"spark.synapse.linkedService\", \"Fabric_Order\") \\\n",
+					"    .option(\"kustoDatabase\", \"OrderDetails\") \\\n",
 					"    .option(\"kustoQuery\", \"KustoAirlineDataTransactional34 | where Year >= 1987\t| take 10000\") \\\n",
 					"    .option(\"clientRequestPropertiesJson\", crp.toString()) \\\n",
 					"    .load()\n",
 					"\n",
 					"display(kustoDfSingle)"
 				],
-				"execution_count": null
+				"execution_count": 10
 			},
 			{
 				"cell_type": "markdown",
@@ -254,8 +254,8 @@
 					"\n",
 					"kustoDfDistributed  = spark.read \\\n",
 					"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\n",
-					"    .option(\"spark.synapse.linkedService\", \"sdkse2etest\") \\\n",
-					"    .option(\"kustoDatabase\", \"sdktestdb\") \\\n",
+					"    .option(\"spark.synapse.linkedService\", \"Fabric_Order\") \\\n",
+					"    .option(\"kustoDatabase\", \"OrderDetails\") \\\n",
 					"    .option(\"kustoQuery\", \"KustoAirlineDataTransactional34 | where Year >= 1987\t| take 10000\") \\\n",
 					"    .option(\"readMode\", \"ForceDistributedMode\") \\\n",
 					"    .load()\n",
@@ -263,7 +263,7 @@
 					"display(kustoDfDistributed)\n",
 					""
 				],
-				"execution_count": 2
+				"execution_count": 11
 			},
 			{
 				"cell_type": "markdown",
@@ -308,11 +308,11 @@
 					"val allTypesDf = spark.sqlContext.createDataFrame(data).toDF(\"BoolType\", \"DateTimeType\", \"DynamicType\",\"GuidType\", \"IntType\", \"LongType\",\"RealType\",\"StringType\",\"DecimalType\")\n",
 					"//(BoolType:bool,DateTimeType:datetime,DynamicType:dynamic,GuidType:guid,IntType:int,LongType:long,RealType:real,StringType:string,DecimalType:decimal)\n",
 					"\n",
-					"allTypesDf.write.format(\"com.microsoft.kusto.spark.synapse.datasource\").option(\"kustoDatabase\", \"spark\").option(\"kustoTable\", \"AllDataTypesTransactionalSpark34\")\n",
-					".option(\"tableCreateOptions\",\"CreateIfNotExist\").option(\"spark.synapse.linkedService\", \"sdktestcluster2\").mode(\"Append\").save()\n",
-					"//allTypesDf.write.format(\"com.microsoft.kusto.spark.synapse.datasource\").option(\"spark.synapse.linkedService\", \"sdkse2etest\").option(\"kustoDatabase\", \"sdktestdb\").option(\"kustoTable\", \"AllDataTypesQueuedSpark33\").option(\"tableCreateOptions\",\"CreateIfNotExist\").option(\"writeMode\",\"Queued\").mode(\"Append\").save()"
+					"allTypesDf.write.format(\"com.microsoft.kusto.spark.synapse.datasource\").option(\"kustoDatabase\", \"OrderDetails\").option(\"kustoTable\", \"AllDataTypesTransactionalSpark34\")\n",
+					".option(\"tableCreateOptions\",\"CreateIfNotExist\").option(\"spark.synapse.linkedService\", \"Fabric_Order\").mode(\"Append\").save()\n",
+					"//allTypesDf.write.format(\"com.microsoft.kusto.spark.synapse.datasource\").option(\"spark.synapse.linkedService\", \"Fabric_Order\").option(\"kustoDatabase\", \"OrderDetails\").option(\"kustoTable\", \"AllDataTypesQueuedSpark33\").option(\"tableCreateOptions\",\"CreateIfNotExist\").option(\"writeMode\",\"Queued\").mode(\"Append\").save()"
 				],
-				"execution_count": 6
+				"execution_count": 12
 			},
 			{
 				"cell_type": "markdown",
@@ -345,9 +345,9 @@
 				},
 				"source": [
 					"%%spark\n",
-					"allTypesDf.write.format(\"com.microsoft.kusto.spark.synapse.datasource\").option(\"spark.synapse.linkedService\", \"sdkse2etest\").option(\"kustoDatabase\", \"sdktestdb\").option(\"kustoTable\", \"[All-DataTypes-QueuedSpark34]\").option(\"tableCreateOptions\",\"CreateIfNotExist\").option(\"writeMode\",\"Queued\").mode(\"Append\").save()"
+					"allTypesDf.write.format(\"com.microsoft.kusto.spark.synapse.datasource\").option(\"spark.synapse.linkedService\", \"Fabric_Order\").option(\"kustoDatabase\", \"OrderDetails\").option(\"kustoTable\", \"[All-DataTypes-QueuedSpark34]\").option(\"tableCreateOptions\",\"CreateIfNotExist\").option(\"writeMode\",\"Queued\").mode(\"Append\").save()"
 				],
-				"execution_count": null
+				"execution_count": 13
 			},
 			{
 				"cell_type": "code",
@@ -372,15 +372,15 @@
 					"# Full Sample Code available at: https://github.com/Azure/azure-kusto-spark/blob/master/samples/src/main/python/SynapseSample.py\n",
 					"kustoDfAllTypes  = spark.read \\\n",
 					"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\n",
-					"    .option(\"spark.synapse.linkedService\", \"sdkse2etest\") \\\n",
-					"    .option(\"kustoDatabase\", \"sdktestdb\") \\\n",
+					"    .option(\"spark.synapse.linkedService\", \"Fabric_Order\") \\\n",
+					"    .option(\"kustoDatabase\", \"OrderDetails\") \\\n",
 					"    .option(\"kustoQuery\", \"AllDataTypesTransactionalSpark34\t | take 100\") \\\n",
 					"    .option(\"readMode\", \"ForceDistributedMode\") \\\n",
 					"    .load()\n",
 					"\n",
 					"display(kustoDfAllTypes)"
 				],
-				"execution_count": null
+				"execution_count": 14
 			},
 			{
 				"cell_type": "code",
@@ -406,14 +406,14 @@
 					"# Full Sample Code available at: https://github.com/Azure/azure-kusto-spark/blob/master/samples/src/main/python/SynapseSample.py\n",
 					"transactionalModeCount  = spark.read \\\n",
 					"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\n",
-					"    .option(\"spark.synapse.linkedService\", \"sdkse2etest\") \\\n",
-					"    .option(\"kustoDatabase\", \"sdktestdb\") \\\n",
+					"    .option(\"spark.synapse.linkedService\", \"Fabric_Order\") \\\n",
+					"    .option(\"kustoDatabase\", \"OrderDetails\") \\\n",
 					"    .option(\"kustoQuery\", \"AllDataTypesTransactionalSpark34 | project DiffSecs = datetime_diff('second',ingestion_time(),todatetime(DateTimeType)) | summarize  count(),min(DiffSecs),max(DiffSecs),avg(DiffSecs)\") \\\n",
 					"    .load()\n",
 					"\n",
 					"display(transactionalModeCount)"
 				],
-				"execution_count": null
+				"execution_count": 18
 			},
 			{
 				"cell_type": "code",
@@ -438,14 +438,14 @@
 					"# Full Sample Code available at: https://github.com/Azure/azure-kusto-spark/blob/master/samples/src/main/python/SynapseSample.py\n",
 					"queuedModeCount  = spark.read \\\n",
 					"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\n",
-					"    .option(\"spark.synapse.linkedService\", \"sdkse2etest\") \\\n",
-					"    .option(\"kustoDatabase\", \"sdktestdb\") \\\n",
+					"    .option(\"spark.synapse.linkedService\", \"Fabric_Order\") \\\n",
+					"    .option(\"kustoDatabase\", \"OrderDetails\") \\\n",
 					"    .option(\"kustoQuery\", \"['All-DataTypes-QueuedSpark34'] | project DiffSecs = datetime_diff('second',ingestion_time(),todatetime(DateTimeType)) | summarize  count(),min(DiffSecs),max(DiffSecs),avg(DiffSecs)\") \\\n",
 					"    .load()\n",
 					"\n",
 					"display(queuedModeCount)"
 				],
-				"execution_count": null
+				"execution_count": 16
 			},
 			{
 				"cell_type": "code",
@@ -466,7 +466,7 @@
 					"import datetime\n",
 					"import json"
 				],
-				"execution_count": 2
+				"execution_count": 17
 			},
 			{
 				"cell_type": "code",
