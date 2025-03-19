@@ -1,0 +1,16 @@
+{
+	"name": "Fabric_Order",
+	"properties": {
+		"description": "https://trd-fr03tmwpkn9a8x2n1g.z5.kusto.fabric.microsoft.com",
+		"annotations": [],
+		"type": "AzureDataExplorer",
+		"typeProperties": {
+			"endpoint": "https://trd-fr03tmwpkn9a8x2n1g.z5.kusto.fabric.microsoft.com",
+			"database": "6874bb11-dd3f-40e2-99ff-08fa654152f2"
+		},
+		"connectVia": {
+			"referenceName": "AutoResolveIntegrationRuntime",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
