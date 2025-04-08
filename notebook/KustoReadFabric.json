@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "95b2d055-b7f4-47bf-83f4-43e27f6bbe77"
+				"spark.autotune.trackingId": "3eec0e7c-3b0a-480d-a20e-3f440abea093"
 			}
 		},
 		"metadata": {
@@ -48,6 +48,19 @@
 			"sessionKeepAliveTimeout": 30
 		},
 		"cells": [
+			{
+				"cell_type": "code",
+				"source": [
+					"sc.version\n",
+					"\n",
+					"print(spark.conf.get(\"spark.synapse.vhd.id\"))\n",
+					"print(spark.conf.get(\"spark.synapse.pool.name\"))\n",
+					"print(spark.conf.get(\"spark.cluster.name\"))\n",
+					"\n",
+					"!cat /etc/os-release"
+				],
+				"execution_count": null
+			},
 			{
 				"cell_type": "markdown",
 				"metadata": {

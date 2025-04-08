@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "0450751b-3ee4-4ecb-b1e3-77c53c036b86"
+				"spark.autotune.trackingId": "6491ce54-e66a-4d46-b985-949a5e618ef5"
 			}
 		},
 		"metadata": {
@@ -60,7 +60,7 @@
 					"\n",
 					"!cat /etc/os-release"
 				],
-				"execution_count": 2
+				"execution_count": 3
 			},
 			{
 				"cell_type": "code",
@@ -82,7 +82,7 @@
 					"%%spark\n",
 					"println(spark.conf.get(\"spark.synapse.vhd.id\"))"
 				],
-				"execution_count": null
+				"execution_count": 4
 			},
 			{
 				"cell_type": "code",
@@ -98,7 +98,8 @@
 					},
 					"microsoft": {
 						"language": "scala"
-					}
+					},
+					"collapsed": false
 				},
 				"source": [
 					"%%spark\n",
@@ -106,7 +107,7 @@
 					"val nyctlc = spark.read.parquet(wasbs_path)\n",
 					"display(nyctlc)"
 				],
-				"execution_count": null
+				"execution_count": 5
 			},
 			{
 				"cell_type": "code",
@@ -128,7 +129,7 @@
 					"    { \"linkedService\" : \"synapsekustosparktest\"}  \n",
 					")  "
 				],
-				"execution_count": null
+				"execution_count": 6
 			},
 			{
 				"cell_type": "code",
@@ -147,7 +148,7 @@
 					"!pip install dbldatagen\n",
 					"!pip install jmespath"
 				],
-				"execution_count": null
+				"execution_count": 7
 			},
 			{
 				"cell_type": "code",
@@ -165,7 +166,7 @@
 				"source": [
 					"access_token = mssparkutils.credentials.getConnectionStringOrCreds(\"FabricKustoLS\")"
 				],
-				"execution_count": null
+				"execution_count": 8
 			},
 			{
 				"cell_type": "code",
@@ -190,7 +191,7 @@
 					"\n",
 					"display(dfTestDataStreaming)"
 				],
-				"execution_count": null
+				"execution_count": 9
 			},
 			{
 				"cell_type": "code",
@@ -290,7 +291,7 @@
 				"source": [
 					"spark.conf.set(\"spark.sql.streaming.checkpointLocation\", \"abfss://synapseppe@synapsekustosparktest.dfs.core.windows.net/20240524/4\")"
 				],
-				"execution_count": null
+				"execution_count": 10
 			},
 			{
 				"cell_type": "code",
@@ -311,13 +312,13 @@
 					"    .option(\"kustoCluster\", \"https://trd-2mef4pj1u4g783gj30.z4.kusto.fabric.microsoft.com\") \\\n",
 					"    .option(\"kustoDatabase\", \"Sample\") \\\n",
 					"    .option(\"authToken\",access_token) \\\n",
-					"    .option(\"kustoTable\", \"StreamIngestTest33Transactional\") \\\n",
+					"    .option(\"kustoTable\", \"StreamIngestTest33Transactional_sensor\") \\\n",
 					"    .option(\"tableCreateOptions\",\"CreateIfNotExist\") \\\n",
 					"    .trigger(processingTime='2 seconds')\n",
 					"\n",
 					"txnq.start().awaitTermination(60*1)"
 				],
-				"execution_count": null
+				"execution_count": 11
 			},
 			{
 				"cell_type": "code",
@@ -338,13 +339,13 @@
 					"    .option(\"kustoCluster\", \"https://trd-2mef4pj1u4g783gj30.z4.kusto.fabric.microsoft.com\") \\\n",
 					"    .option(\"kustoDatabase\", \"Sample\") \\\n",
 					"    .option(\"authToken\",access_token) \\\n",
-					"    .option(\"kustoTable\", \"StreamIngestTest33Queued\") \\\n",
+					"    .option(\"kustoTable\", \"StreamIngestTest33Queued_sensor\") \\\n",
 					"    .option(\"writeMode\", \"Queued\") \\\n",
 					"    .option(\"tableCreateOptions\",\"CreateIfNotExist\") \\\n",
 					"    .trigger(processingTime='2 seconds')\n",
 					"queuedq.start().awaitTermination(60*1)"
 				],
-				"execution_count": null
+				"execution_count": 12
 			},
 			{
 				"cell_type": "code",
@@ -372,12 +373,12 @@
 					"    .option(\"kustoCluster\", \"https://trd-2mef4pj1u4g783gj30.z4.kusto.fabric.microsoft.com\") \\\n",
 					"    .option(\"kustoDatabase\", \"Sample\") \\\n",
 					"    .option(\"authToken\",access_token) \\\n",
-					"    .option(\"kustoQuery\", \"StreamIngestTest33Transactional | project DiffSecs = datetime_diff('second',ingestion_time(),todatetime(event_ts)) | summarize  count(),min(DiffSecs),max(DiffSecs),avg(DiffSecs)\") \\\n",
+					"    .option(\"kustoQuery\", \"StreamIngestTest33Transactional_sensor | project DiffSecs = datetime_diff('second',ingestion_time(),todatetime(timestamp)) | summarize  count(),min(DiffSecs),max(DiffSecs),avg(DiffSecs)\") \\\n",
 					"    .load()\n",
 					"\n",
 					"display(transactionalModeCount)"
 				],
-				"execution_count": null
+				"execution_count": 13
 			},
 			{
 				"cell_type": "code",
@@ -405,12 +406,12 @@
 					"    .option(\"kustoCluster\", \"https://trd-2mef4pj1u4g783gj30.z4.kusto.fabric.microsoft.com\") \\\n",
 					"    .option(\"kustoDatabase\", \"Sample\") \\\n",
 					"    .option(\"authToken\",access_token) \\\n",
-					"    .option(\"kustoQuery\", \"StreamIngestTest33Transactional | project DiffSecs = datetime_diff('second',ingestion_time(),todatetime(event_ts)) | summarize  count(),min(DiffSecs),max(DiffSecs),avg(DiffSecs)\") \\\n",
+					"    .option(\"kustoQuery\", \"StreamIngestTest33Transactional_sensor | project DiffSecs = datetime_diff('second',ingestion_time(),todatetime(timestamp)) | summarize  count(),min(DiffSecs),max(DiffSecs),avg(DiffSecs)\") \\\n",
 					"    .load()\n",
 					"\n",
 					"display(queuedModeCount)"
 				],
-				"execution_count": null
+				"execution_count": 14
 			},
 			{
 				"cell_type": "code",
@@ -438,12 +439,12 @@
 					"    .option(\"kustoCluster\", \"https://trd-2mef4pj1u4g783gj30.z4.kusto.fabric.microsoft.com\") \\\n",
 					"    .option(\"kustoDatabase\", \"Sample\") \\\n",
 					"    .option(\"authToken\",access_token) \\\n",
-					"    .option(\"kustoQuery\", \"SparkTableIngestStats('StreamIngestTest33Queued')\") \\\n",
+					"    .option(\"kustoQuery\", \"SparkTableIngestStats('StreamIngestTest33Queued_sensor')\") \\\n",
 					"    .load()\n",
 					"\n",
 					"display(functionModeCount)"
 				],
-				"execution_count": null
+				"execution_count": 15
 			}
 		]
 	}

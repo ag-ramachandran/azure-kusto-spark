@@ -4,7 +4,7 @@
 		"nbformat": 4,
 		"nbformat_minor": 2,
 		"bigDataPool": {
-			"referenceName": "spark33poolb",
+			"referenceName": "spark35as",
 			"type": "BigDataPoolReference"
 		},
 		"sessionProperties": {
@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "b8cb3839-c4e6-4573-82c4-8d97c9a574bf"
+				"spark.autotune.trackingId": "cc83e231-35ac-46f7-b09d-e9d43a72ce4d"
 			}
 		},
 		"metadata": {
@@ -32,15 +32,15 @@
 				"name": "python"
 			},
 			"a365ComputeOptions": {
-				"id": "/subscriptions/216ca57c-8613-4c54-8960-1e5821b6dc8d/resourceGroups/SDK_E2E_TEST/providers/Microsoft.Synapse/workspaces/sdktestssynapse3/bigDataPools/spark33poolb",
-				"name": "spark33poolb",
+				"id": "/subscriptions/216ca57c-8613-4c54-8960-1e5821b6dc8d/resourceGroups/SDK_E2E_TEST/providers/Microsoft.Synapse/workspaces/sdktestssynapse3/bigDataPools/spark35as",
+				"name": "spark35as",
 				"type": "Spark",
-				"endpoint": "https://sdktestssynapse3.dev.azuresynapse-test.azure.net/livyApi/versions/2019-11-01-preview/sparkPools/spark33poolb",
+				"endpoint": "https://sdktestssynapse3.dev.azuresynapse-test.azure.net/livyApi/versions/2019-11-01-preview/sparkPools/spark35as",
 				"auth": {
 					"type": "AAD",
 					"authResource": "https://dev.azuresynapse.net"
 				},
-				"sparkVersion": "3.3",
+				"sparkVersion": "3.5",
 				"nodeCount": 3,
 				"cores": 4,
 				"memory": 28,
@@ -49,6 +49,19 @@
 			"sessionKeepAliveTimeout": 90
 		},
 		"cells": [
+			{
+				"cell_type": "code",
+				"source": [
+					"sc.version\n",
+					"\n",
+					"print(spark.conf.get(\"spark.synapse.vhd.id\"))\n",
+					"print(spark.conf.get(\"spark.synapse.pool.name\"))\n",
+					"print(spark.conf.get(\"spark.cluster.name\"))\n",
+					"\n",
+					"!cat /etc/os-release"
+				],
+				"execution_count": 1
+			},
 			{
 				"cell_type": "code",
 				"metadata": {
@@ -71,7 +84,7 @@
 					"\n",
 					"//7960f9e1-96dd-4e1b-93b3-f0cf157135cc"
 				],
-				"execution_count": 28
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -96,7 +109,7 @@
 					"val nyctlc = spark.read.parquet(wasbs_path)\n",
 					"display(nyctlc)"
 				],
-				"execution_count": 29
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -118,7 +131,7 @@
 					"%%spark\n",
 					"println(mssparkutils.env.getClusterId)"
 				],
-				"execution_count": 30
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -140,7 +153,7 @@
 					"%%spark\n",
 					"val creds = mssparkutils.credentials.getConnectionStringOrCreds(\"sdkse2etestppe\")"
 				],
-				"execution_count": 31
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -171,7 +184,7 @@
 					"\n",
 					"display(kustoDfSingle)"
 				],
-				"execution_count": 32
+				"execution_count": null
 			},
 			{
 				"cell_type": "markdown",
@@ -214,7 +227,7 @@
 					"\n",
 					"display(kustoDfSingle)"
 				],
-				"execution_count": 33
+				"execution_count": null
 			},
 			{
 				"cell_type": "markdown",
@@ -263,7 +276,7 @@
 					"display(kustoDfDistributed)\n",
 					""
 				],
-				"execution_count": 34
+				"execution_count": null
 			},
 			{
 				"cell_type": "markdown",
@@ -312,7 +325,7 @@
 					".option(\"tableCreateOptions\",\"CreateIfNotExist\").option(\"spark.synapse.linkedService\", \"sdkse2etestppe\").mode(\"Append\").save()\n",
 					"//allTypesDf.write.format(\"com.microsoft.kusto.spark.synapse.datasource\").option(\"spark.synapse.linkedService\", \"sdkse2etestppe\").option(\"kustoDatabase\", \"e2e\").option(\"kustoTable\", \"AllDataTypesQueuedSpark33\").option(\"tableCreateOptions\",\"CreateIfNotExist\").option(\"writeMode\",\"Queued\").mode(\"Append\").save()"
 				],
-				"execution_count": 35
+				"execution_count": null
 			},
 			{
 				"cell_type": "markdown",
@@ -347,7 +360,7 @@
 					"%%spark\n",
 					"allTypesDf.write.format(\"com.microsoft.kusto.spark.synapse.datasource\").option(\"spark.synapse.linkedService\", \"sdkse2etestppe\").option(\"kustoDatabase\", \"e2e\").option(\"kustoTable\", \"[All-DataTypes-QueuedSpark34]\").option(\"tableCreateOptions\",\"CreateIfNotExist\").option(\"writeMode\",\"Queued\").mode(\"Append\").save()"
 				],
-				"execution_count": 36
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -380,7 +393,7 @@
 					"\n",
 					"display(kustoDfAllTypes)"
 				],
-				"execution_count": 37
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -413,7 +426,7 @@
 					"\n",
 					"display(transactionalModeCount)"
 				],
-				"execution_count": 38
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -445,7 +458,7 @@
 					"\n",
 					"display(queuedModeCount)"
 				],
-				"execution_count": 40
+				"execution_count": null
 			}
 		]
 	}
