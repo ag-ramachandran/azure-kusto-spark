@@ -4,7 +4,7 @@
 		"nbformat": 4,
 		"nbformat_minor": 2,
 		"bigDataPool": {
-			"referenceName": "spark33poolb",
+			"referenceName": "spark35as",
 			"type": "BigDataPoolReference"
 		},
 		"sessionProperties": {
@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "8abe3ba8-4ac2-40ef-8758-97d5357f4888"
+				"spark.autotune.trackingId": "c2315b1a-a561-4334-9d37-c22a6fbaa5e1"
 			}
 		},
 		"metadata": {
@@ -32,15 +32,15 @@
 				"name": "python"
 			},
 			"a365ComputeOptions": {
-				"id": "/subscriptions/216ca57c-8613-4c54-8960-1e5821b6dc8d/resourceGroups/SDK_E2E_TEST/providers/Microsoft.Synapse/workspaces/sdktestssynapse3/bigDataPools/spark33poolb",
-				"name": "spark33poolb",
+				"id": "/subscriptions/216ca57c-8613-4c54-8960-1e5821b6dc8d/resourceGroups/SDK_E2E_TEST/providers/Microsoft.Synapse/workspaces/sdktestssynapse3/bigDataPools/spark35as",
+				"name": "spark35as",
 				"type": "Spark",
-				"endpoint": "https://sdktestssynapse3.dev.azuresynapse-test.azure.net/livyApi/versions/2019-11-01-preview/sparkPools/spark33poolb",
+				"endpoint": "https://sdktestssynapse3.dev.azuresynapse-test.azure.net/livyApi/versions/2019-11-01-preview/sparkPools/spark35as",
 				"auth": {
 					"type": "AAD",
 					"authResource": "https://dev.azuresynapse.net"
 				},
-				"sparkVersion": "3.3",
+				"sparkVersion": "3.5",
 				"nodeCount": 3,
 				"cores": 4,
 				"memory": 28,
@@ -49,6 +49,19 @@
 			"sessionKeepAliveTimeout": 30
 		},
 		"cells": [
+			{
+				"cell_type": "code",
+				"source": [
+					"sc.version\n",
+					"\n",
+					"print(spark.conf.get(\"spark.synapse.vhd.id\"))\n",
+					"print(spark.conf.get(\"spark.synapse.pool.name\"))\n",
+					"print(spark.conf.get(\"spark.cluster.name\"))\n",
+					"\n",
+					"!cat /etc/os-release"
+				],
+				"execution_count": 29
+			},
 			{
 				"cell_type": "code",
 				"metadata": {
@@ -69,7 +82,7 @@
 					"%%spark\n",
 					"println(spark.conf.get(\"spark.synapse.vhd.id\"))"
 				],
-				"execution_count": 1
+				"execution_count": 30
 			},
 			{
 				"cell_type": "code",
@@ -94,7 +107,7 @@
 					"val nyctlc = spark.read.parquet(wasbs_path)\n",
 					"display(nyctlc)"
 				],
-				"execution_count": 2
+				"execution_count": 31
 			},
 			{
 				"cell_type": "code",
@@ -116,7 +129,7 @@
 					"    { \"linkedService\" : \"synapsekustosparktest\"}  \n",
 					")  "
 				],
-				"execution_count": 3
+				"execution_count": 32
 			},
 			{
 				"cell_type": "code",
@@ -135,7 +148,32 @@
 					"!pip install dbldatagen\n",
 					"!pip install jmespath"
 				],
-				"execution_count": 4
+				"execution_count": 33
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"from pyspark.sql.functions import col, rand, expr\n",
+					"from pyspark.sql.types import StructType, StructField, StringType, IntegerType, DoubleType\n",
+					"\n",
+					"streaming_data = (\n",
+					"    spark.readStream\n",
+					"    .format(\"rate\")  # Generates a continuous stream of rows with a timestamp\n",
+					"    .option(\"rowsPerSecond\", 10)  # Simulate 10 rows per second\n",
+					"    .load()\n",
+					")\n",
+					"\n",
+					"dfTestDataStreaming = streaming_data.select(\n",
+					"    col(\"timestamp\"),\n",
+					"    (rand() * 100).cast(IntegerType()).alias(\"device_id\"),  # Random Device ID (0-100)\n",
+					"    expr(\"CASE WHEN rand() > 0.5 THEN 'ON' ELSE 'OFF' END\").alias(\"status\"),  # Random Status\n",
+					"    (rand() * 50).alias(\"temperature\"),  # Random temperature value (0-50)\n",
+					"    (rand() * 100).alias(\"humidity\")  # Random humidity value (0-100)\n",
+					")\n",
+					"\n",
+					"display(dfTestDataStreaming)"
+				],
+				"execution_count": 34
 			},
 			{
 				"cell_type": "code",
@@ -148,6 +186,10 @@
 						"transient": {
 							"deleting": false
 						}
+					},
+					"editable": false,
+					"run_control": {
+						"frozen": true
 					}
 				},
 				"source": [
@@ -231,7 +273,7 @@
 				"source": [
 					"spark.conf.set(\"spark.sql.streaming.checkpointLocation\", \"abfss://synapseppe@synapsekustosparktest.dfs.core.windows.net/20240524/2\")"
 				],
-				"execution_count": 6
+				"execution_count": 35
 			},
 			{
 				"cell_type": "code",
@@ -255,9 +297,10 @@
 					"    .option(\"tableCreateOptions\",\"CreateIfNotExist\") \\\n",
 					"    .trigger(processingTime='2 seconds')\n",
 					"\n",
-					"txnq.start().awaitTermination(60*1)"
+					"txnq.start().awaitTermination(60*1)\n",
+					"##StreamIngestTest33Transactional"
 				],
-				"execution_count": 7
+				"execution_count": 36
 			},
 			{
 				"cell_type": "code",
@@ -273,6 +316,7 @@
 					}
 				},
 				"source": [
+					"\n",
 					"queuedq = dfTestDataStreaming.writeStream \\\n",
 					"    .format(\"com.microsoft.kusto.spark.synapse.datasink.KustoSynapseSinkProvider\") \\\n",
 					"    .option(\"spark.synapse.linkedService\", \"sdkse2etestppe\") \\\n",
@@ -284,7 +328,7 @@
 					"    \n",
 					"queuedq.start().awaitTermination(60*1)"
 				],
-				"execution_count": 8
+				"execution_count": 37
 			},
 			{
 				"cell_type": "code",
@@ -311,12 +355,13 @@
 					"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\n",
 					"    .option(\"spark.synapse.linkedService\", \"sdkse2etestppe\") \\\n",
 					"    .option(\"kustoDatabase\", \"e2e\") \\\n",
-					"    .option(\"kustoQuery\", \"StreamIngestTest33Transactional | project DiffSecs = datetime_diff('second',ingestion_time(),todatetime(event_ts)) | summarize  count(),min(DiffSecs),max(DiffSecs),avg(DiffSecs)\") \\\n",
+					"    .option(\"kustoQuery\", \"StreamIngestTest33Transactional | project DiffSecs = datetime_diff('second',ingestion_time(),todatetime(timestamp)) | summarize  count(),min(DiffSecs),max(DiffSecs),avg(DiffSecs)\") \\\n",
 					"    .load()\n",
 					"\n",
-					"display(transactionalModeCount)"
+					"\n",
+					"transactionalModeCount.show()"
 				],
-				"execution_count": 25
+				"execution_count": 38
 			},
 			{
 				"cell_type": "code",
@@ -343,12 +388,12 @@
 					"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\n",
 					"    .option(\"spark.synapse.linkedService\", \"sdkse2etestppe\") \\\n",
 					"    .option(\"kustoDatabase\", \"e2e\") \\\n",
-					"    .option(\"kustoQuery\", \"StreamIngestTest33Transactional | project DiffSecs = datetime_diff('second',ingestion_time(),todatetime(event_ts)) | summarize  count(),min(DiffSecs),max(DiffSecs),avg(DiffSecs)\") \\\n",
+					"    .option(\"kustoQuery\", \"StreamIngestTest33Transactional | project DiffSecs = datetime_diff('second',ingestion_time(),todatetime(timestamp)) | summarize  count(),min(DiffSecs),max(DiffSecs),avg(DiffSecs)\") \\\n",
 					"    .load()\n",
 					"\n",
-					"display(queuedModeCount)"
+					"queuedModeCount.show()"
 				],
-				"execution_count": 26
+				"execution_count": 42
 			},
 			{
 				"cell_type": "code",
@@ -375,12 +420,12 @@
 					"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\n",
 					"    .option(\"spark.synapse.linkedService\", \"sdkse2etestppe\") \\\n",
 					"    .option(\"kustoDatabase\", \"e2e\") \\\n",
-					"    .option(\"kustoQuery\", \"StreamIngestTest33Queued | project DiffSecs = datetime_diff('second',ingestion_time(),todatetime(event_ts)) | summarize  count(),min(DiffSecs),max(DiffSecs),avg(DiffSecs)\") \\\n",
+					"    .option(\"kustoQuery\", \"StreamIngestTest33Queued | project DiffSecs = datetime_diff('second',ingestion_time(),todatetime(timestamp)) | summarize  count(),min(DiffSecs),max(DiffSecs),avg(DiffSecs)\") \\\n",
 					"    .load()\n",
 					"\n",
-					"display(functionModeCount)"
+					"functionModeCount.show()"
 				],
-				"execution_count": 23
+				"execution_count": 43
 			},
 			{
 				"cell_type": "code",
@@ -405,7 +450,7 @@
 					"val nyctlc = spark.read.parquet(wasbs_path)\n",
 					"display(nyctlc)"
 				],
-				"execution_count": 12
+				"execution_count": 41
 			}
 		]
 	}
