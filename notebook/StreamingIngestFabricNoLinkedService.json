@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "6491ce54-e66a-4d46-b985-949a5e618ef5"
+				"spark.autotune.trackingId": "9c02dbef-e5ab-423f-ad24-285a1398e25a"
 			}
 		},
 		"metadata": {
@@ -188,8 +188,7 @@
 					"    (rand() * 50).alias(\"temperature\"),  # Random temperature value (0-50)\n",
 					"    (rand() * 100).alias(\"humidity\")  # Random humidity value (0-100)\n",
 					")\n",
-					"\n",
-					"display(dfTestDataStreaming)"
+					""
 				],
 				"execution_count": 9
 			},

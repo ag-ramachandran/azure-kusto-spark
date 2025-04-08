@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "c2315b1a-a561-4334-9d37-c22a6fbaa5e1"
+				"spark.autotune.trackingId": "332d87be-429f-4cea-bca8-69c87effd0e4"
 			}
 		},
 		"metadata": {
@@ -60,7 +60,7 @@
 					"\n",
 					"!cat /etc/os-release"
 				],
-				"execution_count": 29
+				"execution_count": 1
 			},
 			{
 				"cell_type": "code",
@@ -82,7 +82,7 @@
 					"%%spark\n",
 					"println(spark.conf.get(\"spark.synapse.vhd.id\"))"
 				],
-				"execution_count": 30
+				"execution_count": 2
 			},
 			{
 				"cell_type": "code",
@@ -107,7 +107,7 @@
 					"val nyctlc = spark.read.parquet(wasbs_path)\n",
 					"display(nyctlc)"
 				],
-				"execution_count": 31
+				"execution_count": 3
 			},
 			{
 				"cell_type": "code",
@@ -129,7 +129,7 @@
 					"    { \"linkedService\" : \"synapsekustosparktest\"}  \n",
 					")  "
 				],
-				"execution_count": 32
+				"execution_count": 4
 			},
 			{
 				"cell_type": "code",
@@ -148,7 +148,20 @@
 					"!pip install dbldatagen\n",
 					"!pip install jmespath"
 				],
-				"execution_count": 33
+				"execution_count": 5
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					""
+				]
 			},
 			{
 				"cell_type": "code",
@@ -170,10 +183,9 @@
 					"    (rand() * 50).alias(\"temperature\"),  # Random temperature value (0-50)\n",
 					"    (rand() * 100).alias(\"humidity\")  # Random humidity value (0-100)\n",
 					")\n",
-					"\n",
-					"display(dfTestDataStreaming)"
+					""
 				],
-				"execution_count": 34
+				"execution_count": 8
 			},
 			{
 				"cell_type": "code",
@@ -273,7 +285,7 @@
 				"source": [
 					"spark.conf.set(\"spark.sql.streaming.checkpointLocation\", \"abfss://synapseppe@synapsekustosparktest.dfs.core.windows.net/20240524/2\")"
 				],
-				"execution_count": 35
+				"execution_count": 9
 			},
 			{
 				"cell_type": "code",
@@ -300,7 +312,7 @@
 					"txnq.start().awaitTermination(60*1)\n",
 					"##StreamIngestTest33Transactional"
 				],
-				"execution_count": 36
+				"execution_count": 10
 			},
 			{
 				"cell_type": "code",
@@ -328,7 +340,7 @@
 					"    \n",
 					"queuedq.start().awaitTermination(60*1)"
 				],
-				"execution_count": 37
+				"execution_count": 11
 			},
 			{
 				"cell_type": "code",
@@ -361,7 +373,7 @@
 					"\n",
 					"transactionalModeCount.show()"
 				],
-				"execution_count": 38
+				"execution_count": 12
 			},
 			{
 				"cell_type": "code",
@@ -393,7 +405,7 @@
 					"\n",
 					"queuedModeCount.show()"
 				],
-				"execution_count": 42
+				"execution_count": 13
 			},
 			{
 				"cell_type": "code",
@@ -425,7 +437,7 @@
 					"\n",
 					"functionModeCount.show()"
 				],
-				"execution_count": 43
+				"execution_count": 14
 			},
 			{
 				"cell_type": "code",
@@ -450,7 +462,7 @@
 					"val nyctlc = spark.read.parquet(wasbs_path)\n",
 					"display(nyctlc)"
 				],
-				"execution_count": 41
+				"execution_count": 15
 			}
 		]
 	}
