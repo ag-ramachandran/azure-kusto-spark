@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
 package com.microsoft.kusto.spark.sql.extension
 
 import com.microsoft.azure.kusto.data.ClientRequestProperties
@@ -10,7 +13,12 @@ object SparkExtension {
 
   implicit class DataFrameReaderExtension(df: DataFrameReader) {
 
-    def kusto(kustoCluster: String, database: String, query: String, conf: Map[String, String] = Map.empty[String, String], cpr: Option[ClientRequestProperties] = None): DataFrame = {
+    def kusto(
+        kustoCluster: String,
+        database: String,
+        query: String,
+        conf: Map[String, String] = Map.empty[String, String],
+        cpr: Option[ClientRequestProperties] = None): DataFrame = {
       if (cpr.isDefined) {
         df.option(KustoSourceOptions.KUSTO_CLIENT_REQUEST_PROPERTIES_JSON, cpr.get.toString)
       }
@@ -25,25 +33,39 @@ object SparkExtension {
   }
 
   implicit class DataFrameWriterExtension(df: DataFrameWriter[Row]) {
-    def kusto(kustoCluster: String, database: String, table: String, conf: Map[String, String] = Map.empty[String, String], sparkIngestionProperties: Option[SparkIngestionProperties] = None): Unit = {
+    def kusto(
+        kustoCluster: String,
+        database: String,
+        table: String,
+        conf: Map[String, String] = Map.empty[String, String],
+        sparkIngestionProperties: Option[SparkIngestionProperties] = None): Unit = {
       if (sparkIngestionProperties.isDefined) {
-        df.option(KustoSinkOptions.KUSTO_SPARK_INGESTION_PROPERTIES_JSON, sparkIngestionProperties.get.toString)
+        df.option(
+          KustoSinkOptions.KUSTO_SPARK_INGESTION_PROPERTIES_JSON,
+          sparkIngestionProperties.get.toString)
       }
 
       df.format("com.microsoft.kusto.spark.datasource")
-      .option(KustoSinkOptions.KUSTO_CLUSTER, kustoCluster)
-      .option(KustoSinkOptions.KUSTO_DATABASE, database)
-      .option(KustoSinkOptions.KUSTO_TABLE, table)
-      .options(conf)
-      .mode(SaveMode.Append)
-      .save()
+        .option(KustoSinkOptions.KUSTO_CLUSTER, kustoCluster)
+        .option(KustoSinkOptions.KUSTO_DATABASE, database)
+        .option(KustoSinkOptions.KUSTO_TABLE, table)
+        .options(conf)
+        .mode(SaveMode.Append)
+        .save()
     }
   }
 
   implicit class DataStreamWriterExtension(df: DataStreamWriter[Row]) {
-    def kusto(kustoCluster: String, database: String, table: String, conf: Map[String, String] = Map.empty[String, String], sparkIngestionProperties: Option[SparkIngestionProperties] = None) = {
+    def kusto(
+        kustoCluster: String,
+        database: String,
+        table: String,
+        conf: Map[String, String] = Map.empty[String, String],
+        sparkIngestionProperties: Option[SparkIngestionProperties] = None) = {
       if (sparkIngestionProperties.isDefined) {
-        df.option(KustoSinkOptions.KUSTO_SPARK_INGESTION_PROPERTIES_JSON, sparkIngestionProperties.get.toString)
+        df.option(
+          KustoSinkOptions.KUSTO_SPARK_INGESTION_PROPERTIES_JSON,
+          sparkIngestionProperties.get.toString)
       }
 
       df.format("com.microsoft.kusto.spark.datasink.KustoSinkProvider")

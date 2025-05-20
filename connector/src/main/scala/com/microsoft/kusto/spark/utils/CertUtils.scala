@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
 package com.microsoft.kusto.spark.utils
 
 import java.io.{FileInputStream, IOException}
@@ -12,9 +15,9 @@ object CertUtils {
    * Read pfx file and get privateKey
    *
    * @param path
-   * pfx file path
+   *   pfx file path
    * @param password
-   * the password to the pfx file
+   *   the password to the pfx file
    */
   @throws[NoSuchProviderException]
   @throws[KeyStoreException]
@@ -34,9 +37,9 @@ object CertUtils {
       var alias: Option[String] = Option.empty
       // Break if alias refers to a private key because we want to use that
       // certificate
-      while ( aliases.hasMoreElements && alias.isEmpty) {
+      while (aliases.hasMoreElements && alias.isEmpty) {
         val currentAlias = aliases.nextElement
-        if(store.isKeyEntry(currentAlias)){
+        if (store.isKeyEntry(currentAlias)) {
           alias = Option.apply(currentAlias)
         }
       }
@@ -46,7 +49,7 @@ object CertUtils {
         // Retrieves the private key from the Java keystore
         val key = store.getKey(alias.get, password.toCharArray).asInstanceOf[PrivateKey]
         KeyCert(certificate, key)
-      }else{
+      } else {
         throw new UnrecoverableKeyException(s"cert could not be read from pfx path ${path}")
       }
     } finally {

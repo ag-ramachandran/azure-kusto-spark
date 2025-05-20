@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
 package com.microsoft.kusto.spark.utils
 
 object KustoQueryUtils {
@@ -29,11 +32,9 @@ object KustoQueryUtils {
 
     if (tableName.startsWith("[")) {
       tableName
-    }
-    else if (!tableName.contains("'")) {
+    } else if (!tableName.contains("'")) {
       "['" + tableName + "']"
-    }
-    else {
+    } else {
       "[\"" + tableName + "\"]"
     }
   }

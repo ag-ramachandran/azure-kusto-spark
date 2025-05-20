@@ -1,6 +1,13 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
 package com.microsoft.kusto.spark.datasink
 
 trait Writer {
+  val newLineSep: String = System.lineSeparator()
+
+  val newLineSepLength: Int = newLineSep.length
+
   val out: java.io.Writer
   def write(c: Char): Unit
   def write(str: String): Unit
@@ -8,30 +15,30 @@ trait Writer {
   def writeUnescaped(str: String): Unit = {
     out.write(str)
   }
+  def newLine(): Unit = {
+    out.write(System.lineSeparator())
+  }
+  def getCounter: Long = 0L
+  def resetCounter(): Unit = {}
 }
 
-case class CountingWriter(out: java.io.Writer) extends Writer {
-  private val newLineSep: String = System.lineSeparator()
-//    java.security.AccessController.doPrivileged(
-//    new sun.security.action.GetPropertyAction("line.separator"))
-  private val newLineSepLength: Int = newLineSep.length
-  private var bytesCounter: Long = 0L
+case class CountingWriter(out: java.io.Writer, var bytesCounter: Long = 0L) extends Writer {
 
-  def newLine(): Unit = {
+  override def newLine(): Unit = {
     out.write(newLineSep)
     bytesCounter += newLineSepLength
   }
 
-  def write(c: Char): Unit ={
+  override def write(c: Char): Unit = {
     out.write(c)
     bytesCounter += 1
   }
-  def write(str: String): Unit = {
+  override def write(str: String): Unit = {
     out.write(str)
     bytesCounter += str.length
   }
 
-  def writeStringField(str: String): Unit = {
+  override def writeStringField(str: String): Unit = {
     if (str.nonEmpty) {
       out.write('"')
       bytesCounter += 2
@@ -48,21 +55,21 @@ case class CountingWriter(out: java.io.Writer) extends Writer {
     }
   }
 
-  def getCounter: Long = bytesCounter
+  override def getCounter: Long = bytesCounter
 
-  def resetCounter(): Unit = {
+  override def resetCounter(): Unit = {
     bytesCounter = 0
   }
 }
 
 case class EscapedWriter(out: java.io.Writer) extends Writer {
-  def write(c: Char): Unit ={
+  override def write(c: Char): Unit = {
     out.write(c)
   }
 
-  def write(str: String): Unit ={
+  override def write(str: String): Unit = {
     for (c <- str) {
-      val escaped =  if (c > 127) 0 else EscapedWriter.escapeTable(c)
+      val escaped = if (c > 127) 0 else EscapedWriter.escapeTable(c)
       if (escaped != 0) {
         out.write('\\')
         out.write(escaped)
@@ -72,7 +79,7 @@ case class EscapedWriter(out: java.io.Writer) extends Writer {
     }
   }
 
-  def writeStringField(str: String): Unit = {
+  override def writeStringField(str: String): Unit = {
     out.write('"')
     write(str)
     out.write('"')

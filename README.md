@@ -3,22 +3,30 @@
 </p>
 
 # Azure Data Explorer Connector for Apache Spark
+  
+master: [![Build](https://github.com/Azure/azure-kusto-spark/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/Azure/azure-kusto-spark/actions/workflows/build.yml)
 
-master: [![Build status](https://msazure.visualstudio.com/One/_apis/build/status/Custom/Kusto/azure-kusto-spark%20ci?branchName=master)](https://msazure.visualstudio.com/One/_build/latest?definitionId=58677)
- 
 This library contains the source code for Azure Data Explorer Data Source and Data Sink Connector for Apache Spark.
 
 Azure Data Explorer (A.K.A. [Kusto](https://azure.microsoft.com/services/data-explorer/)) is a lightning-fast indexing and querying service. 
 
 [Spark](https://spark.apache.org/) is a unified analytics engine for large-scale data processing.
 
-Making Azure Data Explorer and Spark work together enables building fast and scalable applications, targeting a variety of Machine Learning, Extract-Transform-Load, Log Analytics and other data-driven scenarios. 
+Making Azure Data Explorer and Spark work together enables building fast and scalable applications, targeting a variety of Machine Learning, Extract-Transform-Load, Log Analytics and other data-driven scenarios.
+
+This connector works with the following spark environments:
+[Azure Databricks](https://azure.microsoft.com/products/databricks),
+[Azure Synapse Data Explorer](https://docs.microsoft.com/azure/synapse-analytics/data-explorer/data-explorer-overview) and
+[Real time analytics in Fabric](https://learn.microsoft.com/fabric/real-time-analytics/overview)
 
 ## Changelog
 
+**Breaking changes in versions 5.2.x** - From these versions, the published packages are shaded and packaged as a self contained jar. This is to avoid issues with common OSS libraries, spark runtimes and/or application dependencies.
+
 For major changes from previous releases, please refer to [Releases](https://github.com/Azure/azure-kusto-spark/releases).
 For known or new issues, please refer to the [issues](https://github.com/Azure/azure-kusto-spark/issues) section.
-> Note: Use the 4.x series only if you are using JDK 11 and 3.x in JDK 8
+> Note: Use the 4.x series only if you are using JDK 11. Versions 3.x and 5.x will work with JDK8 and all versions up
+From versions 5.2.0 and up, the connector is packaged as an uber jar to avoid conflicts with other jars that are added as part of the spark job definitions.
 
 ## Usage
 
@@ -33,14 +41,14 @@ link your application with the artifact below to use the Azure Data Explorer Con
 ```
 groupId = com.microsoft.azure.kusto
 artifactId = kusto-spark_3.0_2.12
-version = 4.0.2
+version = 5.3.0
 ```
 
 **In Maven**:
 
 Look for the following coordinates: 
 ```
-com.microsoft.azure.kusto:kusto-spark_3.0_2.12:4.0.2
+com.microsoft.azure.kusto:kusto-spark_3.0_2.12:5.3.0
 ```
 
 Or clone this repository and build it locally to add it to your local maven repository,.
@@ -50,7 +58,7 @@ The jar can also be found under the [released package](https://github.com/Azure/
     <dependency>
         <groupId>com.microsoft.azure.kusto</groupId>
         <artifactId>kusto-spark_3.0_2.12</artifactId>
-        <version>4.0.2</version>
+        <version>5.2.2</version>
     </dependency>
 ```
 
@@ -58,7 +66,7 @@ The jar can also be found under the [released package](https://github.com/Azure/
 
 ```scala
 libraryDependencies ++= Seq(
-  "com.microsoft.azure.kusto" %% "kusto-spark_3.0" % "4.0.2"
+  "com.microsoft.azure.kusto" %% "kusto-spark_3.0" % "5.2.2"
 )
 ```
 
@@ -67,7 +75,7 @@ libraryDependencies ++= Seq(
 Libraries -> Install New -> Maven -> copy the following coordinates:
 
 ```
-com.microsoft.azure.kusto:kusto-spark_3.0_2.12:4.0.2
+com.microsoft.azure.kusto:kusto-spark_3.0_2.12:5.2.2
 ```
 
 #### Building Samples Module
@@ -95,14 +103,42 @@ To use the connector, you need:
 > Note: when working with Spark version 2.3 or lower, build the jar locally from branch "2.4" and 
 simply change the spark version in the pom file. 
 
+## Local Run - Build Setup
+
+The newer options in the connector have tests pertaining to Blob storage, providing support for user impersonation based data export and also providing a custom blob storage for ingestion.
+
+These are set up on the CI already. To configure these on local machines, set up is required on the machine. The following are commands to be executed on AzCli, the setup can be done through the Azure portal as well.
+
+```
+az login
+az ad signed-in-user show --query "id" --output json
+```
+This will usually output a GUID 
+
+```
+"10ac405f-8d3f-4f95-a012-201801b257d2"
+```
+This ID can then be used to grant access to storage as follows
+
+```shell
+az role assignment create --assignee 10ac405f-8d3f-4f95-a012-201801b257d2 --role "Storage Blob Delegator" --scope /subscriptions/<sub-id>/resourceGroups/<rg-name>/providers/Microsoft.Storage/storageAccounts/<storageacc>
+ 
+az role assignment create --assignee 10ac405f-8d3f-4f95-a012-201801b257d2 --role "Storage Blob Data Contributor" --scope /subscriptions/<sub-id>/resourceGroups/<rg-name>/providers/Microsoft.Storage/storageAccounts/<storageacc>/containers/<container-name>
+```
+
+These commands will set up test storage accounts required for tests.
+
+Once this is set up, you can use the following commands to build and run the tests
+
 ## Build Commands
    
 ```shell
-// Builds jar and runs all tests
-mvn clean package
+mvn clean package -DkustoCluster='https://cluster.westus2.kusto.windows.net' -DkustoDatabase='spark' -DkustoAadAuthorityID='72f988bf-86f1-41af-91ab-2d7cd011db47'  -DkustoIngestionUri='https://ingest-cluster.westus2.kusto.windows.net' -DingestStorageUrl='https://storageacc.blob.core.windows.net' -DingestStorageContainer='ingestcontainer' -DstorageAccountUrl='https://storageacc.blob.core.windows.net/synapseppe\;impersonate'
 
-// Builds jar, runs all tests, and installs jar to your local maven repository
-mvn clean install
+
+# You can pass all the properties as env variables too
+export kustoCluster="https://cluster.westus2.kusto.windows.net"
+
 ```
 
 ## Pre-Compiled Libraries
@@ -110,8 +146,7 @@ To facilitate ramp-up from local jar on platforms such as Azure Databricks, pre-
 are published under [GitHub Releases](https://github.com/Azure/azure-kusto-spark/releases).
 These libraries include:
 * Azure Data Explorer connector library
-* User may also need to include Kusto Java SDK libraries (kusto-data and kusto-ingest), which are published under
-[GitHub Releases](https://github.com/Azure/azure-kusto-java/releases)
+* Version 5.2.0 and up of the library publish uber jars to maven. This is because of conflicts between custom jars that are added as part of the job and the exclude/include process that has to be followed to avoid conflicts.
 
 ## Dependencies
 Spark Azure Data Explorer connector depends on [Azure Data Explorer Data Client Library](https://mvnrepository.com/artifact/com.microsoft.azure.kusto/kusto-data) 

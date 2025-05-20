@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
 package com.microsoft.kusto.spark.datasink
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility
@@ -8,34 +11,58 @@ import com.microsoft.azure.kusto.ingest.IngestionMapping.IngestionMappingKind
 
 import java.util
 import com.microsoft.azure.kusto.ingest.{IngestionMapping, IngestionProperties}
+import org.apache.commons.collections.CollectionUtils
+import org.apache.commons.lang3.StringUtils
 
+import java.security.InvalidParameterException
 import java.time.Instant
+import java.util.Objects
 
-class SparkIngestionProperties(var flushImmediately: Boolean = false,
-                               var dropByTags: util.ArrayList[String] = null,
-                               var ingestByTags: util.ArrayList[String] = null,
-                               var additionalTags: util.ArrayList[String] = null,
-                               var ingestIfNotExists: util.List[String] = null,
-                               var creationTime: Instant = null,
-                               var csvMapping: String = null,
-                               var csvMappingNameReference: String = null){
+class SparkIngestionProperties(
+    var flushImmediately: Boolean = false,
+    var dropByTags: util.List[String] = null,
+    var ingestByTags: util.List[String] = null,
+    var additionalTags: util.List[String] = null,
+    var ingestIfNotExists: util.List[String] = null,
+    var creationTime: Instant = null,
+    var csvMapping: String = null,
+    var csvMappingNameReference: String = null)
+    extends Serializable {
   // C'tor for serialization
-  def this(){
+  def this() {
     this(false)
   }
 
   override def toString: String = {
-    new ObjectMapper().registerModule(new JavaTimeModule()).
-      setVisibility(PropertyAccessor.FIELD, Visibility.ANY).setVisibility(PropertyAccessor.FIELD, Visibility.ANY)
+    new ObjectMapper()
+      .registerModule(new JavaTimeModule())
+      .setVisibility(PropertyAccessor.FIELD, Visibility.ANY)
+      .setVisibility(PropertyAccessor.FIELD, Visibility.ANY)
       .writerWithDefaultPrettyPrinter
       .writeValueAsString(this)
   }
 
-  def toIngestionProperties(database: String, table: String): IngestionProperties ={
+  // In case of Streaming, these options are not supported. The idea is to validate before sending the request to Kusto
+  def validateStreamingProperties(): Unit = {
+    if ((this.ingestByTags != null && !this.ingestByTags.isEmpty)
+      || (this.dropByTags != null && !this.dropByTags.isEmpty)
+      || (this.additionalTags != null && !this.additionalTags.isEmpty)
+      || Objects.nonNull(creationTime)) {
+      throw new InvalidParameterException(
+        "Ingest by tags / Drop by tags / Additional tags / Creation Time are not supported for streaming ingestion " +
+          "through SparkIngestionProperties")
+    }
+    if (StringUtils.isNotEmpty(this.csvMapping)) {
+      throw new InvalidParameterException(
+        "CSVMapping cannot be used with Spark streaming ingestion")
+    }
+  }
+
+  def toIngestionProperties(database: String, table: String): IngestionProperties = {
     val ingestionProperties = new IngestionProperties(database, table)
     val additionalProperties = new util.HashMap[String, String]()
 
-    if (this.flushImmediately){
+    if (this.flushImmediately) {
       ingestionProperties.setFlushImmediately(true)
     }
 
@@ -65,7 +92,10 @@ class SparkIngestionProperties(var flushImmediately: Boolean = false,
     }
 
     if (this.csvMappingNameReference != null) {
-      ingestionProperties.setIngestionMapping(new IngestionMapping(this.csvMappingNameReference, IngestionMapping.IngestionMappingKind.CSV))
+      ingestionProperties.setIngestionMapping(
+        new IngestionMapping(
+          this.csvMappingNameReference,
+          IngestionMapping.IngestionMappingKind.CSV))
     }
 
     ingestionProperties.setAdditionalProperties(additionalProperties)
@@ -74,9 +104,12 @@ class SparkIngestionProperties(var flushImmediately: Boolean = false,
 }
 
 object SparkIngestionProperties {
-  def cloneIngestionProperties(ingestionProperties: IngestionProperties, destinationTable: Option[String] = None): IngestionProperties = {
-    val cloned = new IngestionProperties(ingestionProperties.getDatabaseName,
-      if(destinationTable.isDefined) destinationTable.get else ingestionProperties.getTableName)
+  def cloneIngestionProperties(
+      ingestionProperties: IngestionProperties,
+      destinationTable: Option[String] = None): IngestionProperties = {
+    val cloned = new IngestionProperties(
+      ingestionProperties.getDatabaseName,
+      if (destinationTable.isDefined) destinationTable.get else ingestionProperties.getTableName)
     cloned.setReportLevel(ingestionProperties.getReportLevel)
     cloned.setReportMethod(ingestionProperties.getReportMethod)
     cloned.setAdditionalTags(ingestionProperties.getAdditionalTags)
@@ -85,11 +118,15 @@ object SparkIngestionProperties {
     cloned.setIngestIfNotExists(ingestionProperties.getIngestIfNotExists)
     cloned.setDataFormat(ingestionProperties.getDataFormat)
     cloned.setIngestionMapping(ingestionProperties.getIngestionMapping)
+    cloned.setAdditionalProperties(ingestionProperties.getAdditionalProperties)
+    cloned.setFlushImmediately(ingestionProperties.getFlushImmediately)
     cloned
   }
 
   private[kusto] def fromString(json: String): SparkIngestionProperties = {
-    new ObjectMapper().registerModule(new JavaTimeModule()).
-      setVisibility(PropertyAccessor.FIELD, Visibility.ANY).readValue(json, classOf[SparkIngestionProperties])
+    new ObjectMapper()
+      .registerModule(new JavaTimeModule())
+      .setVisibility(PropertyAccessor.FIELD, Visibility.ANY)
+      .readValue(json, classOf[SparkIngestionProperties])
   }
 }

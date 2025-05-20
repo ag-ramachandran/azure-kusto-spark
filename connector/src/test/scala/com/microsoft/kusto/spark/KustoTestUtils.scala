@@ -1,35 +1,60 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
 package com.microsoft.kusto.spark
 
+import com.azure.core.credential.{AccessToken, TokenRequestContext}
+import com.azure.identity.AzureCliCredentialBuilder
 import com.microsoft.azure.kusto.data.auth.ConnectionStringBuilder
 import com.microsoft.azure.kusto.data.{Client, ClientFactory}
 import com.microsoft.kusto.spark.datasink.SinkTableCreationMode.SinkTableCreationMode
-import com.microsoft.kusto.spark.datasink.{KustoSinkOptions, SinkTableCreationMode, SparkIngestionProperties}
-import com.microsoft.kusto.spark.datasource.KustoSourceOptions
+import com.microsoft.kusto.spark.datasink.{
+  IngestionStorageParameters,
+  KustoSinkOptions,
+  SinkTableCreationMode,
+  SparkIngestionProperties
+}
+import com.microsoft.kusto.spark.datasource.{KustoSourceOptions, TransientStorageCredentials}
 import com.microsoft.kusto.spark.sql.extension.SparkExtension.DataFrameReaderExtension
-import com.microsoft.kusto.spark.utils.CslCommandsGenerator._
-import com.microsoft.kusto.spark.utils.{KustoQueryUtils, KustoDataSourceUtils => KDSU}
-import org.apache.commons.lang3.StringUtils
+import com.microsoft.kusto.spark.utils.CslCommandsGenerator.{
+  generateDropTablesCommand,
+  generateFindCurrentTempTablesCommand,
+  generateTempTableCreateCommand
+}
+import com.microsoft.kusto.spark.utils.{
+  ContainerAndSas,
+  ContainerProvider,
+  KustoQueryUtils,
+  KustoDataSourceUtils => KDSU
+}
 import org.apache.spark.sql.{DataFrame, SaveMode, SparkSession}
 
-import java.nio.file.{Files, Paths}
 import java.security.InvalidParameterException
-import java.util.UUID
-import scala.collection.JavaConverters._
+import java.util.{Collections, UUID}
+import scala.collection.JavaConverters.asScalaBufferConverter
+import scala.collection.mutable
 import scala.concurrent.TimeoutException
+import scala.util.Try
 
 private[kusto] object KustoTestUtils {
-  private val myName = this.getClass.getSimpleName
+  private val className = this.getClass.getSimpleName
   private val loggingLevel: Option[String] = Option(System.getProperty("logLevel"))
-  if (loggingLevel.isDefined) KDSU.setLoggingLevel(loggingLevel.get)
+  private val cachedToken: mutable.Map[String, KustoConnectionOptions] =
+    new mutable.HashMap[String, KustoConnectionOptions]()
+  loggingLevel match {
+    case Some(level) => KDSU.setLoggingLevel(level)
+    // default to warn for tests
+    case None => KDSU.setLoggingLevel("WARN")
+  }
 
   def validateResultsAndCleanup(
-    kustoAdminClient: Client,
-    table: String,
-    database: String,
-    expectedNumberOfRows: Int, // Set a negative value to skip validation
-    timeoutMs: Int,
-    cleanupAllTables: Boolean = true,
-    tableCleanupPrefix: String = "") : Unit = {
+      kustoAdminClient: Client,
+      table: String,
+      database: String,
+      expectedNumberOfRows: Int, // Set a negative value to skip validation
+      timeoutMs: Int,
+      cleanupAllTables: Boolean = true,
+      tableCleanupPrefix: String = ""): Unit = {
 
     var rowCount = 0
     var timeElapsedMs = 0
@@ -46,60 +71,76 @@ private[kusto] object KustoTestUtils {
     }
 
     if (cleanupAllTables) {
-      if (tableCleanupPrefix.isEmpty) throw new InvalidParameterException("Tables cleanup prefix must be set if 'cleanupAllTables' is 'true'")
+      if (tableCleanupPrefix.isEmpty) {
+        throw new InvalidParameterException(
+          "Tables cleanup prefix must be set if 'cleanupAllTables' is 'true'")
+      }
       tryDropAllTablesByPrefix(kustoAdminClient, database, tableCleanupPrefix)
-    }
-    else {
+    } else {
       kustoAdminClient.execute(database, generateDropTablesCommand(table))
     }
 
     if (expectedNumberOfRows >= 0) {
       if (rowCount == expectedNumberOfRows) {
-        KDSU.logInfo(myName, s"KustoSinkStreamingE2E: Ingestion results validated for table '$table'")
+        KDSU.logInfo(
+          className,
+          s"KustoSinkStreamingE2E: Ingestion results validated for table '$table'")
       } else {
-        throw new TimeoutException(s"KustoSinkStreamingE2E: Timed out waiting for ingest. $rowCount rows found in database '$database' table '$table', expected: $expectedNumberOfRows. Elapsed time:$timeElapsedMs")
+        throw new TimeoutException(
+          s"KustoSinkStreamingE2E: Timed out waiting for ingest. $rowCount rows " +
+            s"found in database '$database' table '$table', expected: " +
+            s"$expectedNumberOfRows. Elapsed time:$timeElapsedMs")
       }
     }
   }
 
-
-  def tryDropAllTablesByPrefix(kustoAdminClient: Client, database: String, tablePrefix: String): Unit =
-  {
-    try{
-      val res = kustoAdminClient.execute(database, generateFindCurrentTempTablesCommand(Array(tablePrefix)))
+  def tryDropAllTablesByPrefix(
+      kustoAdminClient: Client,
+      database: String,
+      tablePrefix: String): Unit = {
+    try {
+      val res = kustoAdminClient.execute(
+        database,
+        generateFindCurrentTempTablesCommand(Array(tablePrefix)))
       val tablesToCleanup = res.getPrimaryResults.getData.asScala.map(row => row.get(0))
 
       if (tablesToCleanup.nonEmpty) {
-        kustoAdminClient.execute(database, generateDropTablesCommand(tablesToCleanup.mkString(",")))
+        kustoAdminClient.execute(
+          database,
+          generateDropTablesCommand(tablesToCleanup.mkString(",")))
       }
-    }catch {
-      case exception: Exception =>  KDSU.logWarn(myName, s"Failed to delete temporary tables with exception: ${exception.getMessage}")
+    } catch {
+      case exception: Exception =>
+        KDSU.logWarn(
+          className,
+          s"Failed to delete temporary tables with exception: ${exception.getMessage}")
     }
   }
 
-  def createTestTable(kustoConnectionOptions: KustoConnectionOptions,
-                      prefix: String,
-                      targetSchema: String
-                     ): String = {
+  def createTestTable(
+      kustoConnectionOptions: KustoConnectionOptions,
+      prefix: String,
+      targetSchema: String): String = {
 
     val table = KustoQueryUtils.simplifyName(s"${prefix}_${UUID.randomUUID()}")
-    val engineKcsb = ConnectionStringBuilder.createWithAadApplicationCredentials(
+    val engineKcsb = ConnectionStringBuilder.createWithAadAccessTokenAuthentication(
       s"https://${kustoConnectionOptions.cluster}.kusto.windows.net",
-      kustoConnectionOptions.appId,
-      kustoConnectionOptions.appKey,
-      kustoConnectionOptions.authority)
-    val kustoAdminClient = ClientFactory.createClient(engineKcsb)
-    kustoAdminClient.execute(kustoConnectionOptions.database, generateTempTableCreateCommand(table, targetSchema))
+      kustoConnectionOptions.accessToken)
 
+    val kustoAdminClient = ClientFactory.createClient(engineKcsb)
+    kustoAdminClient.execute(
+      kustoConnectionOptions.database,
+      generateTempTableCreateCommand(table, targetSchema))
     table
   }
 
-  def ingest(kustoConnectionOptions: KustoConnectionOptions,
-             df: DataFrame,
-             table: String,
-             schemaAdjustmentMode: String,
-             sparkIngestionProperties: SparkIngestionProperties = new SparkIngestionProperties()
-             ): Unit = {
+  def ingest(
+      kustoConnectionOptions: KustoConnectionOptions,
+      df: DataFrame,
+      table: String,
+      schemaAdjustmentMode: String,
+      sparkIngestionProperties: SparkIngestionProperties = new SparkIngestionProperties())
+      : Unit = {
 
     df.write
       .format("com.microsoft.kusto.spark.datasource")
@@ -107,55 +148,106 @@ private[kusto] object KustoTestUtils {
       .option(KustoSinkOptions.KUSTO_CLUSTER, kustoConnectionOptions.cluster)
       .option(KustoSinkOptions.KUSTO_DATABASE, kustoConnectionOptions.database)
       .option(KustoSinkOptions.KUSTO_TABLE, table)
-      .option(KustoSinkOptions.KUSTO_AAD_APP_ID, kustoConnectionOptions.appId)
-      .option(KustoSinkOptions.KUSTO_AAD_APP_SECRET, kustoConnectionOptions.appKey)
-      .option(KustoSinkOptions.KUSTO_AAD_AUTHORITY_ID, kustoConnectionOptions.authority)
+      .option(KustoSinkOptions.KUSTO_ACCESS_TOKEN, kustoConnectionOptions.accessToken)
       .option(KustoSinkOptions.KUSTO_ADJUST_SCHEMA, schemaAdjustmentMode)
       .option(KustoSinkOptions.KUSTO_TIMEOUT_LIMIT, (8 * 60).toString)
-      .option(KustoSinkOptions.KUSTO_SPARK_INGESTION_PROPERTIES_JSON, sparkIngestionProperties.toString)
-      .option(KustoSinkOptions.KUSTO_TABLE_CREATE_OPTIONS, kustoConnectionOptions.createTableIfNotExists.toString)
+      .option(
+        KustoSinkOptions.KUSTO_SPARK_INGESTION_PROPERTIES_JSON,
+        sparkIngestionProperties.toString)
+      .option(
+        KustoSinkOptions.KUSTO_TABLE_CREATE_OPTIONS,
+        kustoConnectionOptions.createTableIfNotExists.toString)
       .mode(SaveMode.Append)
       .save()
 
-   }
-
-  def cleanup(kustoConnectionOptions: KustoConnectionOptions,
-              tablePrefix: String): Unit = {
-
-    if (tablePrefix.isEmpty)
-      throw new InvalidParameterException("Tables cleanup prefix must be set")
-
-    val engineKcsb = ConnectionStringBuilder.createWithAadApplicationCredentials(
-      s"https://${kustoConnectionOptions.cluster}.kusto.windows.net",
-      kustoConnectionOptions.appId,
-      kustoConnectionOptions.appKey,
-      kustoConnectionOptions.authority)
-    val kustoAdminClient = ClientFactory.createClient(engineKcsb)
-
-    tryDropAllTablesByPrefix(kustoAdminClient, kustoConnectionOptions.database, tablePrefix)
-
   }
 
-  def validateTargetTable(kustoConnectionOptions: KustoConnectionOptions,
-                          tableName: String,
-                          expectedRows: DataFrame,
-                          spark: SparkSession) : Boolean = {
+  def cleanup(kustoConnectionOptions: KustoConnectionOptions, tablePrefix: String): Unit = {
+    if (tablePrefix.isEmpty) {
+      throw new InvalidParameterException("Tables cleanup prefix must be set")
+    }
+    val engineKcsb = ConnectionStringBuilder.createWithAadAccessTokenAuthentication(
+      clusterToKustoFQDN(kustoConnectionOptions.cluster),
+      kustoConnectionOptions.accessToken)
+    val kustoAdminClient = ClientFactory.createClient(engineKcsb)
+    tryDropAllTablesByPrefix(kustoAdminClient, kustoConnectionOptions.database, tablePrefix)
+  }
+
+  def validateTargetTable(
+      kustoConnectionOptions: KustoConnectionOptions,
+      tableName: String,
+      expectedRows: DataFrame,
+      spark: SparkSession): Boolean = {
 
     val conf = Map[String, String](
-      KustoSourceOptions.KUSTO_AAD_APP_ID -> kustoConnectionOptions.appId,
-      KustoSourceOptions.KUSTO_AAD_APP_SECRET -> kustoConnectionOptions.appKey,
-      KustoSourceOptions.KUSTO_AAD_AUTHORITY_ID -> kustoConnectionOptions.authority
-    )
+      KustoSourceOptions.KUSTO_ACCESS_TOKEN -> kustoConnectionOptions.accessToken)
 
     val tableRows = spark.read
-      .kusto(s"https://${kustoConnectionOptions.cluster}.kusto.windows.net",
-      kustoConnectionOptions.database, tableName, conf)
+      .kusto(
+        clusterToKustoFQDN(kustoConnectionOptions.cluster),
+        kustoConnectionOptions.database,
+        tableName,
+        conf)
 
     tableRows.count() == tableRows.intersectAll(expectedRows).count()
 
   }
 
-  private def getSystemVariable(key:String) = {
+  def getSystemTestOptions: KustoConnectionOptions = {
+    val cluster: String = clusterToKustoFQDN(getSystemVariable(KustoSinkOptions.KUSTO_CLUSTER))
+    val database: String = getSystemVariable(KustoSinkOptions.KUSTO_DATABASE)
+    val table: String =
+      Option(getSystemVariable(KustoSinkOptions.KUSTO_TABLE)).getOrElse("SparkTestTable")
+    KDSU.logInfo(
+      className,
+      s"Getting AZCli token for cluster $cluster , database $database & table $table")
+    val key = s"$cluster"
+    if (cachedToken.contains(key)) {
+      cachedToken(key)
+    } else {
+      val maybeAccessTokenEnv = Option(getSystemVariable(KustoSinkOptions.KUSTO_ACCESS_TOKEN))
+      val authority: String = getSystemVariable(KustoSinkOptions.KUSTO_AAD_AUTHORITY_ID)
+      val clusterScope = s"$cluster/.default"
+      KDSU.logWarn(className, s"Using scope $clusterScope and authority $authority")
+      val accessToken: String = maybeAccessTokenEnv match {
+        case Some(at) =>
+          KDSU.logDebug(
+            className,
+            s"Using access token from environment variable ${KustoSinkOptions.KUSTO_ACCESS_TOKEN}")
+          at
+        case None =>
+          val tokenRequestContext = new TokenRequestContext()
+            .setScopes(Collections.singletonList(clusterScope))
+            .setTenantId(authority)
+          val value =
+            new AzureCliCredentialBuilder().build().getToken(tokenRequestContext).block()
+          Try(value) match {
+            case scala.util.Success(token: AccessToken) =>
+              val azCliToken: AccessToken = token
+              azCliToken.getToken
+            case scala.util.Failure(exception) =>
+              KDSU.reportExceptionAndThrow(
+                s"Failed to get access token for cluster $cluster, database $database & table $table at scope $clusterScope",
+                exception)
+              throw exception
+          }
+      }
+      val storageAccountUrl: String = getSystemVariable("storageAccountUrl")
+      val connectionOptions = KustoConnectionOptions(
+        cluster,
+        database,
+        accessToken,
+        authority,
+        storageContainerUrl = Some(storageAccountUrl))
+      cachedToken.put(key, connectionOptions)
+      KDSU.logDebug(
+        className,
+        s"Generated token for cluster $cluster, database $database & table $table")
+      cachedToken(key)
+    }
+  }
+
+  def getSystemVariable(key: String): String = {
     var value = System.getenv(key)
     if (value == null) {
       value = System.getProperty(key)
@@ -163,26 +255,32 @@ private[kusto] object KustoTestUtils {
     value
   }
 
-  def getSystemTestOptions: KustoConnectionOptions = {
-    val appId: String = KustoTestUtils.getSystemVariable(KustoSinkOptions.KUSTO_AAD_APP_ID)
-    var appKey: String = KustoTestUtils.getSystemVariable(KustoSinkOptions.KUSTO_AAD_APP_SECRET)
-    var authority: String = KustoTestUtils.getSystemVariable(KustoSinkOptions.KUSTO_AAD_AUTHORITY_ID)
-    if (StringUtils.isBlank(authority)) authority = "microsoft.com"
-    val cluster: String = KustoTestUtils.getSystemVariable(KustoSinkOptions.KUSTO_CLUSTER)
-    val database: String = KustoTestUtils.getSystemVariable(KustoSinkOptions.KUSTO_DATABASE)
-    var table: String = KustoTestUtils.getSystemVariable(KustoSinkOptions.KUSTO_TABLE)
-    if (table == null) {
-      table = "SparkTestTable"
+  private def clusterToKustoFQDN(cluster: String): String = {
+    if (cluster.startsWith("https://")) {
+      cluster
+    } else {
+      s"https://$cluster.kusto.windows.net"
     }
-    if (appKey == null) {
-      val secretPath = KustoTestUtils.getSystemVariable("SecretPath")
-      if (secretPath == null) throw new IllegalArgumentException("SecretPath is not set")
-      appKey = Files.readAllLines(Paths.get(secretPath)).get(0)
-    }
-
-    KustoConnectionOptions(cluster, database, appId, appKey, authority)
   }
 
-  case class KustoConnectionOptions(cluster: String, database: String, appId: String, appKey: String, authority: String,
-                                    createTableIfNotExists:SinkTableCreationMode=SinkTableCreationMode.CreateIfNotExist)
+  def generateSasDelegationWithAzCli(storageContainerUrl: String): String = {
+    val containerName = storageContainerUrl match {
+      case TransientStorageCredentials.SasPattern(_, _, _, container, _) =>
+        container
+      case _ => throw new InvalidParameterException("Storage url is invalid")
+    }
+    val ingestionStorageParam =
+      new IngestionStorageParameters(storageContainerUrl, containerName, "", "")
+    val sas = ContainerProvider.getUserDelegatedSas(
+      listPermissions = true, cacheExpirySeconds = 1*60*60, ingestionStorageParameter = ingestionStorageParam)
+    sas
+  }
+
+  final case class KustoConnectionOptions(
+      cluster: String,
+      database: String,
+      accessToken: String,
+      tenantId: String,
+      createTableIfNotExists: SinkTableCreationMode = SinkTableCreationMode.CreateIfNotExist,
+      storageContainerUrl: Option[String] = None)
 }

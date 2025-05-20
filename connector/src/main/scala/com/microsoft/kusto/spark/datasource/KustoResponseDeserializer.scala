@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
 package com.microsoft.kusto.spark.datasource
 
 import com.microsoft.azure.kusto.data.KustoResultSetTable
@@ -13,7 +16,8 @@ import scala.collection.JavaConverters._
 import scala.collection.mutable
 
 object KustoResponseDeserializer {
-  def apply(kustoResult: KustoResultSetTable): KustoResponseDeserializer = new KustoResponseDeserializer(kustoResult)
+  def apply(kustoResult: KustoResultSetTable): KustoResponseDeserializer =
+    new KustoResponseDeserializer(kustoResult)
 }
 
 // Timespan columns are casted to strings in kusto side. A simple test to compare the translation to a Duration string
@@ -48,18 +52,26 @@ class KustoResponseDeserializer(val kustoResult: KustoResultSetTable) {
         case v => v.asInstanceOf[Double]
       }
       case _ => value: Any => value.toString
-      }
+    }
   }
 
-   private def getSchemaFromKustoResult: KustoSchema = {
+  private def getSchemaFromKustoResult: KustoSchema = {
     if (kustoResult.getColumns.isEmpty) {
       KustoSchema(StructType(List()), Set())
     } else {
       val columns = kustoResult.getColumns
 
-      KustoSchema(StructType(columns.map(col => StructField(col.getColumnName,
-            DataTypeMapping.KustoTypeToSparkTypeMap.getOrElse(col.getColumnType.toLowerCase, StringType)))),
-        columns.filter(c => c.getColumnType.equalsIgnoreCase("TimeSpan")).map(c => c.getColumnName).toSet)
+      KustoSchema(
+        StructType(
+          columns.map(col =>
+            StructField(
+              col.getColumnName,
+              DataTypeMapping.KustoTypeToSparkTypeMap
+                .getOrElse(col.getColumnType.toLowerCase, StringType)))),
+        columns
+          .filter(c => c.getColumnType.equalsIgnoreCase("TimeSpan"))
+          .map(c => c.getColumnName)
+          .toSet)
     }
   }
 
@@ -70,10 +82,13 @@ class KustoResponseDeserializer(val kustoResult: KustoResultSetTable) {
     val value: util.ArrayList[Row] = new util.ArrayList[Row](kustoResult.count())
 
 //     Calculate the transformer function for each column to use later by order
-    val valueTransformers: mutable.Seq[Any => Any] = columnInOrder.map(col => getValueTransformer(col.getColumnType))
+    val valueTransformers: mutable.Seq[Any => Any] =
+      columnInOrder.map(col => getValueTransformer(col.getColumnType))
     kustoResult.getData.asScala.foreach(row => {
-      val genericRow = row.toArray().zipWithIndex.map(
-        column => {
+      val genericRow = row
+        .toArray()
+        .zipWithIndex
+        .map(column => {
           if (column._1 == null) null else valueTransformers(column._2)(column._1)
         })
       value.add(new GenericRowWithSchema(genericRow, schema.sparkSchema))

@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
 package com.microsoft.kusto.spark.datasink
 
 import com.microsoft.kusto.spark.utils.{KeyVaultUtils, KustoDataSourceUtils}
@@ -10,21 +13,24 @@ class KustoSinkProvider extends StreamSinkProvider with DataSourceRegister {
 
   override def shortName(): String = "KustoSink"
 
-  override def createSink(sqlContext: SQLContext,
-                          parameters: Map[String, String],
-                          partitionColumns: Seq[String],
-                          outputMode: OutputMode): Sink = {
+  override def createSink(
+      sqlContext: SQLContext,
+      parameters: Map[String, String],
+      partitionColumns: Seq[String],
+      outputMode: OutputMode): Sink = {
     val sinkParameters = KustoDataSourceUtils.parseSinkParameters(parameters)
 
     new KustoSink(
       sqlContext,
       sinkParameters.sourceParametersResults.kustoCoordinates,
-      if(sinkParameters.sourceParametersResults.keyVaultAuth.isDefined){
-        val paramsFromKeyVault = KeyVaultUtils.getAadAppParametersFromKeyVault(sinkParameters.sourceParametersResults.keyVaultAuth.get)
-        KustoDataSourceUtils.mergeKeyVaultAndOptionsAuthentication(paramsFromKeyVault, Some(sinkParameters.sourceParametersResults.authenticationParameters))
+      if (sinkParameters.sourceParametersResults.keyVaultAuth.isDefined) {
+        val paramsFromKeyVault = KeyVaultUtils.getAadAppParametersFromKeyVault(
+          sinkParameters.sourceParametersResults.keyVaultAuth.get)
+        KustoDataSourceUtils.mergeKeyVaultAndOptionsAuthentication(
+          paramsFromKeyVault,
+          Some(sinkParameters.sourceParametersResults.authenticationParameters))
       } else sinkParameters.sourceParametersResults.authenticationParameters,
       sinkParameters.writeOptions,
-      sinkParameters.sourceParametersResults.clientRequestProperties
-    )
+      sinkParameters.sourceParametersResults.clientRequestProperties)
   }
 }

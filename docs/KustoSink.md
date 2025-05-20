@@ -65,20 +65,32 @@ All the options that can be used in the Kusto Sink can be found in KustoSinkOpti
 **Important Optional Parameters:**
 * **KUSTO_WRITE_MODE**
   'writeMode' - For production big loads it is most suggested to move to Queued mode !    
-  'Transactional' mode (default) - guarantees write operation to either completely succeed or fail together
+  **'Transactional'** mode (default) - guarantees write operation to either completely succeed or fail together
   this will include the following additional work: create a temporary table and after processing the data - poll on the ingestion result
   after which the operation move the data to the destination table (the last part is a metadata operation only).  
-  'Queued' mode - The write operation finishes after data is processed by the workers, the data may not be completely
+  
+  **'Queued'** mode - The write operation finishes after data is processed by the workers, the data may not be completely
   available up until the service finishes loading it, failures on the service side will not propagate to Spark but can still be seen.
   'Queued' mode scales better than the Transactional mode as it doesn't need to do track each individual ingestion created by the workers.
-  This can also solve many problems faced when using Transactional mode intermediate table and better work with Materialized views.
-  *Note - Both modes are using Kusto native queued ingestion as described [here](https://learn.microsoft.com/azure/data-explorer/kusto/api/netfx/about-kusto-ingest#queued-ingestion).
+  Queued mode can also solve many problems faced when using Transactional mode intermediate table and better work with Materialized views.
+  > **Note** - Both Transactional and Queued modes use Kusto native queued ingestion as described [here](https://learn.microsoft.com/azure/data-explorer/kusto/api/netfx/about-kusto-ingest#queued-ingestion).  
+  
+  **'KustoStreaming'** mode - uses [stream ingestion](https://learn.microsoft.com/azure/data-explorer/ingest-data-streaming?tabs=azure-portal%2Cjava) 
+  to load data into Kusto. Streaming ingestion is useful for loading data when you need low latency between ingestion and query.
+  As ADX Streaming ingestion has a [data size limit](https://learn.microsoft.com/azure/data-explorer/ingest-data-streaming) of 4 MB, for each partition over a batched rdd the connector will ingest **4MB** chunks of data, ingesting each individually. For each such batch - The connector will try 3 times to stream the data and if fails it will fallback to uploading it to blob storage and queue the ingestion. 
+  It is therefore recommended to configure the rate of Spark stream to produce around 10MB of data per batch and avoid using KustoStreaming.
+  It is also recommended to tune the target table [ingestion batching policy](https://learn.microsoft.com/azure/data-explorer/kusto/management/batching-policy) as this will effect the fallback flow latency.
+
+  > **Note** - [Streaming ingestion policy](https://learn.microsoft.com/en-us/azure/data-explorer/kusto/management/streamingingestionpolicy) must be enabled on the destination table or database and enabled on cluster configuration (see [documentation](https://learn.microsoft.com/azure/data-explorer/ingest-data-streaming?tabs=azure-portal%2Cjava) for details).  Streaming ingestion has certain [performance and operational considerations](https://learn.microsoft.com/en-us/azure/data-explorer/ingest-data-streaming?tabs=azure-portal%2Ccsharp#performance-and-operational-considerations) please validate that the scenario for KustoStreaming mode is inline with these limits.
+
+  > **Note** : Do not use KustoStreaming mode for the sake of streaming as ADX streaming has additional cost and may not be what you need. Spark structured streaming goes well with Queued mode when developing continuous integration.
+  If a request exceeds this size, it will be broken into multiple appropriately sized chunks.
 
 * **KUSTO_POLLING_ON_DRIVER**:
   'pollingOnDriver' - If set to false (default) Kusto Spark will create a new job for the final two ingestion steps done after processing the data, so that the write operation doesn't seem to 'hang' on the Spark UI.
   It's recommended to set this flag to true in production scenarios, so that the worker node doesn't occupy a core while completing the final ingestion steps.
   This is irrelevant for 'Queued' mode
-  >Note:By default (or if polling is false) the logs for progress of the polling operations are available on worker nodes logs, else (if true) these are part of the driver log4j logs and are on debug verbosity.
+  > **Note**: By default (or if polling is false) the logs for progress of the polling operations are available on worker nodes logs, else (if true) these are part of the driver log4j logs and are on debug verbosity.
 
 * **KUSTO_TABLE_CREATE_OPTIONS**:
   'tableCreateOptions' - If set to 'FailIfNotExist' (default), the operation will fail if the table is not found
@@ -86,7 +98,7 @@ All the options that can be used in the Kusto Sink can be found in KustoSinkOpti
   If set to 'CreateIfNotExist' and the table is not found in the requested cluster and database,
   it will be created, with a schema matching the DataFrame that is being written.
 
-* **KustoSinkOptions.KUSTO_SPARK_INGESTION_PROPERTIES_JSON**:
+* **KUSTO_SPARK_INGESTION_PROPERTIES_JSON**:
   'sparkIngestionPropertiesJson' - A json representation of a `SparkIngestionProperties` (use `toString` to make a json of an instance).
 
   Properties:
@@ -103,7 +115,36 @@ All the options that can be used in the Kusto Sink can be found in KustoSinkOpti
 
     - flushImmediately: Boolean - use with caution - flushes the data immediately upon ingestion without aggregation.
 
-**Advanced Users Parameters:**
+* **KUSTO_INGESTION_STORAGE**:
+  'kustoIngestionStorageContainer' - A json representation of an array of `IngestionStorageParameters` (use `toJsonString` to make a json of an instance).
+  
+  This option allows users to use a storage account that they are already using for ingestion. This is very handy in scenarios where the user has a specific networking constraint and want to use a specific blob storage instance that they own instead of using the Kusto DM storage for ingestion.  
+
+  The recommended approach is to instantiate the IngestionStorageParameters as follows.
+  ```scala
+  val ingestionStorageString = IngestionStorageParameters.toJsonString(Array(new IngestionStorageParameters(storageUrl, containerName, "<USER-MSI>", "<SAS>")))
+  ```
+  The string representation is as follows:
+  ```
+  [
+    {
+      "storageUrl": "https://ateststorage.blob.core.windows.net",
+      "containerName": "container1",
+      "userMsi": "msi1" //"sas":"<SAS token>"
+    },
+    {
+      "storageUrl": "https://ateststorage2.blob.core.windows.net",
+      "containerName": "container2",
+      "userMsi": "msi1" //"sas":"<SAS token>"
+    }
+  ]
+  ```
+  > **Note** : The principal of the userMsi or DefaultCredential needs "Storage Blob Delegator" permissions set on the storage account and at least "Storage Blob Data Contributor" access on the storage container. These roles are used to generate delegation SAS tokens for staging data used for the ingestion.
+
+  > **Note** : Lifecycle management and data retention in the provided containers is under the responsibility of the client. This is not handled in scope of the connector.
+
+
+**Advanced User Parameters:**
 
 * **KUSTO_TIMEOUT_LIMIT**:
   'timeoutLimit' - After the dataframe is processed, a polling operation begins. This integer corresponds to the period in seconds after which the polling
@@ -124,9 +165,8 @@ All the options that can be used in the Kusto Sink can be found in KustoSinkOpti
   If set to 'FailIfNotMatch' - fails if schemas don't agree on names and order.
 
 * **KUSTO_CLIENT_BATCHING_LIMIT**:
-  'clientBatchingLimit' - A limit indicating the size in MB of the aggregated data before ingested to Kusto. Note that
-  this is done for each partition. The Kusto ingestion endpoint also aggregates data with a default of 1GB, but here
-  we suggest a maximum of 100MB to adjust it to Spark pulling of data.
+  'clientBatchingLimit' - A limit indicating the size in MB of the aggregated data before ingested to Kusto, default is '300'. Note that
+  this is done for each partition. For production purposes we suggest to set the value to '1024'. 
 
 * **KUSTO_REQUEST_ID**:
   'requestId' - A unique identifier UUID for this ingestion command. Will be used as part of the staging table name as well.

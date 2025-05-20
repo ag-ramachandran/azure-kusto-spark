@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
 package com.microsoft.kusto.spark.authentication
 
 import org.apache.spark.sql.catalyst.util.CaseInsensitiveMap
@@ -12,7 +15,6 @@ class TokenProvider1(map: CaseInsensitiveMap[String]) extends Callable[String] w
 class TokenProvider2(map: CaseInsensitiveMap[String]) extends Callable[String] with Serializable {
   override def call(): String = map("token")
 }
-
 
 class kustoAuthenticationTests extends AnyFlatSpec {
   "KeyVaultAppAuthentication Equals" should "Check equality and inequality between different KeyVaultAppAuthentication" in {
@@ -80,11 +82,13 @@ class kustoAuthenticationTests extends AnyFlatSpec {
 
     val tokenProvider1 = java.lang.ClassLoader.getSystemClassLoader
       .loadClass("com.microsoft.kusto.spark.authentication.TokenProvider1")
-      .getConstructor(params.getClass).newInstance(params)
+      .getConstructor(params.getClass)
+      .newInstance(params)
 
     val tokenProvider2 = java.lang.ClassLoader.getSystemClassLoader
       .loadClass("com.microsoft.kusto.spark.authentication.TokenProvider1")
-      .getConstructor(params.getClass).newInstance(params)
+      .getConstructor(params.getClass)
+      .newInstance(params)
 
     val ktp1 = KustoTokenProviderAuthentication(tokenProvider1.asInstanceOf[Callable[String]])
     val ktp2 = KustoTokenProviderAuthentication(tokenProvider2.asInstanceOf[Callable[String]])
