@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "f704ccea-9ec2-45af-8628-3071d8d99da3"
+				"spark.autotune.trackingId": "8b4bbc88-3e9e-44dc-b7ba-fbf93de69c30"
 			}
 		},
 		"metadata": {
@@ -93,7 +93,184 @@
 			{
 				"cell_type": "code",
 				"source": [
-					"ls_properties:dict[str,str] = "
+					"import unittest\n",
+					"import sys\n",
+					"from pyspark.sql import SparkSession\n",
+					"from pyspark.sql.types import StructType, StructField, StringType, IntegerType, BooleanType, LongType, DoubleType, TimestampType\n",
+					"from pyspark.sql.functions import asc\n",
+					"import uuid\n",
+					"import random\n",
+					"from datetime import datetime, timedelta\n",
+					"import string\n",
+					"import time\n",
+					"import json\n",
+					"from pyspark.sql import Row\n",
+					""
+				],
+				"execution_count": 32
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"    def unwrap_scala_option(val):\n",
+					"        if val is None:\n",
+					"            return None\n",
+					"        val_str = str(val)\n",
+					"        if val_str.startswith(\"Some(\") and val_str.endswith(\")\"):\n",
+					"            return val_str[5:-1]\n",
+					"        if val_str == \"None\":\n",
+					"            return None\n",
+					"        return val_str\n",
+					""
+				],
+				"execution_count": 33
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"def random_name():\n",
+					"    first = ''.join(random.choices(string.ascii_uppercase, k=1)) + ''.join(random.choices(string.ascii_lowercase, k=random.randint(2, 7)))\n",
+					"    last = ''.join(random.choices(string.ascii_uppercase, k=1)) + ''.join(random.choices(string.ascii_lowercase, k=random.randint(2, 7)))\n",
+					"    return f\"{first} {last}\"\n",
+					"\n",
+					""
+				],
+				"execution_count": 34
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"def create_random_data(num=1000):\n",
+					"    items_to_be_inserted = []\n",
+					"    for i in range(0, num):\n",
+					"        item = {'id': str(i) + ':' + spark.version, 'dataField1': str(i), 'dataField2': i % 2 == 0,\n",
+					"                'dataField3': 1.01 * i, 'dataField4': i, 'sparkVersion': spark.version}\n",
+					"        items_to_be_inserted.append(item)\n",
+					"    return items_to_be_inserted"
+				],
+				"execution_count": 35
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"items_to_be_inserted = create_random_data(1000)"
+				],
+				"execution_count": 36
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"data_schema = StructType([\n",
+					"    StructField(\"id\", StringType(), True),\n",
+					"    StructField(\"dataField1\", StringType(), True),\n",
+					"    StructField(\"dataField2\", BooleanType(), True),\n",
+					"    StructField(\"dataField3\", DoubleType(), True),\n",
+					"    StructField(\"dataField4\", IntegerType(), True),\n",
+					"    StructField(\"sparkVersion\", StringType(), True)\n",
+					"])"
+				],
+				"execution_count": 37
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"collapsed": false
+				},
+				"source": [
+					"input_df = spark.createDataFrame(sc.parallelize(items_to_be_inserted,4),data_schema)"
+				],
+				"execution_count": 38
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"tables = []"
+				],
+				"execution_count": 39
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"configurations = [\n",
+					"    {\"write_mode\": \"Transactional\", \"read_mode\": \"ForceSingleMode\", \"auth_type\": \"LS\"},\n",
+					"    {\"write_mode\": \"Transactional\", \"read_mode\": \"ForceDistributedMode\", \"auth_type\": \"native\"}\n",
+					"]\n",
+					"\n",
+					"for config in configurations:\n",
+					"    # Implement the test logic for each configuration\n",
+					"    write_mode = config[\"write_mode\"]\n",
+					"    read_mode = config[\"read_mode\"]\n",
+					"    auth_type = config[\"auth_type\"]\n",
+					"    table_name = f\"Synapse_Spark_Ingest_{write_mode}_{str(uuid.uuid4()).replace('-', '_')}\"\n",
+					"    tables.append(table_name)\n",
+					"    # Make all fields nullable\n",
+					"    linked_svc_props = spark.sparkContext._jvm.com.microsoft.azure.synapse.tokenlibrary.TokenLibrary.getPropertiesAsMap(\"sdkse2etestppe\")\n",
+					"    cluster = unwrap_scala_option(linked_svc_props.get(\"Cluster\"))\n",
+					"    database = unwrap_scala_option(linked_svc_props.get(\"Database\"))\n",
+					"    print(f\"Writing to co-ordinates Kusto table: {table_name} to database: {database}, cluster: {cluster} and linked service: sdkse2etestppe.\")\n",
+					"    print(f\"Input DataFrame row count: {input_df.count()}\")\n",
+					"    print(f\"Write Mode: {write_mode}, Read Mode: {read_mode}, Auth Type: {auth_type}\")\n",
+					"    \n",
+					"    # Write DataFrame to Synapse/Kusto (replace with actual connector and options)\n",
+					"    input_df.write. \\\n",
+					"        format(\"com.microsoft.kusto.spark.synapse.datasource\"). \\\n",
+					"        option(\"kustoDatabase\", database).\\\n",
+					"        option(\"kustoTable\", table_name).\\\n",
+					"        option(\"tableCreateOptions\",\"CreateIfNotExist\").\\\n",
+					"        option(\"spark.synapse.linkedService\", \"sdkse2etestppe\").\\\n",
+					"        mode(\"Append\").\\\n",
+					"        save()\n",
+					"    print(\"Data written to Kusto table: {table_name} with row count {input_df_non_null.count()} in cluster: {cluster} and database: {database}\")\n",
+					"\n",
+					"   \n",
+					"    output_df = spark.read \\\n",
+					"        .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\n",
+					"        .option(\"spark.synapse.linkedService\", \"sdkse2etestppe\") \\\n",
+					"        .option(\"authType\", auth_type) \\\n",
+					"        .option(\"kustoDatabase\", database) \\\n",
+					"        .option(\"kustoQuery\", table_name) \\\n",
+					"        .option(\"readMode\", read_mode) \\\n",
+					"        .load()\n",
+					"    \n",
+					"    print(f\"Data read from Kusto table: {table_name} with row count {output_df.count()}\")\n",
+					"    output_df.show()\n",
+					"    output_df.printSchema()\n",
+					"    assert input_df.count() == output_df.count(), \"Row count mismatch between input and output DataFrames\""
+				],
+				"execution_count": 40
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"linked_service_name=\"sdkse2etestppe\"\n",
+					"linked_svc_props = spark.sparkContext._jvm.com.microsoft.azure.synapse.tokenlibrary.TokenLibrary.getPropertiesAsMap(linked_service_name)\n",
+					"if linked_svc_props is not None:\n",
+					"    cluster = unwrap_scala_option(linked_svc_props.get(\"Cluster\"))\n",
+					"    database = unwrap_scala_option(linked_svc_props.get(\"Database\"))\n",
+					"    authkey = unwrap_scala_option(linked_svc_props.get(\"AuthKey\"))\n",
+					"    print(f\"Tearing down Kusto connector tests for cluster: {cluster}, database: {database}, linked service: {linked_service_name}.\")\n",
+					"    # use requests to make a call to Kusto to clean up any test data if needed\n",
+					"    headers = {\n",
+					"        'Authorization': f'Bearer {authkey}',\n",
+					"        'Content-Type': 'application/json',\n",
+					"        'Accept': 'application/json'\n",
+					"    }\n",
+					"    body = {\n",
+					"        'db': database,\n",
+					"        'csl': query\n",
+					"    }\n",
+					"    for table_name in tables:\n",
+					"        query = f\".drop table {table_name} ifexists\"\n",
+					"        print(f\"Dropping Kusto table: {table_name} in database: {database} on cluster {cluster}.\")\n",
+					"        body['csl'] = query\n",
+					"        response = requests.post(\n",
+					"            f'{cluster}/v1/rest/mgmt',\n",
+					"            headers=headers,\n",
+					"            json=body\n",
+					"        )\n",
+					"        print(f\"Dropping Kusto table: {table_name} in database: {database} on cluster {cluster}. Response: {response.status_code} - {response.text}\")\n",
+					"else:\n",
+					"    print(f\"No linked service properties found for {linked_service_name}.\")"
 				],
 				"execution_count": null
 			}
