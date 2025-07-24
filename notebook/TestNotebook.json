@@ -1,0 +1,102 @@
+{
+	"name": "TestNotebook",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "spark34a",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "f704ccea-9ec2-45af-8628-3071d8d99da3"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/216ca57c-8613-4c54-8960-1e5821b6dc8d/resourceGroups/SDK_E2E_TEST/providers/Microsoft.Synapse/workspaces/sdktestssynapse3/bigDataPools/spark34a",
+				"name": "spark34a",
+				"type": "Spark",
+				"endpoint": "https://sdktestssynapse3.dev.azuresynapse-test.azure.net/livyApi/versions/2019-11-01-preview/sparkPools/spark34a",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.4",
+				"nodeCount": 3,
+				"cores": 4,
+				"memory": 28,
+				"automaticScaleJobs": false
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"source": [
+					"import com.microsoft.azure.synapse.tokenlibrary.{AccessToken, TokenLibrary}\n",
+					"\n",
+					"val lsProperties = TokenLibrary.getPropertiesAsMap(\"sdkse2etestppe\")\n",
+					"\n",
+					"println(lsProperties)\n",
+					""
+				],
+				"execution_count": 4
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"ls_properties_java = sc._jvm.com.microsoft.azure.synapse.tokenlibrary.TokenLibrary.getPropertiesAsMap(\"sdkse2etestppe\")\n",
+					"\n",
+					"def unwrap_scala_option(val):\n",
+					"    if val is None:\n",
+					"        return None\n",
+					"    val_str = str(val)\n",
+					"    if val_str.startswith(\"Some(\") and val_str.endswith(\")\"):\n",
+					"        return val_str[5:-1]\n",
+					"    if val_str == \"None\":\n",
+					"        return None\n",
+					"    return val_str\n",
+					"\n",
+					"# Example usage:\n",
+					"endpoint = ls_properties.get(\"Endpoint\")\n",
+					"endpoint_unwrapped = unwrap_scala_option(endpoint)\n",
+					"\n",
+					"database = ls_properties.get(\"Database\")\n",
+					"database_unwrapped = unwrap_scala_option(database)\n",
+					"\n",
+					"\n",
+					"\n",
+					"print(endpoint_unwrapped)\n",
+					"print(database_unwrapped)\n",
+					""
+				],
+				"execution_count": 41
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"ls_properties:dict[str,str] = "
+				],
+				"execution_count": null
+			}
+		]
+	}
+}
