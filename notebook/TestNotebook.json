@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "8b4bbc88-3e9e-44dc-b7ba-fbf93de69c30"
+				"spark.autotune.trackingId": "ecb22e51-7415-425f-b5ac-5dd36bb79c57"
 			}
 		},
 		"metadata": {
@@ -51,48 +51,6 @@
 			{
 				"cell_type": "code",
 				"source": [
-					"import com.microsoft.azure.synapse.tokenlibrary.{AccessToken, TokenLibrary}\n",
-					"\n",
-					"val lsProperties = TokenLibrary.getPropertiesAsMap(\"sdkse2etestppe\")\n",
-					"\n",
-					"println(lsProperties)\n",
-					""
-				],
-				"execution_count": 4
-			},
-			{
-				"cell_type": "code",
-				"source": [
-					"ls_properties_java = sc._jvm.com.microsoft.azure.synapse.tokenlibrary.TokenLibrary.getPropertiesAsMap(\"sdkse2etestppe\")\n",
-					"\n",
-					"def unwrap_scala_option(val):\n",
-					"    if val is None:\n",
-					"        return None\n",
-					"    val_str = str(val)\n",
-					"    if val_str.startswith(\"Some(\") and val_str.endswith(\")\"):\n",
-					"        return val_str[5:-1]\n",
-					"    if val_str == \"None\":\n",
-					"        return None\n",
-					"    return val_str\n",
-					"\n",
-					"# Example usage:\n",
-					"endpoint = ls_properties.get(\"Endpoint\")\n",
-					"endpoint_unwrapped = unwrap_scala_option(endpoint)\n",
-					"\n",
-					"database = ls_properties.get(\"Database\")\n",
-					"database_unwrapped = unwrap_scala_option(database)\n",
-					"\n",
-					"\n",
-					"\n",
-					"print(endpoint_unwrapped)\n",
-					"print(database_unwrapped)\n",
-					""
-				],
-				"execution_count": 41
-			},
-			{
-				"cell_type": "code",
-				"source": [
 					"import unittest\n",
 					"import sys\n",
 					"from pyspark.sql import SparkSession\n",
@@ -112,15 +70,15 @@
 			{
 				"cell_type": "code",
 				"source": [
-					"    def unwrap_scala_option(val):\n",
-					"        if val is None:\n",
-					"            return None\n",
-					"        val_str = str(val)\n",
-					"        if val_str.startswith(\"Some(\") and val_str.endswith(\")\"):\n",
-					"            return val_str[5:-1]\n",
-					"        if val_str == \"None\":\n",
-					"            return None\n",
-					"        return val_str\n",
+					"def unwrap_scala_option(val):\n",
+					"    if val is None:\n",
+					"        return None\n",
+					"    val_str = str(val)\n",
+					"    if val_str.startswith(\"Some(\") and val_str.endswith(\")\"):\n",
+					"        return val_str[5:-1]\n",
+					"    if val_str == \"None\":\n",
+					"        return None\n",
+					"    return val_str\n",
 					""
 				],
 				"execution_count": 33
