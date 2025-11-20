@@ -4,7 +4,7 @@
 		"nbformat": 4,
 		"nbformat_minor": 2,
 		"bigDataPool": {
-			"referenceName": "spark33poolb",
+			"referenceName": "spark34a",
 			"type": "BigDataPoolReference"
 		},
 		"sessionProperties": {
@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "b8cb3839-c4e6-4573-82c4-8d97c9a574bf"
+				"spark.autotune.trackingId": "401e20a7-3149-4ab3-8471-43440da3bcd8"
 			}
 		},
 		"metadata": {
@@ -32,15 +32,15 @@
 				"name": "python"
 			},
 			"a365ComputeOptions": {
-				"id": "/subscriptions/216ca57c-8613-4c54-8960-1e5821b6dc8d/resourceGroups/SDK_E2E_TEST/providers/Microsoft.Synapse/workspaces/sdktestssynapse3/bigDataPools/spark33poolb",
-				"name": "spark33poolb",
+				"id": "/subscriptions/216ca57c-8613-4c54-8960-1e5821b6dc8d/resourceGroups/SDK_E2E_TEST/providers/Microsoft.Synapse/workspaces/sdktestssynapse3/bigDataPools/spark34a",
+				"name": "spark34a",
 				"type": "Spark",
-				"endpoint": "https://sdktestssynapse3.dev.azuresynapse-test.azure.net/livyApi/versions/2019-11-01-preview/sparkPools/spark33poolb",
+				"endpoint": "https://sdktestssynapse3.dev.azuresynapse-test.azure.net/livyApi/versions/2019-11-01-preview/sparkPools/spark34a",
 				"auth": {
 					"type": "AAD",
 					"authResource": "https://dev.azuresynapse.net"
 				},
-				"sparkVersion": "3.3",
+				"sparkVersion": "3.4",
 				"nodeCount": 3,
 				"cores": 4,
 				"memory": 28,
@@ -67,11 +67,27 @@
 				},
 				"source": [
 					"%%spark\n",
+					"println(spark.version)\n",
 					"println(spark.conf.get(\"spark.synapse.vhd.id\"))\n",
+					"println(spark.conf.get(\"spark.synapse.vhd.name\"))\n",
 					"\n",
-					"//7960f9e1-96dd-4e1b-93b3-f0cf157135cc"
+					""
 				],
-				"execution_count": 28
+				"execution_count": 2
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"microsoft": {
+						"language": "scala"
+					}
+				},
+				"source": [
+					"%%spark\n",
+					"classOf[com.microsoft.kusto.spark.datasink. SparkIngestionProperties].getProtectionDomain.getCodeSource.getLocation\n",
+					"classOf[com.microsoft.kusto.spark.datasink. SparkIngestionProperties].getDeclaredMethod(\"dropByTags\")"
+				],
+				"execution_count": 6
 			},
 			{
 				"cell_type": "code",
