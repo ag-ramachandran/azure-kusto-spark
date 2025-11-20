@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "401e20a7-3149-4ab3-8471-43440da3bcd8"
+				"spark.autotune.trackingId": "1c4f7eb5-fa12-4e88-aec3-b7db9aa282ae"
 			}
 		},
 		"metadata": {
@@ -328,7 +328,7 @@
 					".option(\"tableCreateOptions\",\"CreateIfNotExist\").option(\"spark.synapse.linkedService\", \"sdkse2etestppe\").mode(\"Append\").save()\n",
 					"//allTypesDf.write.format(\"com.microsoft.kusto.spark.synapse.datasource\").option(\"spark.synapse.linkedService\", \"sdkse2etestppe\").option(\"kustoDatabase\", \"e2e\").option(\"kustoTable\", \"AllDataTypesQueuedSpark33\").option(\"tableCreateOptions\",\"CreateIfNotExist\").option(\"writeMode\",\"Queued\").mode(\"Append\").save()"
 				],
-				"execution_count": 35
+				"execution_count": 7
 			},
 			{
 				"cell_type": "markdown",
@@ -342,6 +342,31 @@
 				"source": [
 					"**This will not load immediately, but is a good test for the _queued_ mode**"
 				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"microsoft": {
+						"language": "scala"
+					}
+				},
+				"source": [
+					"%%spark\n",
+					"val sip = new com.microsoft.kusto.spark.datasink. SparkIngestionProperties()\n",
+					"var ingestionTags = new java.util.ArrayList[String]()\n",
+					"ingestionTags.add(\"ICM-712785636\")\n",
+					"sip.ingestByTags = ingestionTags\n",
+					"\n",
+					"var dropTags = new java.util.ArrayList[String]()\n",
+					"dropTags.add(\"ICM-711105719\")\n",
+					"sip.dropByTags = dropTags\n",
+					"\n",
+					"val sipJson = sip.toString()\n",
+					"\n",
+					"allTypesDf.write.format(\"com.microsoft.kusto.spark.synapse.datasource\").option(\"kustoDatabase\", \"e2e\").option(\"kustoTable\", \"AllDataTypesTransactionalSpark34V2\")\n",
+					".option(\"sparkIngestionPropertiesJson\",sipJson).option(\"tableCreateOptions\",\"CreateIfNotExist\").option(\"spark.synapse.linkedService\", \"sdkse2etestppe\").mode(\"Append\").save()"
+				],
+				"execution_count": 10
 			},
 			{
 				"cell_type": "code",
@@ -361,6 +386,9 @@
 				},
 				"source": [
 					"%%spark\n",
+					"\n",
+					"\n",
+					"\n",
 					"allTypesDf.write.format(\"com.microsoft.kusto.spark.synapse.datasource\").option(\"spark.synapse.linkedService\", \"sdkse2etestppe\").option(\"kustoDatabase\", \"e2e\").option(\"kustoTable\", \"[All-DataTypes-QueuedSpark34]\").option(\"tableCreateOptions\",\"CreateIfNotExist\").option(\"writeMode\",\"Queued\").mode(\"Append\").save()"
 				],
 				"execution_count": 36
