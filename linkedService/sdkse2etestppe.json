@@ -1,0 +1,15 @@
+{
+	"name": "sdkse2etestppe",
+	"properties": {
+		"annotations": [],
+		"type": "AzureDataExplorer",
+		"typeProperties": {
+			"endpoint": "https://sdkse2etestppe.westus2.kusto.windows.net/",
+			"database": "e2e"
+		},
+		"connectVia": {
+			"referenceName": "AutoResolveIntegrationRuntime",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
