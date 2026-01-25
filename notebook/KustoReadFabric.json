@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "820779d4-1758-4539-a794-4f4635a022ee"
+				"spark.autotune.trackingId": "07128447-c5e6-4686-ad8e-0b6555bb79e3"
 			}
 		},
 		"metadata": {
@@ -81,7 +81,7 @@
 					"%%spark\n",
 					"println(spark.conf.get(\"spark.synapse.vhd.id\"))"
 				],
-				"execution_count": 1
+				"execution_count": 4
 			},
 			{
 				"cell_type": "code",
@@ -103,7 +103,7 @@
 					"%%spark\n",
 					"println(spark.conf.get(\"spark.synapse.vhd.id\"))"
 				],
-				"execution_count": 2
+				"execution_count": 5
 			},
 			{
 				"cell_type": "code",
@@ -126,7 +126,7 @@
 					"%%pyspark\n",
 					"kustoDf  = spark.read \\\n",
 					"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\n",
-					"    .option(\"spark.synapse.linkedService\", \"Fabric_Order\") \\\n",
+					"    .option(\"spark.synapse.linkedService\", \"FabricNewLS\") \\\n",
 					"    .option(\"kustoDatabase\", \"OrderDetails\") \\\n",
 					"    .option(\"kustoQuery\", \"AllDataTypesTransactionalSpark33\t | take 10\") \\\n",
 					"    .load()\n",
@@ -134,7 +134,7 @@
 					"display(kustoDf)\n",
 					""
 				],
-				"execution_count": 3
+				"execution_count": 8
 			},
 			{
 				"cell_type": "markdown",
