@@ -30,6 +30,10 @@
 			"type": "string",
 			"defaultValue": "91984df3-ff74-440a-9881-2fa44d094648"
 		},
+		"FabricNewLS_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "91984df3-ff74-440a-9881-2fa44d094648"
+		},
 		"Fabric_Order_properties_typeProperties_database": {
 			"type": "string",
 			"defaultValue": "6874bb11-dd3f-40e2-99ff-08fa654152f2"
@@ -86,6 +90,26 @@
 				"typeProperties": {
 					"endpoint": "https://trd-2mef4pj1u4g783gj30.z4.kusto.fabric.microsoft.com",
 					"database": "[parameters('FabricKustoLS_properties_typeProperties_database')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/FabricNewLS')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "AzureDataExplorer",
+				"typeProperties": {
+					"endpoint": "https://trd-fr03tmwpkn9a8x2n1g.z5.kusto.fabric.microsoft.com",
+					"database": "[parameters('FabricNewLS_properties_typeProperties_database')]"
 				},
 				"connectVia": {
 					"referenceName": "AutoResolveIntegrationRuntime",
@@ -880,7 +904,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "c7103b81-ebbe-40f8-a0cf-16c429de63f8"
+						"spark.autotune.trackingId": "e5c09c03-0973-40a8-9656-2c860339afec"
 					}
 				},
 				"metadata": {
@@ -945,7 +969,7 @@
 							"println(spark.conf.get(\"spark.synapse.vhd.id\"))"
 						],
 						"outputs": [],
-						"execution_count": 1
+						"execution_count": 4
 					},
 					{
 						"cell_type": "code",
@@ -968,7 +992,7 @@
 							"println(spark.conf.get(\"spark.synapse.vhd.id\"))"
 						],
 						"outputs": [],
-						"execution_count": 2
+						"execution_count": 5
 					},
 					{
 						"cell_type": "code",
@@ -991,7 +1015,7 @@
 							"%%pyspark\n",
 							"kustoDf  = spark.read \\\n",
 							"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\n",
-							"    .option(\"spark.synapse.linkedService\", \"Fabric_Order\") \\\n",
+							"    .option(\"spark.synapse.linkedService\", \"FabricNewLS\") \\\n",
 							"    .option(\"kustoDatabase\", \"OrderDetails\") \\\n",
 							"    .option(\"kustoQuery\", \"AllDataTypesTransactionalSpark33\t | take 10\") \\\n",
 							"    .load()\n",
@@ -1000,7 +1024,7 @@
 							""
 						],
 						"outputs": [],
-						"execution_count": 3
+						"execution_count": 8
 					},
 					{
 						"cell_type": "markdown",

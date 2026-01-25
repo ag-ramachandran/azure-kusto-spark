@@ -20,6 +20,9 @@
 		"FabricKustoLS_properties_typeProperties_database": {
 			"value": "91984df3-ff74-440a-9881-2fa44d094648"
 		},
+		"FabricNewLS_properties_typeProperties_database": {
+			"value": "91984df3-ff74-440a-9881-2fa44d094648"
+		},
 		"Fabric_Order_properties_typeProperties_database": {
 			"value": "6874bb11-dd3f-40e2-99ff-08fa654152f2"
 		},
