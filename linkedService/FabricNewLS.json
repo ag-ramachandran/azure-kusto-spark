@@ -1,0 +1,15 @@
+{
+	"name": "FabricNewLS",
+	"properties": {
+		"annotations": [],
+		"type": "AzureDataExplorer",
+		"typeProperties": {
+			"endpoint": "https://trd-fr03tmwpkn9a8x2n1g.z5.kusto.fabric.microsoft.com",
+			"database": "91984df3-ff74-440a-9881-2fa44d094648"
+		},
+		"connectVia": {
+			"referenceName": "AutoResolveIntegrationRuntime",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
