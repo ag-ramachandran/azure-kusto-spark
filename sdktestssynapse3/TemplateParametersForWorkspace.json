@@ -32,6 +32,9 @@
 		"sdkse2etestppe_properties_typeProperties_database": {
 			"value": "e2e"
 		},
+		"sdkse2etestppe_new_properties_typeProperties_database": {
+			"value": "e2e"
+		},
 		"sdktestssynapse2-WorkspaceDefaultStorage_properties_typeProperties_url": {
 			"value": "https://sdke2eteststorageadls.dfs.core.windows.net"
 		},
