@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "446bc5cc-5f88-4d39-a126-2d088e7223d0"
+				"spark.autotune.trackingId": "e9e2aba8-908d-4072-9333-d1e78706d9e9"
 			}
 		},
 		"metadata": {
@@ -69,7 +69,7 @@
 					"%%spark\n",
 					"println(spark.conf.get(\"spark.synapse.vhd.id\"))"
 				],
-				"execution_count": 1
+				"execution_count": 3
 			},
 			{
 				"cell_type": "code",
@@ -94,7 +94,7 @@
 					"val nyctlc = spark.read.parquet(wasbs_path)\n",
 					"display(nyctlc)"
 				],
-				"execution_count": 2
+				"execution_count": 4
 			},
 			{
 				"cell_type": "code",
@@ -116,7 +116,7 @@
 					"    { \"linkedService\" : \"synapsekustosparktest\"}  \n",
 					")  "
 				],
-				"execution_count": 3
+				"execution_count": 5
 			},
 			{
 				"cell_type": "code",
@@ -135,7 +135,7 @@
 					"!pip install dbldatagen\n",
 					"!pip install jmespath"
 				],
-				"execution_count": 4
+				"execution_count": 6
 			},
 			{
 				"cell_type": "code",
@@ -213,7 +213,7 @@
 					"\n",
 					"dfTestDataStreaming = testDataSpec.build(withStreaming=True, options={'rowsPerSecond': 1500})"
 				],
-				"execution_count": 5
+				"execution_count": 7
 			},
 			{
 				"cell_type": "code",
@@ -231,7 +231,7 @@
 				"source": [
 					"spark.conf.set(\"spark.sql.streaming.checkpointLocation\", \"abfss://synapseppe@synapsekustosparktest.dfs.core.windows.net/20240524/2\")"
 				],
-				"execution_count": 6
+				"execution_count": 8
 			},
 			{
 				"cell_type": "code",
@@ -249,7 +249,7 @@
 				"source": [
 					"txnq = dfTestDataStreaming.writeStream \\\n",
 					"    .format(\"com.microsoft.kusto.spark.synapse.datasink.KustoSynapseSinkProvider\") \\\n",
-					"    .option(\"spark.synapse.linkedService\", \"sdkse2etestppe\") \\\n",
+					"    .option(\"spark.synapse.linkedService\", \"sdkse2etestppe_new\") \\\n",
 					"    .option(\"kustoDatabase\", \"e2e\") \\\n",
 					"    .option(\"kustoTable\", \"StreamIngestTest33Transactional\") \\\n",
 					"    .option(\"tableCreateOptions\",\"CreateIfNotExist\") \\\n",
@@ -257,7 +257,7 @@
 					"\n",
 					"txnq.start().awaitTermination(60*1)"
 				],
-				"execution_count": 7
+				"execution_count": 9
 			},
 			{
 				"cell_type": "code",

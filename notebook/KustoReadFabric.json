@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "07128447-c5e6-4686-ad8e-0b6555bb79e3"
+				"spark.autotune.trackingId": "a4d1be4e-4066-474f-ae9b-3216b124b473"
 			}
 		},
 		"metadata": {
@@ -81,7 +81,7 @@
 					"%%spark\n",
 					"println(spark.conf.get(\"spark.synapse.vhd.id\"))"
 				],
-				"execution_count": 4
+				"execution_count": 1
 			},
 			{
 				"cell_type": "code",
@@ -103,7 +103,7 @@
 					"%%spark\n",
 					"println(spark.conf.get(\"spark.synapse.vhd.id\"))"
 				],
-				"execution_count": 5
+				"execution_count": 2
 			},
 			{
 				"cell_type": "code",
@@ -134,7 +134,7 @@
 					"display(kustoDf)\n",
 					""
 				],
-				"execution_count": 8
+				"execution_count": 3
 			},
 			{
 				"cell_type": "markdown",
