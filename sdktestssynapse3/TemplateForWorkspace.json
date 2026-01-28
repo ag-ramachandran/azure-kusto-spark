@@ -426,7 +426,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "6ff177fa-3b14-4a42-814d-c3a158b4fee0"
+						"spark.autotune.trackingId": "0862d002-334d-40b9-99c4-50ee61356d30"
 					}
 				},
 				"metadata": {
@@ -440,18 +440,18 @@
 						"name": "python"
 					},
 					"a365ComputeOptions": {
-						"id": "/subscriptions/216ca57c-8613-4c54-8960-1e5821b6dc8d/resourceGroups/SDK_E2E_TEST/providers/Microsoft.Synapse/workspaces/sdktestssynapseas/bigDataPools/spark35",
+						"id": "/subscriptions/216ca57c-8613-4c54-8960-1e5821b6dc8d/resourceGroups/SDK_E2E_TEST/providers/Microsoft.Synapse/workspaces/sdktestssynapse3/bigDataPools/spark35",
 						"name": "spark35",
 						"type": "Spark",
-						"endpoint": "https://sdktestssynapseas.dev.azuresynapse-test.azure.net/livyApi/versions/2019-11-01-preview/sparkPools/spark35",
+						"endpoint": "https://sdktestssynapse3.dev.azuresynapse-test.azure.net/livyApi/versions/2019-11-01-preview/sparkPools/spark35",
 						"auth": {
 							"type": "AAD",
 							"authResource": "https://dev.azuresynapse.net"
 						},
 						"sparkVersion": "3.5",
-						"nodeCount": 3,
-						"cores": 4,
-						"memory": 28
+						"nodeCount": 10,
+						"cores": 8,
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 90
 				},
@@ -552,7 +552,7 @@
 						"metadata": {
 							"jupyter": {
 								"source_hidden": false,
-								"outputs_hidden": false
+								"outputs_hidden": true
 							},
 							"nteract": {
 								"transient": {
@@ -594,13 +594,13 @@
 							"    .option(\"accessToken\", creds)\n",
 							"    .option(\"kustoCluster\", \"https://sdkse2etestppe.westus2.kusto.windows.net\" )\n",
 							"    .option(\"kustoDatabase\", \"e2e\")\n",
-							"    .option(\"kustoQuery\", \"KustoAirlineDataTransactional34 | where Year >= 1987\t| take 10000\")\n",
+							"    .option(\"kustoQuery\", \"AllDataTypesTransactionalSpark34 | take 10000\")\n",
 							"    .load()\n",
 							"\n",
 							"display(kustoDfSingle)"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 15
 					},
 					{
 						"cell_type": "markdown",
@@ -637,14 +637,14 @@
 							"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\n",
 							"    .option(\"spark.synapse.linkedService\", \"sdkse2etestppe\") \\\n",
 							"    .option(\"kustoDatabase\", \"e2e\") \\\n",
-							"    .option(\"kustoQuery\", \"KustoAirlineDataTransactional34 | where Year >= 1987\t| take 10000\") \\\n",
+							"    .option(\"kustoQuery\", \"AllDataTypesTransactionalSpark34\t| take 10000\") \\\n",
 							"    .option(\"clientRequestPropertiesJson\", crp.toString()) \\\n",
 							"    .load()\n",
 							"\n",
 							"display(kustoDfSingle)"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 16
 					},
 					{
 						"cell_type": "markdown",
@@ -686,7 +686,7 @@
 							"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\n",
 							"    .option(\"spark.synapse.linkedService\", \"sdkse2etestppe\") \\\n",
 							"    .option(\"kustoDatabase\", \"e2e\") \\\n",
-							"    .option(\"kustoQuery\", \"KustoAirlineDataTransactional34 | where Year >= 1987\t| take 10000\") \\\n",
+							"    .option(\"kustoQuery\", \"AllDataTypesTransactionalSpark34\t| take 10000\") \\\n",
 							"    .option(\"readMode\", \"ForceDistributedMode\") \\\n",
 							"    .load()\n",
 							"\n",
@@ -694,7 +694,7 @@
 							""
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 17
 					},
 					{
 						"cell_type": "markdown",
@@ -744,7 +744,7 @@
 							"//allTypesDf.write.format(\"com.microsoft.kusto.spark.synapse.datasource\").option(\"spark.synapse.linkedService\", \"sdkse2etestppe\").option(\"kustoDatabase\", \"e2e\").option(\"kustoTable\", \"AllDataTypesQueuedSpark33\").option(\"tableCreateOptions\",\"CreateIfNotExist\").option(\"writeMode\",\"Queued\").mode(\"Append\").save()"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 18
 					},
 					{
 						"cell_type": "markdown",
@@ -783,7 +783,7 @@
 							".option(\"sparkIngestionPropertiesJson\",sipJson).option(\"tableCreateOptions\",\"CreateIfNotExist\").option(\"spark.synapse.linkedService\", \"sdkse2etestppe\").mode(\"Append\").save()"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 19
 					},
 					{
 						"cell_type": "code",
@@ -809,7 +809,7 @@
 							"allTypesDf.write.format(\"com.microsoft.kusto.spark.synapse.datasource\").option(\"spark.synapse.linkedService\", \"sdkse2etestppe\").option(\"kustoDatabase\", \"e2e\").option(\"kustoTable\", \"[All-DataTypes-QueuedSpark34]\").option(\"tableCreateOptions\",\"CreateIfNotExist\").option(\"writeMode\",\"Queued\").mode(\"Append\").save()"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 20
 					},
 					{
 						"cell_type": "code",
@@ -843,7 +843,7 @@
 							"display(kustoDfAllTypes)"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 21
 					},
 					{
 						"cell_type": "code",
@@ -877,7 +877,7 @@
 							"display(transactionalModeCount)"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 22
 					},
 					{
 						"cell_type": "code",
@@ -910,7 +910,7 @@
 							"display(queuedModeCount)"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 23
 					}
 				]
 			},
@@ -937,7 +937,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "a4d1be4e-4066-474f-ae9b-3216b124b473"
+						"spark.autotune.trackingId": "7960c474-220a-44ee-83b3-1c9f9241bc29"
 					}
 				},
 				"metadata": {
@@ -1002,29 +1002,6 @@
 						],
 						"outputs": [],
 						"execution_count": 1
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							},
-							"microsoft": {
-								"language": "scala"
-							}
-						},
-						"source": [
-							"%%spark\n",
-							"println(spark.conf.get(\"spark.synapse.vhd.id\"))"
-						],
-						"outputs": [],
-						"execution_count": 2
 					},
 					{
 						"cell_type": "code",
@@ -1106,7 +1083,7 @@
 							""
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 4
 					},
 					{
 						"cell_type": "markdown",
@@ -1155,7 +1132,7 @@
 							"//allTypesDf.write.format(\"com.microsoft.kusto.spark.synapse.datasource\").option(\"spark.synapse.linkedService\", \"Fabric_Order\").option(\"kustoDatabase\", \"OrderDetails\").option(\"kustoTable\", \"AllDataTypesQueuedSpark33\").option(\"tableCreateOptions\"\"CreateIfNotExist\").option(\"writeMode\",\"Queued\").mode(\"Append\").save(),"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 5
 					},
 					{
 						"cell_type": "markdown",
@@ -1191,7 +1168,7 @@
 							"allTypesDf.write.format(\"com.microsoft.kusto.spark.synapse.datasource\").option(\"spark.synapse.linkedService\", \"Fabric_Order\").option(\"kustoDatabase\", \"OrderDetails\").option(\"kustoTable\", \"AllDataTypesQueuedSpark33\").option(\"tableCreateOptions\",\"CreateIfNotExist\").option(\"writeMode\",\"Queued\").mode(\"Append\").save()"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 6
 					},
 					{
 						"cell_type": "code",
@@ -1226,7 +1203,7 @@
 							"display(kustoDfAllTypes)"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 7
 					},
 					{
 						"cell_type": "code",
@@ -1260,7 +1237,7 @@
 							"display(transactionalModeCount)"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 8
 					},
 					{
 						"cell_type": "code",
@@ -1293,7 +1270,7 @@
 							"display(queuedModeCount)"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 9
 					},
 					{
 						"cell_type": "code",
@@ -1319,7 +1296,7 @@
 							"display(nyctlc)"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 10
 					}
 				]
 			},
@@ -1333,21 +1310,21 @@
 				"nbformat": 4,
 				"nbformat_minor": 2,
 				"bigDataPool": {
-					"referenceName": "spark33poolb",
+					"referenceName": "spark35",
 					"type": "BigDataPoolReference"
 				},
 				"sessionProperties": {
-					"driverMemory": "28g",
-					"driverCores": 4,
-					"executorMemory": "28g",
-					"executorCores": 4,
+					"driverMemory": "56g",
+					"driverCores": 8,
+					"executorMemory": "56g",
+					"executorCores": 8,
 					"numExecutors": 2,
 					"runAsWorkspaceSystemIdentity": true,
 					"conf": {
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "47cd96b5-390c-4a7a-a238-1dc4bd66d2ad"
+						"spark.autotune.trackingId": "caf604b3-f76f-4d12-90be-fc20e34fa68d"
 					}
 				},
 				"metadata": {
@@ -1361,18 +1338,18 @@
 						"name": "python"
 					},
 					"a365ComputeOptions": {
-						"id": "/subscriptions/216ca57c-8613-4c54-8960-1e5821b6dc8d/resourceGroups/SDK_E2E_TEST/providers/Microsoft.Synapse/workspaces/sdktestssynapse3/bigDataPools/spark33poolb",
-						"name": "spark33poolb",
+						"id": "/subscriptions/216ca57c-8613-4c54-8960-1e5821b6dc8d/resourceGroups/SDK_E2E_TEST/providers/Microsoft.Synapse/workspaces/sdktestssynapse3/bigDataPools/spark35",
+						"name": "spark35",
 						"type": "Spark",
-						"endpoint": "https://sdktestssynapse3.dev.azuresynapse-test.azure.net/livyApi/versions/2019-11-01-preview/sparkPools/spark33poolb",
+						"endpoint": "https://sdktestssynapse3.dev.azuresynapse-test.azure.net/livyApi/versions/2019-11-01-preview/sparkPools/spark35",
 						"auth": {
 							"type": "AAD",
 							"authResource": "https://dev.azuresynapse.net"
 						},
-						"sparkVersion": "3.3",
-						"nodeCount": 3,
-						"cores": 4,
-						"memory": 28
+						"sparkVersion": "3.5",
+						"nodeCount": 10,
+						"cores": 8,
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -1794,7 +1771,7 @@
 							"display(queuedModeCount)"
 						],
 						"outputs": [],
-						"execution_count": 13
+						"execution_count": 12
 					}
 				]
 			},
@@ -1981,7 +1958,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "773de14f-f3eb-41e9-9327-f28089bc4243"
+						"spark.autotune.trackingId": "df0d8223-aabf-4af7-838b-10d4683e550a"
 					}
 				},
 				"metadata": {
@@ -2006,8 +1983,7 @@
 						"sparkVersion": "3.5",
 						"nodeCount": 10,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": false
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -2033,7 +2009,7 @@
 							"println(spark.conf.get(\"spark.synapse.vhd.id\"))"
 						],
 						"outputs": [],
-						"execution_count": 3
+						"execution_count": 1
 					},
 					{
 						"cell_type": "code",
@@ -2059,7 +2035,7 @@
 							"display(nyctlc)"
 						],
 						"outputs": [],
-						"execution_count": 4
+						"execution_count": 2
 					},
 					{
 						"cell_type": "code",
@@ -2082,7 +2058,7 @@
 							")  "
 						],
 						"outputs": [],
-						"execution_count": 5
+						"execution_count": 3
 					},
 					{
 						"cell_type": "code",
@@ -2102,7 +2078,7 @@
 							"!pip install jmespath"
 						],
 						"outputs": [],
-						"execution_count": 6
+						"execution_count": 4
 					},
 					{
 						"cell_type": "code",
@@ -2181,7 +2157,7 @@
 							"dfTestDataStreaming = testDataSpec.build(withStreaming=True, options={'rowsPerSecond': 1500})"
 						],
 						"outputs": [],
-						"execution_count": 7
+						"execution_count": 5
 					},
 					{
 						"cell_type": "code",
@@ -2200,7 +2176,15 @@
 							"spark.conf.set(\"spark.sql.streaming.checkpointLocation\", \"abfss://synapseppe@synapsekustosparktest.dfs.core.windows.net/20240524/2\")"
 						],
 						"outputs": [],
-						"execution_count": 8
+						"execution_count": 6
+					},
+					{
+						"cell_type": "code",
+						"source": [
+							"print(mssparkutils.credentials.getPropertiesAll(\"sdkse2etestppe_new\"))"
+						],
+						"outputs": [],
+						"execution_count": 7
 					},
 					{
 						"cell_type": "code",
@@ -2224,10 +2208,50 @@
 							"    .option(\"tableCreateOptions\",\"CreateIfNotExist\") \\\n",
 							"    .trigger(processingTime='2 seconds')\n",
 							"\n",
+							"\n",
 							"txnq.start().awaitTermination(60*1)"
 						],
 						"outputs": [],
+						"execution_count": 8
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"microsoft": {
+								"language": "scala"
+							}
+						},
+						"source": [
+							"%%spark\n",
+							"import com.microsoft.azure.synapse.tokenlibrary.{AccessToken, TokenLibrary}\n",
+							"\n",
+							"def getLSMetadata(linkServiceName: String): AccessToken = {\n",
+							"    val resource = s\"\"\"{\"audience\": \"AzureDataExplorer\", \"name\": \"$linkServiceName\"}\"\"\"\n",
+							"    TokenLibrary.getAccessToken(resource)\n",
+							"  }\n",
+							" \n",
+							"def getNativeMetadata: AccessToken = {\n",
+							"    val resource = \"\"\"{\"audience\": \"AzureDataExplorer\", \"name\": \"\"}\"\"\"\n",
+							"    TokenLibrary.getAccessToken(resource)\n",
+							"  }"
+						],
+						"outputs": [],
 						"execution_count": 9
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"microsoft": {
+								"language": "scala"
+							}
+						},
+						"source": [
+							"%%spark\n",
+							" \n",
+							"print(getLSMetadata(\"sdkse2etestppe\"))"
+						],
+						"outputs": [],
+						"execution_count": 10
 					},
 					{
 						"cell_type": "code",
@@ -2252,10 +2276,11 @@
 							"    .option(\"tableCreateOptions\",\"CreateIfNotExist\") \\\n",
 							"    .trigger(processingTime='2 seconds')\n",
 							"    \n",
-							"queuedq.start().awaitTermination(60*1)"
+							"queuedq.start().awaitTermination(60*1)\n",
+							"queuedq.show()"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 1
 					},
 					{
 						"cell_type": "code",
@@ -2288,7 +2313,7 @@
 							"display(transactionalModeCount)"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 12
 					},
 					{
 						"cell_type": "code",
@@ -2321,7 +2346,7 @@
 							"display(queuedModeCount)"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 13
 					},
 					{
 						"cell_type": "code",
@@ -2354,7 +2379,7 @@
 							"display(functionModeCount)"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 14
 					},
 					{
 						"cell_type": "code",
@@ -2380,7 +2405,7 @@
 							"display(nyctlc)"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 15
 					}
 				]
 			},
@@ -2408,7 +2433,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "32b2da35-de86-40d2-9344-1f3f62b49fdd"
+						"spark.autotune.trackingId": "892fe6b5-4704-4fa8-b415-19992a459fc9"
 					}
 				},
 				"metadata": {
@@ -2433,7 +2458,8 @@
 						"sparkVersion": "3.5",
 						"nodeCount": 10,
 						"cores": 8,
-						"memory": 56
+						"memory": 56,
+						"automaticScaleJobs": false
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -2746,39 +2772,6 @@
 						],
 						"outputs": [],
 						"execution_count": 10
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							},
-							"microsoft": {
-								"language": "python"
-							},
-							"collapsed": false
-						},
-						"source": [
-							"%%pyspark\n",
-							"# Read data from Azure Data Explorer table(s)\n",
-							"# Full Sample Code available at: https://github.com/Azure/azure-kusto-spark/blob/master/samples/src/main/python/SynapseSample.py\n",
-							"functionModeCount  = spark.read \\\n",
-							"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\n",
-							"    .option(\"spark.synapse.linkedService\", \"Fabric_Order\") \\\n",
-							"    .option(\"kustoDatabase\", \"OrderDetails\") \\\n",
-							"    .option(\"kustoQuery\", \"SparkTableIngestStats('StreamIngestTest33Queued')\") \\\n",
-							"    .load()\n",
-							"\n",
-							"display(functionModeCount)"
-						],
-						"outputs": [],
-						"execution_count": 11
 					}
 				]
 			},
@@ -3590,11 +3583,11 @@
 					"delayInMinutes": 15
 				},
 				"autoScale": {
-					"enabled": false,
+					"enabled": true,
 					"maxNodeCount": 10,
 					"minNodeCount": 3
 				},
-				"nodeCount": 3,
+				"nodeCount": 10,
 				"nodeSize": "Medium",
 				"nodeSizeFamily": "MemoryOptimized",
 				"sparkVersion": "3.5",
