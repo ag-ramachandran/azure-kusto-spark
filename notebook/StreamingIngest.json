@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "e9e2aba8-908d-4072-9333-d1e78706d9e9"
+				"spark.autotune.trackingId": "df0d8223-aabf-4af7-838b-10d4683e550a"
 			}
 		},
 		"metadata": {
@@ -69,7 +69,7 @@
 					"%%spark\n",
 					"println(spark.conf.get(\"spark.synapse.vhd.id\"))"
 				],
-				"execution_count": 3
+				"execution_count": 1
 			},
 			{
 				"cell_type": "code",
@@ -94,7 +94,7 @@
 					"val nyctlc = spark.read.parquet(wasbs_path)\n",
 					"display(nyctlc)"
 				],
-				"execution_count": 4
+				"execution_count": 2
 			},
 			{
 				"cell_type": "code",
@@ -116,7 +116,7 @@
 					"    { \"linkedService\" : \"synapsekustosparktest\"}  \n",
 					")  "
 				],
-				"execution_count": 5
+				"execution_count": 3
 			},
 			{
 				"cell_type": "code",
@@ -135,7 +135,7 @@
 					"!pip install dbldatagen\n",
 					"!pip install jmespath"
 				],
-				"execution_count": 6
+				"execution_count": 4
 			},
 			{
 				"cell_type": "code",
@@ -213,7 +213,7 @@
 					"\n",
 					"dfTestDataStreaming = testDataSpec.build(withStreaming=True, options={'rowsPerSecond': 1500})"
 				],
-				"execution_count": 7
+				"execution_count": 5
 			},
 			{
 				"cell_type": "code",
@@ -231,7 +231,14 @@
 				"source": [
 					"spark.conf.set(\"spark.sql.streaming.checkpointLocation\", \"abfss://synapseppe@synapsekustosparktest.dfs.core.windows.net/20240524/2\")"
 				],
-				"execution_count": 8
+				"execution_count": 6
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"print(mssparkutils.credentials.getPropertiesAll(\"sdkse2etestppe_new\"))"
+				],
+				"execution_count": 7
 			},
 			{
 				"cell_type": "code",
@@ -255,9 +262,47 @@
 					"    .option(\"tableCreateOptions\",\"CreateIfNotExist\") \\\n",
 					"    .trigger(processingTime='2 seconds')\n",
 					"\n",
+					"\n",
 					"txnq.start().awaitTermination(60*1)"
 				],
+				"execution_count": 8
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"microsoft": {
+						"language": "scala"
+					}
+				},
+				"source": [
+					"%%spark\n",
+					"import com.microsoft.azure.synapse.tokenlibrary.{AccessToken, TokenLibrary}\n",
+					"\n",
+					"def getLSMetadata(linkServiceName: String): AccessToken = {\n",
+					"    val resource = s\"\"\"{\"audience\": \"AzureDataExplorer\", \"name\": \"$linkServiceName\"}\"\"\"\n",
+					"    TokenLibrary.getAccessToken(resource)\n",
+					"  }\n",
+					" \n",
+					"def getNativeMetadata: AccessToken = {\n",
+					"    val resource = \"\"\"{\"audience\": \"AzureDataExplorer\", \"name\": \"\"}\"\"\"\n",
+					"    TokenLibrary.getAccessToken(resource)\n",
+					"  }"
+				],
 				"execution_count": 9
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"microsoft": {
+						"language": "scala"
+					}
+				},
+				"source": [
+					"%%spark\n",
+					" \n",
+					"print(getLSMetadata(\"sdkse2etestppe\"))"
+				],
+				"execution_count": 10
 			},
 			{
 				"cell_type": "code",
@@ -282,9 +327,10 @@
 					"    .option(\"tableCreateOptions\",\"CreateIfNotExist\") \\\n",
 					"    .trigger(processingTime='2 seconds')\n",
 					"    \n",
-					"queuedq.start().awaitTermination(60*1)"
+					"queuedq.start().awaitTermination(60*1)\n",
+					"queuedq.show()"
 				],
-				"execution_count": null
+				"execution_count": 1
 			},
 			{
 				"cell_type": "code",
@@ -316,7 +362,7 @@
 					"\n",
 					"display(transactionalModeCount)"
 				],
-				"execution_count": null
+				"execution_count": 12
 			},
 			{
 				"cell_type": "code",
@@ -348,7 +394,7 @@
 					"\n",
 					"display(queuedModeCount)"
 				],
-				"execution_count": null
+				"execution_count": 13
 			},
 			{
 				"cell_type": "code",
@@ -380,7 +426,7 @@
 					"\n",
 					"display(functionModeCount)"
 				],
-				"execution_count": null
+				"execution_count": 14
 			},
 			{
 				"cell_type": "code",
@@ -405,7 +451,7 @@
 					"val nyctlc = spark.read.parquet(wasbs_path)\n",
 					"display(nyctlc)"
 				],
-				"execution_count": null
+				"execution_count": 15
 			}
 		]
 	}

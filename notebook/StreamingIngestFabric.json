@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "32b2da35-de86-40d2-9344-1f3f62b49fdd"
+				"spark.autotune.trackingId": "4832e78f-85b1-418a-975f-73fb81a72260"
 			}
 		},
 		"metadata": {
@@ -347,38 +347,6 @@
 					"display(queuedModeCount)"
 				],
 				"execution_count": 10
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					},
-					"microsoft": {
-						"language": "python"
-					},
-					"collapsed": false
-				},
-				"source": [
-					"%%pyspark\n",
-					"# Read data from Azure Data Explorer table(s)\n",
-					"# Full Sample Code available at: https://github.com/Azure/azure-kusto-spark/blob/master/samples/src/main/python/SynapseSample.py\n",
-					"functionModeCount  = spark.read \\\n",
-					"    .format(\"com.microsoft.kusto.spark.synapse.datasource\") \\\n",
-					"    .option(\"spark.synapse.linkedService\", \"Fabric_Order\") \\\n",
-					"    .option(\"kustoDatabase\", \"OrderDetails\") \\\n",
-					"    .option(\"kustoQuery\", \"SparkTableIngestStats('StreamIngestTest33Queued')\") \\\n",
-					"    .load()\n",
-					"\n",
-					"display(functionModeCount)"
-				],
-				"execution_count": 11
 			}
 		]
 	}
