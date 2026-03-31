@@ -29,6 +29,9 @@
 		"adxmi_properties_typeProperties_database": {
 			"value": "spark"
 		},
+		"fabric_as_house_properties_typeProperties_database": {
+			"value": "1581de7e-3594-4dc1-89c1-d48aa6fdacd8"
+		},
 		"sdkse2etestppe_properties_typeProperties_database": {
 			"value": "e2e"
 		},
